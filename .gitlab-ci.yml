@@ -1,0 +1,13 @@
+compile-and-unit-test:
+    stage: build
+    image: $CI_REGISTRY_IMAGE/sdutil-osdu-ubuntu
+    script:
+        - chmod +x devops/scripts/run_unit_tests.sh
+        - ./devops/scripts/run_unit_tests.sh
+        - mkdir -p dist
+        - rm -rf dist/*
+        - cp -r README.md requirements.txt sdlib sdutil sdutil.py dist
+    artifacts:
+        name: sdutil
+        paths:
+        - dist/
