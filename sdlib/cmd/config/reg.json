@@ -1,0 +1,12 @@
+{
+    "description": "manage the utility configuration",
+    "help": [
+        "> python sdutil config [ *init | *show ] (options)\n",
+        "  *init      $ python sdutil config init",
+        "               initialize the utility configurations\n",
+        "  *show      $ python sdutil config show",
+        "               list the utility configurations\n",
+        "  (options)  | --idtoken=<token> pass the credential token to use, rather than generating a new one"
+    ],
+    "name": "config"
+}

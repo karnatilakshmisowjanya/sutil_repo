@@ -1,0 +1,23 @@
+{
+    "description": "user authorization utilities",
+    "help": [
+        "> python sdutil user [ *add | *list | *remove | *roles ] (options)\n",
+        "  *add       $ python sdutil user add [user@email] [sdpath] [role]*",
+        "               add a user to a subproject resource\n",
+        "               [user@email]  : email of the user to add",
+        "               [sdpath]      : seismic store subproject path, sd://<tenant>/<subproject>",
+        "               [role]        : user role [admin|editor|viewer]\n",
+        "  *list      $ python sdutil user list [sdpath]",
+        "               list users and roles in a subproject\n",
+        "               [sdpath]      : seismic store subproject path, sd://<tenant>/<subproject>\n",
+        "  *remove    $ python sdutil user remove [user@email] [sdpath]",
+        "               remove a user and all his roles from a subproject (you cannot remove yourself)\n",
+        "               [user@email]  : email of the user to add",
+        "               [sdpath]      : seismic store subproject path, sd://<tenant>/<subproject>\n",
+        "  *roles     $ python sdutil user roles [sdpath]",
+        "               retrieve the user roles in a seismic store tenant project\n",
+        "               [sdpath]      : seismic store tenant path, sd://<tenant>\n",
+        "  (options)  | --idtoken=<token> pass the credential token to use, rather than generating a new one"
+    ],
+    "name": "user"
+}

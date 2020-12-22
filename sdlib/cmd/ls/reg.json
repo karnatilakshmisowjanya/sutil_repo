@@ -1,0 +1,15 @@
+{
+    "description": "list subprojects and datasets",
+    "help": [
+        "> python sdutil ls [ *subproject | *dataset ] (options)\n",
+        "  *subprojects       $ python sdutil ls sd://<tenant>",
+        "                       list subprojects in a tenant\n",
+        "  *datasets          $ python sdutil ls sd://<tenant>/<subproject>/<path>",
+        "                       list datasets and directories in a subproject path\n",
+        "  (options)          | -r --recursive          recursive list",
+        "                     | -l --full-path --long   full path display",
+        "                     | -lr -rl                 recursive list and full path display",
+        "                     | --idtoken=<token>       pass the credential token to use, rather than generating a new one"
+    ],
+    "name": "ls"
+}

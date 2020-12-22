@@ -1,0 +1,24 @@
+{
+    "description": "copy data to(upload)/from(download)/in(copy) seismic store",
+    "help": [
+        "> python sdutil cp [ *upload | *download | *inplace ]\n",
+        "  *upload     $ python sdutil cp [localFile] [sdpath] [legaltag] (options)",
+        "                upload a dataset to seismic store\n",
+        "                [localFile]  : path of the local file to upload",
+        "                [sdpath]     : seistore path",
+        "                [legaltag]   : legal tag to be set to the dataset, if not provided, the suproject one will be used\n",
+        "                (options)    | --seismicmeta=filepath seismic metadata file (json)",
+        "                             | --idtoken=<token> pass the credential token to use, rather than generating a new one\n",
+        "  *download   $ python sdutil cp [sdpath] [localFile] (options)",
+        "                download a dataset from seismic store\n",
+        "                [sdpath]     : seistore path",
+        "                [localFile]  : path of the local file to download\n",
+        "                (options)    | --idtoken=<token> pass the credential token to use, rather than generating a new one\n",
+        "  *inplace    $ python sdutil cp [sdpathFrom] [sdpathTo] (options)",
+        "                copy a dataset inplace seismic store\n",
+        "                [sdpathFrom] : the origin seistore path",
+        "                [sdpathTo]   : the destination seistore path\n",
+        "                (options)    | --idtoken=<token> pass the credential token to use, rather than generating a new one"
+    ],
+    "name": "cp"
+}

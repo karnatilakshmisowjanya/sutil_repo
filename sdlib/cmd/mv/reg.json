@@ -1,0 +1,11 @@
+{
+    "description": "move a dataset in seismic store",
+    "help": [
+        "> python sdutil mv *sdpath_from *sdpath_to (options)\n",
+        "  move a dataset to a different location in seismic store (same tenant required)\n",
+        "  *sdpath_from  : the origin seismic store path. sd://<tenant>/<subproject>/<path>/<dataset>",
+        "  *sdpath_to    : the destiantion seismic store path. sd://<tenant>/<subproject>/<path>*/<dataset>\n" ,
+        "  (options)      | --idtoken=<token> pass the credential token to use, rather than generating a new one"
+    ],
+    "name": "mv"
+}

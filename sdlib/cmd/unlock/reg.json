@@ -1,0 +1,10 @@
+{
+    "description": "remove a lock on a seismic store dataset",
+    "help": [
+        "> python sdutil unlock *dataset (options)\n",
+        "  *dataset   $ python sdutil unlock sd://<tenant>/<subproject>/<path>/<dataset>",
+        "               remove a lockfile on a seismic store dataset\n",
+        "  (options)  | --idtoken=<token> pass the credential token to use, rather than generating a new one"
+    ],
+    "name": "unlock"
+}

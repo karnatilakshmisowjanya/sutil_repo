@@ -1,0 +1,12 @@
+{
+    "description": "delete a subproject or a space separated list of datasets",
+    "help": [
+        "> python sdutil rm [ *subproject | *dataset ] (options)\n",
+        "  *dataset      $ python sdutil rm sd://<tenant>/<subproject>/<path>/<dataset>",
+        "                  delete a dataset or a list of dataset from seismic store\n",
+        "  *subproject   $ python sdutil rm sd://<tenant>/<subproject>",
+        "                  delete a subproject from seismic store\n",        
+        "  (options)     | --idtoken=<token> pass the credential token to use, rather than generating a new one"
+    ],
+    "name": "rm"
+}

@@ -1,0 +1,15 @@
+{
+    "description": "print information like size, creation date, legal tag(admin) for a space separated list of tenants, subprojects or datasets",
+    "help": [
+        "> python sdutil stat [ *tenant | *subproject | *dataset ] (options)\n",
+        "  *tenant         $ python sdutil stat sd://<tenant> (admin)",
+        "                    print tenant information like esd and google project id.\n",
+        "  *subproject     $ python sdutil stat sd://<tenant>/<subproject>",
+        "                    print subproject information like storage location, legal tag(admin).\n",
+        "  *dataset        $ python sdutil stat sd://<tenant>/<subproject>/<path>/<dataset>",
+        "                    print dataset information like size, creation date, legal tag(admin).\n",
+        "  (options)       | -d --detailed      display detailed information",
+        "                  | --idtoken=<token>  pass the credential token to use, rather than generating a new one"
+    ],
+    "name": "stat"
+}

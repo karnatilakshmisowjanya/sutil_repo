@@ -1,0 +1,22 @@
+{
+    "description": "application authorization utilities",
+    "help": [
+        "> python sdutil app [ *register | *list | *set-trusted | *list-trusted ] (options)\n",
+        "  *register      $ python sdutil app register [appservice@email] [sdpath]",
+        "                   register a new application in a seismic store tenant\n",
+        "                   [appservice@email] : email of the application service account to register",
+        "                   [sdpath]           : seismic store tenant path, sd://<tenant_name>\n",
+        "  *list          $ python sdutil app list [sdpath]",
+        "                   list registered applications in a seismic store tenant\n",
+        "                   [sdpath] : seismic store tenant path, sd://<tenant_name>\n",
+        "  *set-trusted   $ python sdutil app set-trusted [appservice@email] [sdpath]",
+        "                   set a registered application as trusted application a seismic store tenant(app must be registered)\n",
+        "                   [appservice@email] : email of the application service account to register",
+        "                   [sdpath]           : seismic store tenant path, sd://<tenant_name>\n",
+        "  *list-trusted  $ python sdutil app list-trusted [sdpath]",
+        "                   list trusted applications in a seismic store tenant\n",
+        "                   [sdpath] : seismic store tenant path, sd://<tenant_name>\n",
+        "  (options)      | --idtoken=<token> pass the credential token to use, rather than generating a new one"
+    ],
+    "name": "app"
+}

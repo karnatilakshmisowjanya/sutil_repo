@@ -1,0 +1,17 @@
+{
+    "description": "authentication utilities",
+    "help": [
+        " > python sdutil auth [ *login | *logout | *idtoken | *activate-service-account | *deactivate-service-account ]\n",
+        "   *login     $ python sdutil auth login",
+        "                login to sdutil\n",
+        "   *logout    $ python sdutil auth logout",
+        "                logout from sdutil\n",
+        "   *idtoken   $ python sdutil auth idtoken",
+        "                generate and print an Auth IDToken\n",
+        "   *activate-service-account    $ python sdutil auth activate-service-account --key-file=path_to_key.json",
+        "                                  set sdutil to use a given service account\n",
+        "   *deactivate-service-account  $ python sdutil auth deactivate-service-account",
+        "                                  return sdutil to using user credentials"
+    ],
+    "name": "auth"
+}

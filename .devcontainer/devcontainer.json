@@ -1,0 +1,47 @@
+// Manages devcontainer lifecycle
+{
+	"name": "SDUtility Client",
+	"build": {
+		"dockerfile": "Dockerfile",
+		"context": "..",
+		"args": {
+			"VARIANT": "3"
+		}
+	},
+
+	// Set values for Oauth2
+	// "OAUTH2_CLIENT_ID": "123456789123456789123"
+	// "OAUTH2_CLIENT_SECRET": "1a2b3c4d5e6f7g8h9i1k2"
+	"containerEnv": {
+		"OAUTH2_CLIENT_ID": "123456789123456789123",
+		"OAUTH2_CLIENT_SECRET": "1a2b3c4d5e6f7g8h9i1k2"
+	},
+
+	// Sets *default* container specific settings.json values on container create.
+	// These settings override the settings.json from within the .vscode directory
+	"settings": {
+		"terminal.integrated.shell.linux": "/bin/bash",
+		"python.linting.enabled": true,
+		"python.linting.pylintEnabled": true,
+		"python.formatting.autopep8Path": "/usr/local/py-utils/venvs/autopep8/bin/autopep8",
+		"python.formatting.blackPath": "/usr/local/py-utils/venvs/black/bin/black",
+		"python.formatting.yapfPath": "/usr/local/py-utils/venvs/yapf/bin/yapf",
+		"python.linting.banditPath": "/usr/local/py-utils/venvs/bandit/bin/bandit",
+		"python.linting.flake8Path": "/usr/local/py-utils/venvs/flake8/bin/flake8",
+		"python.linting.mypyPath": "/usr/local/py-utils/venvs/mypy/bin/mypy",
+		"python.linting.pycodestylePath": "/usr/local/py-utils/venvs/pycodestyle/bin/pycodestyle",
+		"python.linting.pydocstylePath": "/usr/local/py-utils/venvs/pydocstyle/bin/pydocstyle",
+		"python.linting.pylintPath": "/usr/local/py-utils/venvs/pylint/bin/pylint",
+		"python.testing.pytestPath": "/usr/local/py-utils/venvs/pytest/bin/pytest"
+	},
+
+	// Add the IDs of vs code extensions you want installed when the container is created.
+	"extensions": [
+		"ms-python.python"
+	],
+
+	"postStartCommand": "./../session/post-create/sync_deps.py",
+
+	// This username comes with the prebuilt python image. Prevents interaction as root user.
+	"remoteUser": "vscode"
+}
