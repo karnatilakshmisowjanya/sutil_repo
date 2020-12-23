@@ -15,7 +15,6 @@
 # ***************************************************************************
 
 seistore:
-  env: '#{config.seistore.svc.env}#'
   service: '#{config.seistore.svc.params}#'
 auth_provider:
   default: '#{config.auth_provider.default}#'
