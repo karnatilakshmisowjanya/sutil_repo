@@ -39,7 +39,7 @@ def main():
 
         Config.parse_config_yamls()
 
-        if cmd_name != "config" or cmd_name != "init":
+        if cmd_name != "config" and cmd_name != "init":
             Config.load_config()
 
         cmd = import_from('sdlib.cmd.%s.cmd' % cmd_name.lower(),
