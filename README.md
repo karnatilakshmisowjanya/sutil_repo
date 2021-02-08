@@ -6,15 +6,16 @@ Seismic store is a cloud-based solution designed to store and manage datasets of
 
 The **sdutil** is an intuitive command line utility tool to interact with seismic store and perform some basic operations like upload or download datasets to or from seismic store, manage users, list folders content and more.
 
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Seistore Resources](#seistore-resources)
-- [Subprojects](#subprojects)
-- [Users Management](#users-management)
-- [Usage Examples](#usage-examples)
-- [Utility Testing](#utility-testing)
-- [FAQ](#faq)
+- [Seismic Store SDUTIL](#seismic-store-sdutil)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Seistore Resources](#seistore-resources)
+  - [Subprojects](#subprojects)
+  - [Users Management](#users-management)
+  - [Usage Examples](#usage-examples)
+  - [Utility Testing](#utility-testing)
+  - [FAQ](#faq)
 
 ## Prerequisites
 
@@ -26,6 +27,11 @@ Windows
 Linux
 
 - [64-bit Python 3.8.3](https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tgz)
+
+Unix
+
+- [64-bit Python 3.8.3](https://www.python.org/ftp/python/3.8.3/Python-3.8.3.tgz)
+- [Apple Xcode C++ Build Tools]
 
 Other requirements are addressed in the INSTALLATION section below.
 
