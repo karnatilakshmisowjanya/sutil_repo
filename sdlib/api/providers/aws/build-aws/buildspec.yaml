@@ -29,8 +29,7 @@ phases:
       - echo "Installing requirements.txt"
       - pip install -r ./requirements.txt
       - pip install pylint
-      - pylint ./sdlib/api/providers/aws/*.py --disable=F0001
-      - pylint ./sdlib/api/providers/aws/**/*.py --disable=F0001
+      - pylint ./sdlib/api/providers/aws/*.py --disable=F0001 --errors-only
 
 artifacts:
   files:
