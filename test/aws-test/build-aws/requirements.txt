@@ -1,4 +1,4 @@
-# ***************************************************************************
+# -*- coding: utf-8 -*-
 # Copyright 2017-2019, Schlumberger
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,5 +12,28 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# ***************************************************************************
-# Removed contents to make it work in cicd. See local_config_template.yaml for the contents needed in this file for local testing
+
+Authlib==0.13
+azure-storage-blob==12.3.2
+certifi==2019.11.28
+chardet==3.0.4
+Click==7.0
+Flask==1.1.1
+idna==2.8
+itsdangerous==1.1.0
+Jinja2==2.10.3
+MarkupSafe==1.1.1
+PyYAML==5.3.1
+requests==2.22.0
+six==1.13.0
+tqdm==4.41.0
+urllib3==1.25.8
+Werkzeug==0.16.0
+lxml
+pytest
+pytest-timeout
+mock
+coverage
+xmlrunner
+unittest-xml-reporting
+

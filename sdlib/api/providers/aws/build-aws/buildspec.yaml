@@ -29,11 +29,13 @@ phases:
       - echo "Installing requirements.txt"
       - pip install -r ./requirements.txt
       - pip install pylint
-      - pylint ./sdlib/api/providers/aws/*.py --disable=F0001 --errors-only
+      - pylint ./sdlib/api/providers/aws/*.py --disable=F0001  --errors-only
+      - echo "Building integration testing assemblies and gathering artifacts..."
+      - ./test/aws-test/build-aws/prepare-dist.sh
 
 artifacts:
   files:
     - "**/*"
-  base-directory: "."
+  base-directory: "dist"
   name: ${REPO_NAME}_${BRANCH_NAME}_$(date +%F)_${CODEBUILD_BUILD_NUMBER}.zip
 
