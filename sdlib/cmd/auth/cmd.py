@@ -51,51 +51,59 @@ class Auth(SDUtilCMD):
             return
 
         if cmd == "activate-service-account":
-            if (keyword_args.key_file is None
-                    or keyword_args.key_file is True):
-                raise Exception(
-                    "\nWrong Command: missing required argument"
-                    " --key-file=PATH_TO_KEY.json\n"
-                    '               For more information type '
-                    '"python sdutil auth"'
-                    ' to open the command help menu.')
 
-            if not os.path.exists(keyword_args.key_file):
-                raise Exception("\nKey file doesn't exist: %s"
-                                % keyword_args.key_file)
-
-            full_path = os.path.abspath(keyword_args.key_file)
-
-            try:
-                os.makedirs(os.path.dirname(self._auth._service_account_file))
-            except OSError as e:
-                if e.errno == errno.EEXIST:
-                    # ~/.sdcfg already exists
-                    pass
-
-            with open(self._auth._service_account_file, "w") as auth_fh:
-                json.dump({"service-account-key-file": full_path},
-                          auth_fh, indent=4)
+            self.activate_service_account(keyword_args)
             return
 
         if cmd == "deactivate-service-account":
-            try:
-                os.remove(self._auth._service_account_file)
-            except OSError as e:
-                if e.errno == errno.ENOENT:
-                    # ignore file doesn't exist
-                    pass
+
+            self.deactivate_service_account(keyword_args)
             return
 
         if cmd == 'idtoken':
-            idtoken = self._auth.get_id_token(force_refresh=True)
+
+            idtoken = self._auth.get_id_token()
             print('\n' + idtoken)
             return
 
         raise Exception(
             '\n'
             'Wrong Command: ' + cmd + ' is not a valid argument.\n'
-            '               The valid arguments are login,'
-            ' logout, activate-service-account and idtoken.\n'
+            '               The valid arguments are:\n                  login,'
+            ' logout, activate-service-account, deactivate-service-account and idtoken.\n'
             '               For more information type "python sdutil auth"'
             ' to open the command help menu.')
+
+    def activate_service_account(self, keyword_args):
+
+        if keyword_args.key_file is None or keyword_args.key_file is True:
+            raise Exception(
+                "\nWrong Command: missing required argument --key-file=PATH_TO_KEY.json\n"
+                '               For more information type "python sdutil auth" to open the command help menu.')
+
+        if not os.path.exists(keyword_args.key_file):
+            raise Exception("\nKey file doesn't exist: %s"% keyword_args.key_file)
+
+        full_path = os.path.abspath(keyword_args.key_file)
+
+        # ensure the directory for contain it exists or create it
+        try:
+            os.makedirs(os.path.dirname(self._auth.get_service_account_file()))
+        except OSError as e:
+            if e.errno == errno.EEXIST:
+                pass
+                
+        with open(self._auth.get_service_account_file(), "w") as auth_fh:
+            json.dump({"service-account-key-file": full_path}, auth_fh, indent=4)
+
+        return
+
+    def deactivate_service_account(self, keyword_args):
+        
+        try:
+            os.remove(self._auth.get_service_account_file())
+        except OSError as e:
+            if e.errno == errno.ENOENT:
+                # ignore file doesn't exist
+                pass
+        return

@@ -36,6 +36,7 @@ class Dataset(object):
     sbit_count = None
     seismicmeta = None
     seismicmeta_guid = None
+    transfer_status = None 
 
     @classmethod
     def from_json(cls, data):
@@ -58,4 +59,5 @@ class Dataset(object):
         dataset.sbit_count = data.get('sbit_count', None)
         dataset.seismicmeta = data.get('seismicmeta', None)
         dataset.seismicmeta_guid = data.get('seismicmeta_guid', None)
+        dataset.transfer_status = data.get('transfer_status', None )
         return dataset

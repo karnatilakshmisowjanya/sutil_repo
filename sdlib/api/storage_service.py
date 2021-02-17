@@ -51,15 +51,3 @@ class StorageService(object):
 
     def download(self, *args, **kwargs):
         raise NotImplementedError()
-
-    @staticmethod
-    def get_storage_regions():
-        raise NotImplementedError()
-
-    @staticmethod
-    def get_storage_classes():
-        raise NotImplementedError()
-
-    @staticmethod
-    def get_storage_multi_regions():
-        raise NotImplementedError()

@@ -23,7 +23,6 @@ import sys
 from sdlib.api.dataset import Dataset
 from sdlib.api.seismic_store_service import SeismicStoreService
 from sdlib.api.storage_service import StorageFactory
-
 from sdlib.cmd.cmd import SDUtilCMD
 from sdlib.cmd.helper import CMDHelper
 from sdlib.shared.utils import Utils
@@ -85,13 +84,9 @@ class Cp(SDUtilCMD):
                 ' to open the command help menu.')
 
         print('')
-        print('> Copying the dataset ' + sdpath_from + ' to ' +
-              sdpath_to + ' ... ', end='')
-        sys.stdout.flush()
-
+       
         SeismicStoreService(self._auth).dataset_cp(sdpath_from, sdpath_to)
-
-        print('OK')
+        
         sys.stdout.flush()
 
     def cp_sd_to_local(self, args, keyword_args):

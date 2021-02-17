@@ -24,8 +24,6 @@ sys.path.append(
             os.path.dirname(
                     os.path.abspath(__file__)))))
 
-sys.modules['flask'] = Mock(side_effect=Exception('error'))
-
 
 import sdlib.__main__
 

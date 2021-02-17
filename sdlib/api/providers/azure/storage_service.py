@@ -32,7 +32,6 @@ from ....shared.config import Config
 
 @StorageFactory.register(provider="azure")
 class AzureStorageService(StorageService):
-    __STORAGE_CLASSES = ['REGIONAL']
 
     def __init__(self, auth):
         super(AzureStorageService, self).__init__(auth=auth)
@@ -61,7 +60,7 @@ class AzureStorageService(StorageService):
                                                     use_byte_buffer=True, 
                                                     max_concurrency=self._max_concurrency, 
                                                     max_single_put_size=self._max_single_put_size) as container_client:
-                with container_client.get_blob_client(dataset_id) as blob_client:
+                with container_client.get_blob_client("0") as blob_client:
                     bar='- Uploading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
                     with tqdm(total=os.path.getsize(filename), bar_format=bar, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
                         def callback(response):
@@ -85,7 +84,7 @@ class AzureStorageService(StorageService):
 
         with open(localfilename, 'wb') as lfile:
             with ContainerClient.from_container_url(container_url=sas_url) as container_client:
-                with container_client.get_blob_client(dataset_id) as blob_client:
+                with container_client.get_blob_client("0") as blob_client:
                     bar='- Downloading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
                     with tqdm(total=blob_size, bar_format=bar, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
                         def callback(response):
@@ -105,21 +104,3 @@ class AzureStorageService(StorageService):
             outfile.close()
 
         return True
-
-    @staticmethod
-    def get_storage_regions():
-        return AzureStorageService._get_regions()      
-
-    @staticmethod
-    def get_storage_classes():
-        return AzureStorageService.__STORAGE_CLASSES
-
-    @staticmethod
-    def get_storage_multi_regions():
-        return AzureStorageService._get_regions()
-
-    @staticmethod
-    def _get_regions():
-        if Config.get_env() == "evd":
-            return ["US-CENTRAL1"]
-        return ["EUROPE-WEST1"]

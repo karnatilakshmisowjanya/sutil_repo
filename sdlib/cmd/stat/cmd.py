@@ -16,14 +16,14 @@
 
 from __future__ import print_function
 
-import sys
 import os
+import sys
 
+from sdlib.api.dataset import Dataset
+from sdlib.api.seismic_store_service import SeismicStoreService
 from sdlib.cmd.cmd import SDUtilCMD
 from sdlib.cmd.helper import CMDHelper
 from sdlib.shared.utils import Utils
-from sdlib.api.seismic_store_service import SeismicStoreService
-from sdlib.api.dataset import Dataset
 
 
 class Stat(SDUtilCMD):
@@ -90,8 +90,10 @@ class Stat(SDUtilCMD):
         print(' - Uri: ' + sdpath)
         if 'ltag' in res:
             print(' - Legal Tag: ' + res['ltag'])
-        print(' - Storage Class: ' + res['storage_class'])
-        print(' - Storage Location: ' + res['storage_location'])
+        if 'storage_class' in res:
+            print(' - Storage Class: ' + res['storage_class'])
+        if 'storage_location' in res:
+            print(' - Storage Location: ' + res['storage_location'])
         sys.stdout.flush()
 
     def display_dataset(self, sdpath, detailed_flag):
@@ -123,4 +125,9 @@ class Stat(SDUtilCMD):
         if detailed_flag and ds.seismicmeta is not None:
             print(' - Seismic record : ', end="")
             print(ds.seismicmeta)
+
+        if ds.transfer_status is not None:
+            print(' - Copy Transfer Status: ', end="")
+            print(ds.transfer_status)
+            
         sys.stdout.flush()

@@ -18,14 +18,17 @@ from unittest import TestCase
 
 from sdlib.shared.config import Config
 
-
 class SdUtilTestCase(TestCase):
     @classmethod
     def setUpClass(cls):
-        Config.parse_config_yamls()
-        Config.load_config({
-            "env": 'env',
-            "appkey": 'appkey',
-            "cloudprovider": 'provider'
+        
+        Config.load({
+            'seistore': {'service': '{"provider":{"env":{"url":"any","appkey":"any"}}}'},
+            'auth_provider': {'oauth2': '{}'
+        }})
+        
+        Config.load_user_config({
+            "env": "env", "appkey": "any", "cloudprovider": "provider"
         })
+
         super(SdUtilTestCase, cls).setUpClass()

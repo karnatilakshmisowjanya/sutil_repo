@@ -17,7 +17,6 @@ Authlib==0.13
 azure-storage-blob==12.3.2
 certifi==2019.11.28
 chardet==3.0.4
-crc32c==2.0
 Click==7.0
 Flask==1.1.1
 idna==2.8
@@ -30,3 +29,5 @@ six==1.13.0
 tqdm==4.41.0
 urllib3==1.25.8
 Werkzeug==0.16.0
+lxml==4.6.2
+crc32c==2.2
