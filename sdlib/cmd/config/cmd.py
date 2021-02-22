@@ -62,9 +62,9 @@ class Config(SDUtilCMD):
 
         # set the cloud provider
         idx_to_env = {str(idx+1): env
-                      for idx, env in enumerate(Configuration.SEISTORE.SERVICE.keys())}
+                      for idx, env in enumerate(Configuration.get_service_configurations().keys())}
         print()
-        for idx, env in enumerate(Configuration.SEISTORE.SERVICE.keys()):
+        for idx, env in enumerate(Configuration.get_service_configurations().keys()):
             print("[" + str(idx + 1) + "] " + env)
         print("\nSelect the cloud provider: ", end='')
         sys.stdout.flush()
@@ -73,10 +73,10 @@ class Config(SDUtilCMD):
             idx = int(idx)
         except Exception:
             raise Exception("\nInvalid choice.")
-        if idx < 1 or idx > len(Configuration.SEISTORE.SERVICE.keys()):
+        if idx < 1 or idx > len(Configuration.get_service_configurations().keys()):
             raise Exception("\nInvalid choice.")
         provider = idx_to_env[str(idx)]
-        provider_envs = Configuration.SEISTORE.SERVICE[provider]
+        provider_envs = Configuration.get_service_configurations()[provider]
 
         # set the deployemnt environemnt
         idx_to_env = {str(idx+1): env
@@ -114,10 +114,14 @@ class Config(SDUtilCMD):
         Configuration.save_config(provider, provider_env, appkey)
 
     def show(self, args):
-        Configuration.load_config()
+        Configuration.load_user_config()
         print()
         print('Provider    : ' + Configuration.get_cloud_provider())
         print('Service Url : ' + Configuration.get_svc_url())
         if Configuration.get_svc_appkey():
             print('Serivce Key : ' + Configuration.get_svc_appkey())
         print('Serivce Env : ' + Configuration.get_svc_env())
+        if os.path.isfile(self._auth.get_service_account_file()):
+            print('Auth Mode   : Service Workload Credentials')
+        else:
+            print('Auth Mode   : User Credentials')

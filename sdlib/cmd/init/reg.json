@@ -1,7 +1,0 @@
-{
-    "description": "initialize sdutil to use a specific seismic store environment",
-    "help": [
-        " > python sdutil init"
-    ], 
-    "name": "init"
-}

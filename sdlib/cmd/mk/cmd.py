@@ -74,42 +74,47 @@ class Mk(SDUtilCMD):
         print('')
 
         sd = SeismicStoreService(self._auth)
-        storage_provider = StorageFactory.build(sd.get_cloud_provider(sdpath), auth=self._auth)
+        cloud_provider = sd.get_cloud_provider(sdpath)
 
-        for idx, cl in enumerate(storage_provider.get_storage_classes()):
-            print("[" + str(idx + 1) + "] " + cl)
-        print("\nSelect the bucket storage class: ", end='')
-        sys.stdout.flush()
-        idx = sys.stdin.readline()
-        try:
-            idx = int(idx)
-        except Exception:
-            raise Exception("\nInvalid choice.")
-        if idx < 1 or idx > len(storage_provider.get_storage_classes()):
-            raise Exception("\nInvalid choice.")
-        cl = storage_provider.get_storage_classes()[idx-1]
+        if(cloud_provider=="google"):
 
-        if cl == 'REGIONAL':
-            locs = storage_provider.get_storage_regions()
-        elif cl == 'MULTI_REGIONAL':
-            locs = storage_provider.get_storage_multi_regions()
-        else:
-            locs = storage_provider.get_storage_multi_regions() + storage_provider.get_storage_regions()
+            storage_provider = StorageFactory.build(sd.get_cloud_provider(sdpath), auth=self._auth)
 
-        print('')
+            for idx, cl in enumerate(storage_provider.get_storage_classes()):
+                print("[" + str(idx + 1) + "] " + cl)
+            print("\nSelect the bucket storage class: ", end='')
+            sys.stdout.flush()
+            idx = sys.stdin.readline()
+            try:
+                idx = int(idx)
+            except Exception:
+                raise Exception("\nInvalid choice.")
+            if idx < 1 or idx > len(storage_provider.get_storage_classes()):
+                raise Exception("\nInvalid choice.")
+            cl = storage_provider.get_storage_classes()[idx-1]
 
-        for idx, loc in enumerate(locs):
-            print("["+str(idx+1)+"] " + loc)
-        print("\nSelect the bucket storage location: ", end='')
-        sys.stdout.flush()
-        idx = sys.stdin.readline()
-        try:
-            idx = int(idx)
-        except Exception:
-            raise Exception("\nInvalid choice.")
-        if idx < 1 or idx > len(locs):
-            raise Exception("\nInvalid choice.")
-        loc = locs[idx-1]
+            if cl == 'REGIONAL':
+                locs = storage_provider.get_storage_regions()
+            elif cl == 'MULTI_REGIONAL':
+                locs = storage_provider.get_storage_multi_regions()
+            else:
+                locs = storage_provider.get_storage_multi_regions() + storage_provider.get_storage_regions()
+
+            print('')
+
+            for idx, loc in enumerate(locs):
+                print("["+str(idx+1)+"] " + loc)
+            print("\nSelect the bucket storage location: ", end='')
+            sys.stdout.flush()
+            idx = sys.stdin.readline()
+            try:
+                idx = int(idx)
+            except Exception:
+                raise Exception("\nInvalid choice.")
+            if idx < 1 or idx > len(locs):
+                raise Exception("\nInvalid choice.")
+            loc = locs[idx-1]
+
 
         tenant = Utils.getTenant(sdpath)
         subproject = Utils.getSubproject(sdpath)
@@ -125,7 +130,7 @@ class Mk(SDUtilCMD):
         sys.stdout.flush()
 
         sd.create_subproject(
-            tenant, subproject, owner_email, cl, loc, legal_tag)
+            tenant, subproject, owner_email, "REGIONAL", "US-CENTRAL1", legal_tag)
 
         print('OK')
         sys.stdout.flush()

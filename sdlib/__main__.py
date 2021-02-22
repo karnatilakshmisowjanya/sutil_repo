@@ -14,15 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-from __future__ import print_function
-
 import sys
 
 from sdlib.auth.auth_service import AuthFactory
 from sdlib.cmd.helper import CMDHelper
 from sdlib.shared.config import Config
 
+# Ensure it is executed with python3
+if sys.version_info[0] < 3:
+    raise Exception("\nThe utility must be executedusing Python 3")
 
 def main():
     try:
@@ -37,10 +37,10 @@ def main():
         if cmd_name not in CMDHelper.getCmdNames():
             raise Exception(CMDHelper.main_help()[:-1])
 
-        Config.parse_config_yamls()
+        Config.load()
 
-        if cmd_name != "config" and cmd_name != "init":
-            Config.load_config()
+        if cmd_name != "config":
+            Config.load_user_config()
 
         cmd = import_from('sdlib.cmd.%s.cmd' % cmd_name.lower(),
                           cmd_name.capitalize())
@@ -49,13 +49,10 @@ def main():
         cmd(auth_provider).execute(positional_args, keyword_args)
 
     except Exception as ex:  # pylint: disable=W0703
-        print(str(ex))
-        if sys.platform != 'win32':
-            print('')
+        print(str(ex) + '\n')
         return 1
 
-    if sys.platform != 'win32':
-        print('')
+    print('')
     return 0
 
 

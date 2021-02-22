@@ -15,6 +15,6 @@
 # ***************************************************************************
 
 seistore:
-  service: '#{config.seistore.svc.params}#'
+  service: #{config.seistore.service.params}#
 auth_provider:
-  default: '#{config.auth_provider.default}#'
+  #{config.auth_provider}#: #{config.auth_provider.params}#

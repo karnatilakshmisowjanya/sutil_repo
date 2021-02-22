@@ -15,13 +15,9 @@
 
 
 import os
+from .config import Oauth2Configuration
 
-from sdlib.shared.config import Config
-
-
-def logout(credentials_filename):
-    ftkdir = os.path.join(os.path.expanduser("~"), Config.HOME)
-    if os.path.isdir(ftkdir):
-        ftkfile = os.path.join(ftkdir, credentials_filename)
-        if os.path.isfile(ftkfile):
-            os.remove(ftkfile)
+def logout(configurations: Oauth2Configuration):
+    if os.path.isdir(configurations.token_file_dir):
+        if os.path.isfile(configurations.token_file):
+            os.remove(configurations.token_file)

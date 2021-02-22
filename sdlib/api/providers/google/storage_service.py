@@ -347,9 +347,31 @@ class GoogleStorageService(StorageService):
 
     @staticmethod
     def get_storage_regions():
-        return ['ASIA', 'EU', 'US', 'NORTHAMERICA-NORTHEAST1', 'US-CENTRAL1', 'US-EAST1', 'US-EAST4', 'US-WEST1', 'SOUTHAMERICA-EAST1', 
-                    'EUROPE-WEST1', 'EUROPE-WEST2', 'EUROPE-WEST3', 'EUROPE-WEST4', 'ASIA-EAST1', 'ASIA-NORTHEAST1', 'ASIA-SOUTH1', 
-                    'ASIA-SOUTHEAST1', 'AUSTRALIA-SOUTHEAST1']
+        return [
+            'NORTHAMERICA-NORTHEAST1',
+            'US-CENTRAL1',
+            'US-EAST1',
+            'US-EAST4',
+            'US-WEST1',
+            'US-WEST2',
+            'US-WEST3',
+            'US-WEST4',
+            'SOUTHAMERICA-EAST1',
+            'EUROPE-NORTH1',
+            'EUROPE-WEST1',
+            'EUROPE-WEST2',
+            'EUROPE-WEST3',
+            'EUROPE-WEST4',
+            'EUROPE-WEST6',
+            'ASIA-EAST1',
+            'ASIA-EAST2',
+            'ASIA-NORTHEAST1',
+            'ASIA-NORTHEAST2',
+            'ASIA-NORTHEAST3',
+            'ASIA-SOUTH1',
+            'ASIA-SOUTHEAST1',
+            'ASIA-SOUTHEAST2',
+            'AUSTRALIA-SOUTHEAST1']
 
     @staticmethod
     def get_storage_classes():

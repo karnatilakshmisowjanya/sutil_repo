@@ -29,6 +29,7 @@ with open(_yaml_file, 'r') as fh:
     _config_spec = yaml.load(fh, Loader=yaml.FullLoader)
 
 configuration = json.loads(_config_spec['seistore']['service'])
+
 provider = list(configuration.keys())[0]
 env = list(configuration[provider].keys())[0]
 appkey = None
@@ -39,3 +40,4 @@ Config.save_config(provider, env, appkey)
 
 os.environ["OAUTH2_CLIENT_ID"] = "test"
 os.environ["OAUTH2_CLIENT_SECRET"] = "test"
+os.environ["OAUTH2_CLIENT_REDIRECT_URL"] = "https://test/auth/callback"

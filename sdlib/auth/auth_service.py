@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
+import abc
 
 
 class AuthFactory(type):
@@ -37,34 +37,24 @@ class AuthFactory(type):
         return klass(idtoken, *args, **kwargs)
 
 
-class AuthService(object):
+class AuthService(abc.ABC):
 
-    # initialize provider configurations
+    @abc.abstractmethod
     def __init__(self, idtoken=None):
-        raise NotImplementedError()
+        pass
 
-    # get the idtoken
+    @abc.abstractmethod
     def get_id_token(self):
-        raise NotImplementedError()
+        pass
 
-    # refresh the idtoken
-    def refresh(self):
-        raise NotImplementedError()
-
-    # login credentials
+    @abc.abstractmethod
     def login(self):
-        raise NotImplementedError()
+        pass
 
-    # logout credentials
+    @abc.abstractmethod
     def logout(self):
-        raise NotImplementedError()
+        pass
 
-    @staticmethod
-    def validate_spec(config):
-        """
-        A method to validate configuration specs
-
-        :param config: Config
-        :return: None; raises Assertion Exception
-        """
-        raise NotImplementedError()
+    @abc.abstractmethod
+    def get_service_account_file():
+        pass;

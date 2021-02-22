@@ -29,7 +29,7 @@ local_file_name_02 = fname_prefix + '_local_02.txt'
 dataset_01 = fname_prefix + '_01.txt'
 dataset_02 = fname_prefix + '_02.txt'
 
-test_size = (1024 * 1024 * 1024, '1.0 MB') # for dev test => test_size = (1024, '1.0 KB')
+test_size = (1024 * 1024 * 1024, '1.0 GB') # for dev test => test_size = (1024, '1.0 KB')
 
 def setup_module(module):
     with open(local_file_name_01, 'wb') as fout:

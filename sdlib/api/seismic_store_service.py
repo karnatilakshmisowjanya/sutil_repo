@@ -18,10 +18,9 @@ import json
 import time
 
 import requests
-from six.moves import urllib
-
 from sdlib.shared.config import Config
 from sdlib.shared.sdpath import SDPath
+from six.moves import urllib
 
 
 class SeismicStoreService(object):
@@ -148,8 +147,11 @@ class SeismicStoreService(object):
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
         resp = requests.post(url=url, headers=header, params=querystring,verify=Config.get_ssl_verify())
-        if resp.status_code != 200:
-            raise Exception('\n[' + str(resp.status_code) + '] ' + resp.text)
+        
+        if resp.status_code == 202 or resp.status_code == 200:
+            print(resp.json())
+        else:
+            raise Exception('\n[' + str(resp.status_code) + '] ' + resp.json())
 
     def dataset_register(self, sdpath, sdtype=None, legal_tag=None,
                          seismicmeta=None):

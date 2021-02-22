@@ -80,26 +80,25 @@ Seismic Store Utility
 
 available commands:
 
- * app     : application authorization utilities
  * auth    : authentication utilities
- * config  : manage the utility configuration
- * cp      : copy data to(upload)/from(download)/in(copy) seismic store
- * init    : initialize sdutil to use a specific seismic store environment
- * ls      : list subprojects and datasets
- * mk      : create a subproject resource
- * mv      : move a dataset in seismic store
- * patch   : patch a seismic store subproject or dataset
- * rm      : delete a subproject or a space separated list of datasets
- * stat    : print information like size, creation date, legal tag(admin) for a space separated list of tenants, subprojects or datasets
  * unlock  : remove a lock on a seismic store dataset
- * user    : user authorization utilities
  * version : print the sdutil version
+ * rm      : delete a subproject or a space separated list of datasets
+ * mv      : move a dataset in seismic store
+ * config  : manage the utility configuration
+ * mk      : create a subproject resource
+ * cp      : copy data to(upload)/from(download)/in(copy) seismic store
+ * stat    : print information like size, creation date, legal tag(admin) for a space separated list of tenants, subprojects or datasets
+ * patch   : patch a seismic store subproject or dataset
+ * app     : application authorization utilities
+ * ls      : list subprojects and datasets
+ * user    : user authorization utilities
 ```
 
-At first usage time, the utility will require to insert an appkey. This can be generated throught the delfi portal. The appkey can be changed/updated next using the utility `init` command.
+At first usage time, the utility required to be initialized by invoking the sdutil config init command.
 
 ```sh
-python sdutil init
+python sdutil config init
 ```
 
 Before start using the utility and perform any operation, you must login into the system. By running the following login command, sdutil will open a sign-in page in a web browser.
