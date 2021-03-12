@@ -13,4 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # ***************************************************************************
-# Removed contents to make it work in cicd. See local_config_template.yaml for the contents needed in this file for local testing
+seistore:
+  service: '#{config.seistore.svc.params}#'
+auth_provider:
+  default: '#{config.auth_provider.default}#'
