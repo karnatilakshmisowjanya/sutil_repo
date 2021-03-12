@@ -26,7 +26,7 @@ def test_sdutil_user_add(capsys, pargs):
    missing_padding = len(payload) % 4
    if missing_padding != 0:
       payload += '=' * (4 - missing_padding)
-   email = json.loads(base64.b64decode(payload))['email']
+   email = json.loads(base64.b64decode(payload)).get('email') or json.loads(base64.b64decode(payload))['username']
    set_args("user add {email} {path} viewer --idtoken={stoken}".format(path=tsp_path, stoken=pargs.idtoken, email=email))
    status, output = run_command(capsys)
    assert not status

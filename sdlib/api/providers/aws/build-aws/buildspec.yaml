@@ -1,0 +1,41 @@
+# Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+# https://docs.aws.amazon.com/codebuild/latest/userguide/build-spec-ref.html
+
+# https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html
+version: 0.2
+
+phases:
+  install:
+    commands:
+    # - if [ $(echo $CODEBUILD_SOURCE_VERSION | grep -c  ^refs/heads.*) -eq 1 ]; then echo "Branch name found"; else echo "This build only supports branch builds" && exit 1; fi
+    # - apt-get update -y
+  build:
+    commands:
+      - export REPO_NAME=${PWD##*/}
+      - export BRANCH_NAME=`echo ${CODEBUILD_SOURCE_VERSION} | awk '{gsub("refs/heads/","");gsub("\\.","-");gsub("[[:space:]]","-")}1' | sed 's/\//-/g' | awk '{print tolower($0)}'`
+      - echo "Installing requirements.txt"
+      - pip install -r ./requirements.txt
+      - pip install pylint
+      - pylint ./sdlib/api/providers/aws/*.py --disable=F0001  --errors-only
+      - echo "Building integration testing assemblies and gathering artifacts..."
+      - ./test/aws-test/build-aws/prepare-dist.sh
+
+artifacts:
+  files:
+    - "**/*"
+  base-directory: "dist"
+  name: ${REPO_NAME}_${BRANCH_NAME}_$(date +%F)_${CODEBUILD_BUILD_NUMBER}.zip
+

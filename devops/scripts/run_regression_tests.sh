@@ -76,6 +76,7 @@ cd ${mnt_volume}
 
 # create temporary configuration for unit test
 cp sdlib/config.yaml config_original.yaml
+cat /dev/null > sdlib/config.yaml
 echo "seistore:" > sdlib/config.yaml
 echo "    service: '{\"${provider}\": {\"env\" : {\"url\": \"${service_url}\", \"appkey\": \"${service_key}\", \"ssl_verify\": ${ssl_verify}}}}'" >> sdlib/config.yaml
 echo "auth_provider:" >> sdlib/config.yaml
