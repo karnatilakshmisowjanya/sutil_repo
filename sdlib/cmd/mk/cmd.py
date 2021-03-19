@@ -76,6 +76,8 @@ class Mk(SDUtilCMD):
         sd = SeismicStoreService(self._auth)
         cloud_provider = sd.get_cloud_provider(sdpath)
 
+        cl = None
+        loc = None
         if(cloud_provider=="google"):
 
             storage_provider = StorageFactory.build(sd.get_cloud_provider(sdpath), auth=self._auth)
@@ -130,7 +132,7 @@ class Mk(SDUtilCMD):
         sys.stdout.flush()
 
         sd.create_subproject(
-            tenant, subproject, owner_email, "REGIONAL", "US-CENTRAL1", legal_tag)
+            tenant, subproject, owner_email, cl, loc, legal_tag)
 
         print('OK')
         sys.stdout.flush()
