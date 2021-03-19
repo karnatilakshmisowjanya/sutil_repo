@@ -46,11 +46,16 @@ class SeismicStoreService(object):
             'ltag': legal_tag
         }
 
-        body = {
-            'admin': owner_email,
-            'storage_class': gcsclass,
-            'storage_location': gcsloc
-        }
+        if gcsclass is not None and gcsloc is not None:
+            body = {
+                'admin': owner_email,
+                'storage_class': gcsclass,
+                'storage_location': gcsloc
+            }
+        else:
+            body = {
+                'admin': owner_email
+            }
 
         resp = requests.post(url=url, json=body, headers=header, verify=Config.get_ssl_verify())
         if resp.status_code != 200:
