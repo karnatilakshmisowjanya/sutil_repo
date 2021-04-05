@@ -56,7 +56,7 @@ def callback():
         pickle.dump(token, fh)
 
     # Help prevent others from stealing the credentials. CAVEAT: chmod has little effect on windows.
-    os.chmod(_configuration.token_file_name, stat.S_IRUSR | stat.S_IWUSR)
+    os.chmod(_configuration.token_file, stat.S_IRUSR | stat.S_IWUSR)
 
     return 'User Logged in as: ' + userinfo['name'] + ' (' + userinfo['email'] + ')'
 
@@ -92,7 +92,7 @@ def login(configuration: Oauth2Configuration):
     _oauth_client = oauth_client.create_client(_configuration.oauht2_provider)    
 
     # NOTE: the Config.OAuth.REDIRECT_URI must match the registered URI with provider.
-    redirect_url = _oauth_client.create_authorization_url(_configuration.oauth2_client_redirect_url)['rv']
+    redirect_url = _oauth_client.create_authorization_url(_configuration.oauth2_client_redirect_url)['url']
 
     webbrowser.open(redirect_url)
     logging.getLogger('werkzeug').setLevel(logging.ERROR)
