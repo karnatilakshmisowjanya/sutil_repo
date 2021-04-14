@@ -86,7 +86,7 @@ class User(SDUtilCMD):
                 raise Exception(
                     '\nWrong Command: %s is not a valid role' % role +
                     '               The valid roles are '
-                    '[admin, editor, viewer].\n'
+                    '[admin, viewer].\n'
                     '               For more information type '
                     '"python sdutil user"'
                     ' to open the command help menu.')

@@ -168,8 +168,7 @@ A subproject resource can be created by a `Tenant Admin Only` with the following
 
 To be able to use seismic store, a user must be registered/added to at least a subproject resource with a role that define his access level. Seismic Store support three different roles scoped at subproject level:
 
-- **admin**: read/write/list/delete access + users management.
-- **editor**: read/write/list/delete access
+- **admin**: read/write access + users management.
 - **viewer**: read/list access
 
 A user can be register by a `Subproject Admin Only` with the following sdutil command:
@@ -182,7 +181,7 @@ A user can be register by a `Subproject Admin Only` with the following sdutil co
 
                [user@email]  : email of the user to add
                [sdpath]      : seismic store subproject path, sd://<tenant>/<subproject>
-               [role]        : user role [admin|editor|viewer]
+               [role]        : user role [admin|viewer]
 ```
 
 ## Usage Examples
