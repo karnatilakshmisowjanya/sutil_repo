@@ -63,14 +63,6 @@ class Mk(SDUtilCMD):
         owner_email = str(args[0]).lower()
         legal_tag = str(args[1])
 
-        # check that it's a valid email
-        if Utils.isValidEmail(owner_email) is False:
-            raise Exception(
-                '\n' +
-                'Wrong Command: ' + owner_email + ' is not a valid email.\n' +
-                '               For more information type "python sdutil mk"'
-                ' to open the command help menu.')
-
         print('')
 
         sd = SeismicStoreService(self._auth)
