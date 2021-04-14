@@ -24,7 +24,7 @@ class Config(object):
     HOME = ".sdcfg"
     CONFIG_FILE = "sducfg.json"
     SDPATH_PREFIX = 'sd://'
-    USER_ROLES = ['ADMIN', 'EDITOR', 'VIEWER']
+    USER_ROLES = ['ADMIN', 'VIEWER']
 
     __configuration = {}
     __user_configuration = {}

@@ -69,13 +69,6 @@ class User(SDUtilCMD):
             self.help()
         useremail = str(args[0]).lower()
 
-        # check that it's a valid email
-        if Utils.isValidEmail(useremail) is False:
-            raise Exception(
-                '\nWrong Command: %s is not a valid email.\n' % useremail +
-                '               For more information type '
-                '"python sdutil user" to open the command help menu.')
-
         args.pop(0)
         if not args:
             self.help()
@@ -93,7 +86,7 @@ class User(SDUtilCMD):
                 raise Exception(
                     '\nWrong Command: %s is not a valid role' % role +
                     '               The valid roles are '
-                    '[admin, editor, viewer].\n'
+                    '[admin, viewer].\n'
                     '               For more information type '
                     '"python sdutil user"'
                     ' to open the command help menu.')
@@ -148,14 +141,6 @@ class User(SDUtilCMD):
         if not args:
             self.help()
         useremail = str(args[0]).lower()
-
-        # check that it's a valid email
-        if Utils.isValidEmail(useremail) is False:
-            raise Exception(
-                '\n' +
-                'Wrong Command: ' + useremail + ' is not a valid email.\n' +
-                '               For more information type "python sdutil user"'
-                ' to open the command help menu.')
 
         args.pop(0)
         if not args:
