@@ -46,6 +46,7 @@ class Oauth2Configuration(object):
         self.oauht2_refresh_token_param = configuration['refresh_token_params']
         self.oauht2_open_id_url = configuration['open_id_url']
         self.oauht2_scope = configuration['scope']
+        self.redirect_url = configuration['redirect_url']
 
         self.oauth2_client_id = os.getenv("OAUTH2_CLIENT_ID")
         if not self.oauth2_client_id:
