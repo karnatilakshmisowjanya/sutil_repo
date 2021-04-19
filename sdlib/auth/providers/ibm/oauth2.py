@@ -21,15 +21,15 @@ from authlib.integrations.requests_client import OAuth2Session
 from authlib.oauth2.rfc6749.wrappers import OAuth2Token
 
 from sdlib.shared.config import Config
-from .auth_service import IbmAuthService, IbmAuthFactory
+from sdlib.auth.auth_service import AuthService, AuthFactory
 
 from .config import Oauth2Configuration
 from .login import login
 from .logout import logout
 
 
-@IbmAuthFactory.register(provider="ibm")
-class OAuth2Service(IbmAuthService):
+@AuthFactory.register(provider="ibm")
+class OAuth2Service(AuthService):
     """
     A wrapper class for any OAuth2 provider based on Authlib
     https://docs.authlib.org/en/stable/index.html
