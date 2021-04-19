@@ -6,7 +6,7 @@
         "               add a user to a subproject resource\n",
         "               [user@email]  : email of the user to add",
         "               [sdpath]      : seismic store subproject path, sd://<tenant>/<subproject>",
-        "               [role]        : user role [admin|editor|viewer]\n",
+        "               [role]        : user role [admin|viewer]\n",
         "  *list      $ python sdutil user list [sdpath]",
         "               list users and roles in a subproject\n",
         "               [sdpath]      : seismic store subproject path, sd://<tenant>/<subproject>\n",
