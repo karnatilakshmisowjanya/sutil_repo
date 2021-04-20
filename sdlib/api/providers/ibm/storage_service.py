@@ -41,7 +41,7 @@ class IbmStorageService(StorageService):
         self._secret_key = os.getenv("COS_SECRET_KEY", "NA")
         self._region = os.getenv("COS_REGION", "NA")
 
-    async def upload(self, file_name: str, dataset: Dataset, object_name=None):
+    def upload(self, file_name: str, dataset: Dataset, object_name=None):
         """Upload file to S3 bucket
 
         Args:
@@ -62,12 +62,12 @@ class IbmStorageService(StorageService):
             object_name = f"{s3_folder_name}/{dataset.name}"
 
         if self._s3_client is None:
-            self._s3_client = await self.get_s3_client(self)
+            self._s3_client = self.get_s3_client(self)
 
         try:
             self._s3_client.create_bucket(Bucket=bucket_name, )
         except ClientError as err:
-            raise err
+            print(err)
 
         transfer = S3Transfer(self._s3_client)
 
@@ -80,7 +80,7 @@ class IbmStorageService(StorageService):
 
         return True
 
-    async def download(self, local_filename: str, dataset: Dataset):
+    def download(self, local_filename: str, dataset: Dataset):
         """download object from S3
 
         Args:
@@ -104,7 +104,7 @@ class IbmStorageService(StorageService):
         bar_format = '- Downloading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
 
         if self._s3_client is None:
-            self._s3_client = await self.get_s3_client(self)
+            self._s3_client = self.get_s3_client(self)
 
         transfer = S3Transfer(self._s3_client)
 
@@ -129,7 +129,7 @@ class IbmStorageService(StorageService):
         return inner
 
     @staticmethod
-    async def get_s3_client(self):
+    def get_s3_client(self):
         print("IBMBlobStorageFactory().get_s3_client")
         if self._s3_resource is None:
             print("IBMBlobStorageFactory()._s3_resource is None")
