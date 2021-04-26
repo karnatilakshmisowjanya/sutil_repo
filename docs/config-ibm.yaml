@@ -1,0 +1,23 @@
+seistore:
+  service: '{"ibm": {"ibmEnv":{"url": "https://nginx-ibm/osdu-seismic/api/v3", "appkey": ""}}}'
+  url: 'https://nginx-ibm/osdu-seismic/api/v3'
+  cloud_provider: 'ibm'
+  key: ''
+  env: 'ibmEnv'
+  auth-mode: 'JWT Token'
+  ssl_verify: False
+  APPKEY: ''
+  APPKEY_NAME: ''
+auth_provider:
+  ibm: '{"provider": "ibm",
+         "authorize_url": "https://keycloak-url/auth/realms/OSDU/protocol/openid-connect/auth",
+         "authorize_params": {"response_type": "code", "redirect_uri": "http://localhost:4300/auth/callback"},
+         "access_token_url": "https://keycloak-url/auth/realms/OSDU/protocol/openid-connect/token",
+         "access_token_params": {"grant_type": "authorization_code", "redirect_uri": "http://localhost:4300/auth/callback"},
+         "refresh_token_url": "https://keycloak-url/auth/realms/OSDU/protocol/openid-connect/token",
+         "refresh_token_params": {"grant_type": "refresh_token"},
+         "open_id_url": "https://keycloak-url/auth/realms/OSDU/.well-known/uma2-configuration",
+         "scope": "openid",
+         "redirect_url": "http://localhost:4300/auth/callback"}'
+ibm:
+  empty: 'none'
