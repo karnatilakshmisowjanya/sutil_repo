@@ -16,6 +16,7 @@ The **sdutil** is an intuitive command line utility tool to interact with seismi
   - [Usage Examples](#usage-examples)
   - [Utility Testing](#utility-testing)
   - [FAQ](#faq)
+  - [Setup and Usage for IBM env](#setup-and-usage-for-ibm-env)
 
 ## Prerequisites
 
@@ -263,4 +264,53 @@ run the [changelog script](./changelog-generator.sh) to automatically generate t
 
 ```bash
 ./scripts/changelog_gen.sh
+```
+## Setup and Usage for IBM env
+Below steps are for windows subsystem linux - ubuntu 20.04
+* Checkout the source code from community [gitlab](https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil.git)
+
+* In case python virtual env is not installed, use below commands else skip to next section
+```
+sudo apt-get update
+sudo apt-get install python3-venv --fix-missing
+```
+
+* create new venv and install package
+```
+#create new virtual env with name : sdutilenv
+python3 -m venv sdutilenv
+
+#activate the virtual end
+source sdutilenv/bin/Activate
+
+#install python package for sdutil
+pip install -r requirements.txt
+
+```
+
+* replace/edit config.yaml in sdlib/config.yaml by this [config.yaml](https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil/-/raw/ibm-documentation/docs/config-ibm.yaml)
+
+* export or set below environment variables
+```
+export OAUTH2_CLIENT_ID=check-env-provisioning-team-as-specific-to-cluster
+export OAUTH2_CLIENT_SECRET=check-env-provisioning-team-as-specific-to-cluster
+export OAUTH2_CLIENT_REDIRECT_URL=http://localhost:4300/auth/callback
+export COS_URL=minio-url-specific-to-the-cluster
+export COS_ACCESS_KEY=minio-access-key-specific-to-the-cluster
+export COS_SECRET_KEY=minio-secret-key-specific-to-the-cluster
+export COS_REGION=us-east-1
+```
+* Run below commands to login, list, upload and download
+```
+python sdutil config init
+python sdutil auth login
+
+# it will result in the pop up and will redirect user to authentication from keycloak. Enter the username and password.
+python sdutil ls sd://osdu
+python sdutil ls sd://osdu/testsubp
+#upload file
+python sdutil cp local-dir/file-name-at-source.txt sd://osdu/testsubp/file-name-at-destination.txt
+
+#download file
+python sdutil cp sd://osdu/testsubp/file-name-at-ddms.txt local-dir/file-name-a-tdestination.txt
 ```
