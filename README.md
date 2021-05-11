@@ -314,3 +314,52 @@ python sdutil cp local-dir/file-name-at-source.txt sd://osdu/testsubp/file-name-
 #download file
 python sdutil cp sd://osdu/testsubp/file-name-at-ddms.txt local-dir/file-name-a-tdestination.txt
 ```
+
+
+## Setup and Usage for Azure env
+Below steps are for windows subsystem linux - ubuntu 20.04
+* Checkout the source code from community [gitlab](https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil.git)
+
+* In case python virtual env is not installed, use below commands else skip to next section
+```
+sudo apt-get update
+sudo apt-get install python3-venv 
+```
+
+* create new venv and install package
+```
+#create new virtual env with name : sdutilenv
+python3 -m venv sdutilenv
+
+#activate the virtual end
+source sdutilenv/bin/Activate
+
+#install python package for sdutil
+pip install -r requirements.txt
+
+```
+
+* replace/edit config.yaml in sdlib/config.yaml by this [config-azure.yaml]https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil/-/blob/master/docs/config-azure.yaml)
+
+* export or set below environment variables
+```
+export AZURE_TENANT_ID=check-env-provisioning-team-as-specific-to-cluster
+export AZURE_CLIENT_ID=check-env-provisioning-team-as-specific-to-cluster
+export AZURE_PRINCIPAL_ID=check-env-provisioning-team-as-specific-to-cluster
+export AZURE_PRINCIPAL_SECRET=check-env-provisioning-team-as-specific-to-cluster
+
+```
+* Run below commands to login, list, upload and download
+```
+python sdutil config init
+python sdutil auth login
+
+# Should display login success message. Credentials expiry set to 1 hour. 
+python sdutil ls sd://<tenant> e.g. sd://opendes
+python sdutil ls sd://<tenant>/<subproject> e.g. sd://opendes/test
+#upload file
+python sdutil cp local-dir/file-name-at-source.txt sd://opendes/test/file-name-at-destination.txt
+
+#download file
+python sdutil cp sd://opendes/test/file-name-at-ddms.txt local-dir/file-name-at-destination.txt
+```
