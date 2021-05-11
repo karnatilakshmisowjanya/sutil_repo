@@ -1,0 +1,19 @@
+seistore:
+  service: '{"azure-sdutil": {"azureGlabEnv":{"url": "https://osdu-glab.msft-osdu-test.org/seistore-svc/api/v3", "appkey": ""}}}'
+  url: 'https://osdu-glab.msft-osdu-test.org/seistore-svc/api/v3'
+  cloud_provider: 'azure'
+  env: 'glab'
+  auth-mode: 'JWT Token'
+  ssl_verify: False
+auth_provider:
+  azure: '{
+         "provider": "azure",
+         "authorize_url": "https://login.microsoftonline.com/",
+         "oauth_token_host_end": "/oauth2/token",
+         "grant_type": "authorization_code",
+         "scope_end":"/.default openid profile offline_access",
+         "redirect_uri":"http://localhost:8080",
+         "login_grant_type": "client_credentials"
+         }'
+azure:
+  empty: 'none'
