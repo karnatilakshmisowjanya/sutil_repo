@@ -49,9 +49,10 @@ def login(configuration: Oauth2Configuration):
     authority_uri=_configuration.oauht2_authorize_url
     auth_obj = {
             "grant_type": _configuration.oauth2_login_grant_type,
-            "client_id": _configuration.oauth2_principal_id,
-            "client_secret": _configuration.oauth2_principal_secret,
-            "resource": _configuration.oauth2_client_id
+            "client_id": _configuration.oauth2_client_id,
+            "client_secret": _configuration.oauth2_client_secret,
+            "refresh_token": _configuration.oauth2_refresh_token,
+            "scope": _configuration.oauth2_scopes
         }
 
     x = requests.post(authority_uri, data = auth_obj)
@@ -67,4 +68,4 @@ def login(configuration: Oauth2Configuration):
     with open(_configuration.token_file, "w") as fh:
         json.dump(token, fh)
 
-    print("Successfully logged into Azure SDUTIL. Credientials expire in 1 hour")
+    print("Successfully logged into Azure SDUTIL.")

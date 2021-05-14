@@ -341,12 +341,13 @@ pip install -r requirements.txt
 
 * replace/edit config.yaml in sdlib/config.yaml by this [config-azure.yaml]https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil/-/blob/master/docs/config-azure.yaml)
 
+* You need to provide the refresh token for the environment in config.yaml. Follow the directions in [osduauth](https://community.opengroup.org/osdu/platform/deployment-and-operations/infra-azure-provisioning/-/tree/master/tools/rest/osduauth) to obtain a token and once obtained save the value in settings.
+
 * export or set below environment variables
 ```
 export AZURE_TENANT_ID=check-env-provisioning-team-as-specific-to-cluster
 export AZURE_CLIENT_ID=check-env-provisioning-team-as-specific-to-cluster
-export AZURE_PRINCIPAL_ID=check-env-provisioning-team-as-specific-to-cluster
-export AZURE_PRINCIPAL_SECRET=check-env-provisioning-team-as-specific-to-cluster
+export AZURE_CLIENT_SECRET=check-env-provisioning-team-as-specific-to-cluster
 
 ```
 * Run below commands to login, list, upload and download
