@@ -30,7 +30,6 @@ class Oauth2Configuration(object):
         assert 'provider' in configuration , "\nThe \"provider\" configuration has not been found in the \"auth_provider:oauth2\" section of the config.yaml"
         assert 'authorize_url' in configuration , "\nThe \"authorize_url\" configuration has not been found in the \"auth_provider:oauth2\" section of the config.yaml"
         assert 'oauth_token_host_end' in configuration , "\nThe \"oauth_token_host_end\" configuration has not been found in the \"auth_provider:oauth2\" section of the config.yaml"
-        assert 'grant_type' in configuration , "\nThe \"grant_type\" configuration has not been found in the \"auth_provider:oauth2\" section of the config.yaml"
         assert 'scope_end' in configuration , "\nThe \"scope_end\" configuration has not been found in the \"auth_provider:oauth2\" section of the config.yaml"
         assert 'redirect_uri' in configuration , "\nThe \"redirect_uri\" configuration has not been found in the \"auth_provider:oauth2\" section of the config.yaml"
         assert 'login_grant_type' in configuration , "\nThe \"login_grant_type\" configuration has not been found in the \"auth_provider:oauth2\" section of the config.yaml"
@@ -39,7 +38,6 @@ class Oauth2Configuration(object):
         self.oauht2_provider = configuration['provider']
         self.azure_authorize_url = configuration['authorize_url']
         self.oauht2_token_host_end = configuration['oauth_token_host_end']
-        self.oauht2_grant_type = configuration['grant_type']
         self.oauth2_redirect_uri = configuration["redirect_uri"]
         self.oauth2_login_grant_type = configuration["login_grant_type"]
         self.oauth2_refresh_token = configuration["refresh_token"]
