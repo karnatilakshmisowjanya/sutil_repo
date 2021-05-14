@@ -34,6 +34,7 @@ class Oauth2Configuration(object):
         assert 'scope_end' in configuration , "\nThe \"scope_end\" configuration has not been found in the \"auth_provider:oauth2\" section of the config.yaml"
         assert 'redirect_uri' in configuration , "\nThe \"redirect_uri\" configuration has not been found in the \"auth_provider:oauth2\" section of the config.yaml"
         assert 'login_grant_type' in configuration , "\nThe \"login_grant_type\" configuration has not been found in the \"auth_provider:oauth2\" section of the config.yaml"
+        assert 'refresh_token' in configuration , "\nThe \"refresh_token\" configuration has not been found in the \"auth_provider:oauth2\" section of the config.yaml"
        
         self.oauht2_provider = configuration['provider']
         self.azure_authorize_url = configuration['authorize_url']
@@ -41,24 +42,21 @@ class Oauth2Configuration(object):
         self.oauht2_grant_type = configuration['grant_type']
         self.oauth2_redirect_uri = configuration["redirect_uri"]
         self.oauth2_login_grant_type = configuration["login_grant_type"]
+        self.oauth2_refresh_token = configuration["refresh_token"]
 
         self.azure_tenant_id = os.getenv("AZURE_TENANT_ID")
         if not self.azure_tenant_id:
-            raise Exception('\AZURE_TENANT_ID is required but have not been found in the environement.')
+            raise Exception('\AZURE TENANT ID is required but have not been found in the environement.')
 
         self.oauth2_client_id = os.getenv("AZURE_CLIENT_ID")
         if not self.oauth2_client_id:
-            raise Exception('\AZURE_CLIENT_ID is required but have not been found in the environement.')
+            raise Exception('\AZURE CLIENT ID is required but have not been found in the environement.')
 
-        self.oauth2_principal_id = os.getenv("AZURE_PRINCIPAL_ID")
-        if not self.oauth2_principal_id:
-            raise Exception('\AZURE_PRINCIPAL_ID is required but have not been found in the environement.')
+        self.oauth2_client_secret = os.getenv("AZURE_CLIENT_SECRET")
+        if not self.oauth2_client_secret:
+            raise Exception('\AZURE CLIENT SECRET is required but have not been found in the environement.')
 
-        self.oauth2_principal_secret = os.getenv("AZURE_PRINCIPAL_SECRET")
-        if not self.oauth2_principal_secret:
-            raise Exception('\AZURE_PRINCIPAL_SECRET is required but have not been found in the environement.')
-
-
+        
         self.oauht2_authorize_url = self.azure_authorize_url + self.azure_tenant_id + self.oauht2_token_host_end
         self.oauth2_scopes = self.oauth2_client_id + configuration["scope_end"]
 
