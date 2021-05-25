@@ -21,24 +21,23 @@ import tqdm
 from botocore.exceptions import ClientError
 from sdlib.api.dataset import Dataset
 from sdlib.api.storage_service import StorageFactory, StorageService
+from sdlib.api.seismic_store_service import SeismicStoreService
 
 
 @StorageFactory.register(provider="ibm")
 class IbmStorageService(StorageService):
     _endpointURL = None
-    _access_key = None
-    _secret_key = None
     _region = None
     _signature_version = 's3v4'
 
     _s3_resource = None
     _s3_client = None
+    _seistore_svc = None
 
     def __init__(self, auth, *args, **kwargs):
         super().__init__(auth, *args, **kwargs)
+        self._seistore_svc = SeismicStoreService(auth=auth)
         self._endpointURL = os.getenv("COS_URL", "NA")
-        self._access_key = os.getenv("COS_ACCESS_KEY", "NA")
-        self._secret_key = os.getenv("COS_SECRET_KEY", "NA")
         self._region = os.getenv("COS_REGION", "NA")
 
     def upload(self, file_name: str, dataset: Dataset, object_name=None):
@@ -62,7 +61,7 @@ class IbmStorageService(StorageService):
             object_name = f"{s3_folder_name}/{dataset.name}"
 
         if self._s3_client is None:
-            self._s3_client = self.get_s3_client(self)
+            self._s3_client = self.get_s3_client(self, dataset)
 
         try:
             self._s3_client.create_bucket(Bucket=bucket_name, )
@@ -104,7 +103,7 @@ class IbmStorageService(StorageService):
         bar_format = '- Downloading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
 
         if self._s3_client is None:
-            self._s3_client = self.get_s3_client(self)
+            self._s3_client = self.get_s3_client(self, dataset)
 
         transfer = S3Transfer(self._s3_client)
 
@@ -129,14 +128,20 @@ class IbmStorageService(StorageService):
         return inner
 
     @staticmethod
-    def get_s3_client(self):
+    def get_s3_client(self, dataset):
         print("IBMBlobStorageFactory().get_s3_client")
+        response = self._seistore_svc.get_storage_access_token(tenant=dataset.tenant, subproject=dataset.subproject,
+                                                               readonly=False)
+        # the response will be "acess_key_id:secret_key:session_token", so we parse it
+        access_key_id, secret_key, session_token = response.split(":")
+
         if self._s3_resource is None:
             print("IBMBlobStorageFactory()._s3_resource is None")
             _s3_resource = boto3.resource('s3',
                                           endpoint_url=self._endpointURL,
-                                          aws_access_key_id=self._access_key,
-                                          aws_secret_access_key=self._secret_key,
+                                          aws_access_key_id=access_key_id,
+                                          aws_secret_access_key=secret_key,
+                                          aws_session_token=session_token,
                                           config=Config(signature_version=self._signature_version),
                                           region_name=self._region)
             print("IBMBlobStorageFactory()._s3_resource: ", _s3_resource)
