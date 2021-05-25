@@ -156,7 +156,7 @@ class SeismicStoreService(object):
         if resp.status_code == 202 or resp.status_code == 200:
             print(resp.json())
         else:
-            raise Exception('\n[' + str(resp.status_code) + '] ' + resp.json())
+            raise Exception('\n[' + str(resp.status_code) + '] ' + resp.text)
 
     def dataset_register(self, sdpath, sdtype=None, legal_tag=None,
                          seismicmeta=None):
