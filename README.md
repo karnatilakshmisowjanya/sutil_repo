@@ -288,7 +288,7 @@ pip install -r requirements.txt
 
 ```
 
-* replace/edit config.yaml in sdlib/config.yaml by this [config.yaml](https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil/-/raw/ibm-documentation/docs/config-ibm.yaml)
+* replace/edit config.yaml in sdlib/config.yaml by this [config.yaml](https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil/-/raw/master/docs/config-ibm.yaml)
 
 * export or set below environment variables
 ```
@@ -296,8 +296,6 @@ export OAUTH2_CLIENT_ID=check-env-provisioning-team-as-specific-to-cluster
 export OAUTH2_CLIENT_SECRET=check-env-provisioning-team-as-specific-to-cluster
 export OAUTH2_CLIENT_REDIRECT_URL=http://localhost:4300/auth/callback
 export COS_URL=minio-url-specific-to-the-cluster
-export COS_ACCESS_KEY=minio-access-key-specific-to-the-cluster
-export COS_SECRET_KEY=minio-secret-key-specific-to-the-cluster
 export COS_REGION=us-east-1
 ```
 * Run below commands to login, list, upload and download
