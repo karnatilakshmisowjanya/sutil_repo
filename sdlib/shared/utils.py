@@ -22,11 +22,6 @@ from sdlib.shared.config import Config
 class Utils(object):
 
     @staticmethod
-    def isValidEmail(email):
-        email_regex = r"^[\w-]+(\.[\w-]+)*@[\w-]+(\.[\w-]+)*(\.[a-z]{2,4})$"
-        return bool(re.match(email_regex, str(email).lower()))
-
-    @staticmethod
     def isSDPath(sdpath):
         return str(sdpath).startswith(Config.SDPATH_PREFIX)
 

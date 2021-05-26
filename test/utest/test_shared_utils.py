@@ -29,11 +29,6 @@ from test.utest import SdUtilTestCase
 
 
 class TestUtils(SdUtilTestCase):
-    def test_isValidEmail(self):
-        self.assertTrue(Utils.isValidEmail('user@domain.com'))
-        self.assertFalse(Utils.isValidEmail('user@domain'))
-        self.assertFalse(Utils.isValidEmail('userdomain@'))
-        self.assertFalse(Utils.isValidEmail('user'))
 
     def test_isSDPath(self):
         self.assertTrue(Utils.isSDPath('sd://tnx01/spx01/a/b/c/dsx01'))
