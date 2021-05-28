@@ -1,5 +1,5 @@
 seistore:
-  service: '{"azure-sdutil": {"azureGlabEnv":{"url": "https://osdu-glab.msft-osdu-test.org/seistore-svc/api/v3", "appkey": ""}}}'
+  service: '{"azure": {"azureGlabEnv":{"url": "https://osdu-glab.msft-osdu-test.org/seistore-svc/api/v3", "appkey": ""}}}'
   url: 'https://osdu-glab.msft-osdu-test.org/seistore-svc/api/v3'
   cloud_provider: 'azure'
   env: 'glab'
