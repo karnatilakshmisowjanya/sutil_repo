@@ -45,7 +45,7 @@ class Dataset(object):
         dataset.subproject = data['subproject']
         dataset.path = data['path']
         dataset.name = data['name']
-        dataset.created_by = data['created_by']
+        dataset.created_by = data.get('created_by', None)
         dataset.dstype = data.get('type', None)
         dataset.created_date = data['created_date']
         dataset.last_modified_date = data['last_modified_date']
