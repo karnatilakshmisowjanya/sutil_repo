@@ -64,7 +64,9 @@ class Config(object):
 
         # load configurations as json
         cls.__configuration['seistore']['service'] = json.loads(cls.__configuration['seistore']['service'])
-        cls.__configuration['auth_provider'][auth_provider_name] = json.loads(cls.__configuration['auth_provider'][auth_provider_name])
+        auth_config = cls.__configuration['auth_provider'][auth_provider_name]
+        if auth_config != '#{config.auth_provider.default}#' and auth_config != None and len(auth_config) > 0 :
+            cls.__configuration['auth_provider'][auth_provider_name] = json.loads(cls.__configuration['auth_provider'][auth_provider_name])
 
 
     @classmethod
