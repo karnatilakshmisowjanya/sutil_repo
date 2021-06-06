@@ -68,15 +68,6 @@ class App(SDUtilCMD):
         svcemail = args[0]
         args.pop(0)
 
-        # check that it's a valid email
-        if Utils.isValidEmail(svcemail) is False:
-            raise Exception(
-                '\n' +
-                'Wrong Command: ' + svcemail +
-                ' is not a valid email.\n'
-                '               For more information type "python sdutil app"'
-                ' to open the command help menu.')
-
         if not args:
             self.help()
 
@@ -105,15 +96,6 @@ class App(SDUtilCMD):
 
         svcemail = args[0]
         args.pop(0)
-
-        # check that it's a valid email
-        if Utils.isValidEmail(svcemail) is False:
-            raise Exception(
-                '\n' +
-                'Wrong Command: ' + svcemail +
-                ' is not a valid email.\n'
-                '               For more information type "python sdutil app"'
-                ' to open the command help menu.')
 
         if not args:
             self.help()
