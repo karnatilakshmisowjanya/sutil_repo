@@ -132,10 +132,18 @@ class User(SDUtilCMD):
         sys.stdout.flush()
         print('')
         ml = max([len(row[0]) for row in rx]) + 3
+        admins = []
         for item in rx:
-            print('- ' + item[0], end='')
-            print(' ' * (ml - len(item[0])), end='')
-            print(item[1])
+            if item[1] == 'admin':
+                admins.append(item[0])
+                print('- ' + item[0], end='')
+                print(' ' * (ml - len(item[0])), end='')
+                print(item[1])                
+            else:
+                if item[0] not in admins:
+                    print('- ' + item[0], end='')
+                    print(' ' * (ml - len(item[0])), end='')
+                    print(item[1])
 
     def remove(self, args):
         if not args:
