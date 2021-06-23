@@ -13,16 +13,17 @@
 # limitations under the License.
 
 from __future__ import print_function
+import math
 import os
+import sys
+import time
 import boto3
-from boto3.s3.transfer import S3Transfer
+from boto3.s3.transfer import S3Transfer, TransferConfig
 from botocore.client import Config
 import tqdm
-from botocore.exceptions import ClientError
 from sdlib.api.dataset import Dataset
 from sdlib.api.storage_service import StorageFactory, StorageService
 from sdlib.api.seismic_store_service import SeismicStoreService
-
 
 @StorageFactory.register(provider="ibm")
 class IbmStorageService(StorageService):
@@ -39,43 +40,34 @@ class IbmStorageService(StorageService):
         self._seistore_svc = SeismicStoreService(auth=auth)
         self._endpointURL = os.getenv("COS_URL", "NA")
         self._region = os.getenv("COS_REGION", "NA")
+        self._chunkSize = 20 * 1048576
 
     def upload(self, file_name: str, dataset: Dataset, object_name=None):
         """Upload file to S3 bucket
 
-        Args:
-            file_name (str): the path to the local file
-            dataset (str): the dataset where this file should be uploaded
-            object_name (str, optional): S3 object key. Default is None.
+               Args:
+                   file_name (str): the path to the local file
+                   dataset (str): the dataset where this file should be uploaded
+                   object_name (str, optional): S3 object key. Default is None.
 
-        Returns:
-            bool: did the upload succeed?
-        """
+               Returns:
+                   bool: did the upload succeed?
+               """
 
-        # for now IBM's gcsurl is "bucket_name$$subproject_folder/dataset_folder"
         bucket_name, s3_folder_name = dataset.gcsurl.split('/')
-        print(dataset.gcsurl)
-
-        # If S3 object_name was not specified, use file_name
-        if object_name is None:
-            object_name = f"{s3_folder_name}/{dataset.name}"
+        object_name = f"{s3_folder_name}/" + "0"
 
         if self._s3_client is None:
             self._s3_client = self.get_s3_client(self, dataset)
-
-        try:
-            self._s3_client.create_bucket(Bucket=bucket_name, )
-        except ClientError as err:
-            print(err)
-
-        transfer = S3Transfer(self._s3_client)
+        transfer_config = TransferConfig(multipart_threshold=9999999999999999, use_threads=True, max_concurrency=10)
+        transfer = S3Transfer(client=self._s3_client, config=transfer_config)
 
         bar_format = '- Uploading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
-
-        # Upload the file
-        with tqdm.tqdm(total=os.path.getsize(file_name), bar_format=bar_format, unit='B', unit_scale=True,
-                       unit_divisor=1024) as pbar:
-            transfer.upload_file(file_name, bucket_name, object_name, callback=IbmStorageService._progress_hook(pbar))
+        with tqdm.tqdm(
+            total=os.path.getsize(file_name), bar_format=bar_format, 
+            unit='B', unit_scale=True, unit_divisor=1024) as pbar:
+                transfer.upload_file(filename=file_name, bucket=bucket_name, key=object_name, callback=IbmStorageService._progress_hook(pbar))
+        print("File [" + file_name + "] uploaded successfully")
 
         return True
 
@@ -94,26 +86,52 @@ class IbmStorageService(StorageService):
         """
 
         bucket_name, s3_folder_name = dataset.gcsurl.split('/')
-        # parse object name from the URL
-        object_name = f"{s3_folder_name}/{dataset.name}"
+        start_time = time.time()
 
-        # get object's size from attr
-        object_size = dataset.filemetadata['size']
-        # create tqdm progress bar template
-        bar_format = '- Downloading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
-
-        if self._s3_client is None:
-            self._s3_client = self.get_s3_client(self, dataset)
-
-        transfer = S3Transfer(self._s3_client)
-
-        # Download the file
-        with tqdm.tqdm(total=object_size, bar_format=bar_format, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
-            transfer.download_file(bucket_name, object_name, local_filename,
-                                   callback=IbmStorageService._progress_hook(pbar))
+        # download partial objects
+        cursize = 0
+        with open(local_filename, 'wb') as localFile:
+            nobjects = dataset.filemetadata['nobjects']
+            for obj in range(0, nobjects):
+                object_name = f"{s3_folder_name}/" + str(obj)
+                cursize_incr = self.downloadObject(localFile, bucket_name, object_name, dataset, cursize)
+                cursize =+ cursize_incr
+            ctime = time.time() - start_time + sys.float_info.epsilon
+            speed = str(round(((dataset.filemetadata['size'] / 1048576.0) / ctime), 3))
+            print('- Transfer completed: ' + speed + ' [MB/s]')
 
         return True
 
+    def downloadObject(self, localFile, bucket, obj, dataset, cursize):
+
+        if self._s3_client is None:
+            self._s3_client = self.get_s3_client(self, dataset)
+    
+        objsize = int(self._s3_resource.Object(bucket, obj).content_length)
+        ntrx = int(math.floor(objsize / self._chunkSize))
+        rtrx_size = objsize - ntrx * self._chunkSize
+
+        # bar='- Downloading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
+        # with tqdm(total=dataset.filemetadata['size'], bar_format=bar, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
+        for ii in range(0, ntrx):
+            start_byte = self._chunkSize * ii
+            stop_byte = self._chunkSize * (ii + 1) - 1
+            resp = self._s3_client.get_object(Bucket=bucket, Key=obj, Range='bytes={}-{}'.format(start_byte, stop_byte))
+            for i in resp['Body']:
+                localFile.write(i)
+
+            cursize = cursize + self._chunkSize
+
+        if rtrx_size != 0:
+            start_byte = self._chunkSize * ntrx
+            stop_byte = self._chunkSize * ntrx + rtrx_size - 1
+            resp = self._s3_client.get_object(Bucket=bucket, Key=obj, Range='bytes={}-{}'.format(start_byte, stop_byte))
+            for i in resp['Body']:
+                localFile.write(i)
+
+        return objsize
+
+    
     @staticmethod
     def _progress_hook(tqdm_instance):
         """update tqdm progress bar
@@ -129,23 +147,28 @@ class IbmStorageService(StorageService):
 
     @staticmethod
     def get_s3_client(self, dataset):
-        print("IBMBlobStorageFactory().get_s3_client")
-        response = self._seistore_svc.get_storage_access_token(tenant=dataset.tenant, subproject=dataset.subproject,
-                                                               readonly=False)
-        # the response will be "acess_key_id:secret_key:session_token", so we parse it
+
+        response = self._seistore_svc.get_storage_access_token(
+            tenant=dataset.tenant, subproject=dataset.subproject,readonly=False)
+
         access_key_id, secret_key, session_token = response.split(":")
 
         if self._s3_resource is None:
-            print("IBMBlobStorageFactory()._s3_resource is None")
-            _s3_resource = boto3.resource('s3',
-                                          endpoint_url=self._endpointURL,
-                                          aws_access_key_id=access_key_id,
-                                          aws_secret_access_key=secret_key,
-                                          aws_session_token=session_token,
-                                          config=Config(signature_version=self._signature_version),
-                                          region_name=self._region)
-            print("IBMBlobStorageFactory()._s3_resource: ", _s3_resource)
+            self._s3_resource = boto3.resource(
+                's3',
+                endpoint_url=self._endpointURL,
+                aws_access_key_id=access_key_id,
+                aws_secret_access_key=secret_key,
+                aws_session_token=session_token,
+                config=Config(
+                signature_version=self._signature_version,
+                connect_timeout=6000,
+                read_timeout=6000,
+                retries={
+                    'total_max_attempts':10,
+                    'mode': 'standard'
+                }),
+                region_name=self._region)
 
-        s3_client = _s3_resource.meta.client
-        print("IBMBlobStorageFactory().s3_client: ", s3_client)
+        s3_client = self._s3_resource.meta.client
         return s3_client
