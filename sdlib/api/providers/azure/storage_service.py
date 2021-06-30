@@ -81,22 +81,29 @@ class AzureStorageService(StorageService):
         dataset_id = gcsurl[1]
         blob_size = dataset.filemetadata["size"]
         sas_url = self._get_sas_url(dataset, False)
+        counter = 0
+        current_size = 0
+        try:
+            with open(localfilename, 'wb') as lfile:
+                while(current_size < blob_size):
+                    with ContainerClient.from_container_url(container_url=sas_url) as container_client:
+                        with container_client.get_blob_client(str(counter)) as blob_client:
+                            bar='- Downloading Chunk Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
+                            with tqdm(total=blob_size, bar_format=bar, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
+                                def callback(response):
+                                    current = response.context['download_stream_current']
+                                    if current is not None:
+                                        pbar.update(current)
 
-        with open(localfilename, 'wb') as lfile:
-            with ContainerClient.from_container_url(container_url=sas_url) as container_client:
-                with container_client.get_blob_client("0") as blob_client:
-                    bar='- Downloading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
-                    with tqdm(total=blob_size, bar_format=bar, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
-                        def callback(response):
-                                current = response.context['download_stream_current']
-                                if current is not None:
-                                    pbar.update(current)
-
-                        blob_client.download_blob(max_concurrency=self._max_concurrency,
-                                                  validate_content=True,raw_response_hook=callback).readinto(lfile)
- 
-            lfile.close()
-            print('- Transfer completed')
+                            blob_client.download_blob(max_concurrency=blob_size,
+                                                validate_content=True,raw_response_hook=callback).readinto(lfile)
+                            counter=counter+1
+                            current_size = os.fstat(lfile.fileno()).st_size
+        except:                   
+            print("Finished Chunks")
+            
+        lfile.close()
+        print('- Transfer completed')
 
         if dataset.seismicmeta is not None:
             with open(localfilename + '_seismicmeta.json', 'w') as outfile:
