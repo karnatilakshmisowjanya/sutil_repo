@@ -76,7 +76,7 @@ class AzureStorageService(StorageService):
 
     def download(self, localfilename, dataset):
         """Downloads dataset(blob) from azure storage container"""
-        print('')
+        print('Begin Download')
         gcsurl = dataset.gcsurl.split("/")
         dataset_id = gcsurl[1]
         blob_size = dataset.filemetadata["size"]
@@ -86,19 +86,23 @@ class AzureStorageService(StorageService):
         try:
             with open(localfilename, 'wb') as lfile:
                 while(current_size < blob_size):
-                    with ContainerClient.from_container_url(container_url=sas_url) as container_client:
+                    with ContainerClient.from_container_url(container_url=sas_url,
+                                                            max_block_size=self._chunkSize, 
+                                                            use_byte_buffer=True, 
+                                                            max_concurrency=self._max_concurrency, 
+                                                            max_single_put_size=self._max_single_put_size) as container_client:
                         with container_client.get_blob_client(str(counter)) as blob_client:
-                            bar='- Downloading Chunk Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
-                            with tqdm(total=blob_size, bar_format=bar, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
-                                def callback(response):
-                                    current = response.context['download_stream_current']
-                                    if current is not None:
-                                        pbar.update(current)
-
-                            blob_client.download_blob(max_concurrency=blob_size,
-                                                validate_content=True,raw_response_hook=callback).readinto(lfile)
+                           # bar='- Downloading Chunk Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
+                           # with tqdm(total=blob_size, bar_format=bar, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
+                           #     def callback(response):
+                           #         current = response.context['download_stream_current']
+                           #         if current is not None:
+                           #             pbar.update(current)
+                            print("Downloading Chunk # " + str(counter + 1))
+                            blob_client.download_blob(validate_content=True).readinto(lfile)
                             counter=counter+1
                             current_size = os.fstat(lfile.fileno()).st_size
+                            print("Current: " + str(current_size) + " of " + str(blob_size))
         except:                   
             print("Finished Chunks")
             
