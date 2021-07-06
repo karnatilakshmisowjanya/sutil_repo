@@ -20,6 +20,7 @@ import webbrowser
 import stat
 
 from authlib.integrations.flask_client import OAuth
+from authlib.integrations.requests_client import OAuth2Session
 from six.moves import cPickle as pickle
 
 from flask import Flask, request
@@ -43,7 +44,11 @@ def callback():
     global _configuration
     global _oauth_client
 
-    token = _oauth_client.authorize_access_token()
+    oauth_state = request.args.get('state')
+    myclient = OAuth2Session(_configuration.oauth2_client_id, _configuration.oauth2_client_secret, state=oauth_state, redirect_uri=_configuration.oauth2_client_redirect_url)
+    token = myclient.fetch_token(_configuration.oauht2_access_token_url, authorization_response=request.url)
+
+    #token = _oauth_client.authorize_access_token()
     userinfo = _oauth_client.parse_id_token(token)
 
     # ensure the directory exist if not create it
