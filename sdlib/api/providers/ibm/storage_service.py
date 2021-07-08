@@ -69,6 +69,7 @@ class IbmStorageService(StorageService):
                 transfer.upload_file(filename=file_name, bucket=bucket_name, key=object_name, callback=IbmStorageService._progress_hook(pbar))
         print("File [" + file_name + "] uploaded successfully")
 
+        self._seistore_svc.auth.refresh()
         return True
 
     def download(self, local_filename: str, dataset: Dataset):
