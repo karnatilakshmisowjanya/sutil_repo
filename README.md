@@ -362,3 +362,62 @@ python sdutil cp local-dir/file-name-at-source.txt sd://opendes/test/file-name-a
 #download file
 python sdutil cp sd://opendes/test/file-name-at-ddms.txt local-dir/file-name-at-destination.txt
 ```
+
+## Setup and Usage for AWS env
+* Checkout the source code from community [gitlab](https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil.git)
+
+* In case python virtual env is not installed, use below commands else skip to next section
+```
+pip install virtualenv
+# Note that you may need to add the installed virtualenv command to your PATH
+```
+
+* Create new virtual environment and install package
+```
+# Create new virtual environment with name : sdutilenv
+virtualenv sdutilenv
+
+# Activate the virtual environment
+## Windows CMD
+./sdutilenv/scripts/activate.bat
+## Windows Powershell
+./sdutilenv/scripts/Activate.ps1
+## Linux Bash
+source ./sdutilenv/bin/activate
+
+#install python package for sdutil
+pip install -r requirements.txt
+
+```
+
+* Replace/edit config.yaml in sdlib/config.yaml by this [config-aws.yaml](https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil/-/blob/master/docs/config-aws.yaml)
+
+* You need to provide the OSDU HTTPS url and the Cognito client id. Use the default Cognito client id without the client secret
+
+* You will also need to ensure that you have AWS credentials set up on your development machine with a profile defined for the AWS account that hosts your OSDU
+
+* Export or set below environment variables
+```
+export AWS_PROFILE=aws-profile-name
+```
+
+* Optionally export or set below environment variables to simplify authentication process
+```
+export COGNITO_USER=cognito-username
+export COGNITO_PASSWORD=cognito-password
+```
+
+* Run below commands to login, list, upload and download
+```
+python sdutil config init
+python sdutil auth login
+
+# Should display login success message. Credentials expiry set to 1 hour. 
+python sdutil ls sd://<tenant> e.g. sd://opendes
+python sdutil ls sd://<tenant>/<subproject> e.g. sd://opendes/test
+# Upload file
+python sdutil cp local-dir/file-name-at-source.txt sd://opendes/test/file-name-at-destination.txt
+
+# Download file
+python sdutil cp sd://opendes/test/file-name-at-ddms.txt local-dir/file-name-at-destination.txt
+```

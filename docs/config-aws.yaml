@@ -1,4 +1,5 @@
-# Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+# ***************************************************************************
+# Copyright 2017-2019, Schlumberger
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,5 +12,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# ***************************************************************************
+seistore:
+  service: '{"aws": {"osdu":{"url": "<HTTPS_OSDU_URL>/api/seismic-store/v3", "appkey": ""}}}'
+  url: '<HTTPS_OSDU_URL>/api/seismic-store/v3'
+  cloud_provider: 'aws'
+  env: 'osdu'
+  auth-mode: 'JWT Token'
+  ssl_verify: False
+auth_provider:
+  aws: '{
+          "provider": "aws",
+          "cognito_client_id": "<COGNITO_CLIENT_ID>"
+        }'
 
-from .auth_service import AwsAuthService
