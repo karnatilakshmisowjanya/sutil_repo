@@ -1,0 +1,19 @@
+osdu-package:
+  stage: deploy
+  image: ubuntu
+  dependencies:
+    - compile-and-unit-test
+  script:
+    - apt-get update
+    - apt-get install curl -y
+    - apt-get install tar -y
+    - apt-get install gzip -y
+    - apt-get install git -y
+    - version_major=2
+    - version_minor=2
+    - PACKAGE_VERSION=${version_major}.${version_minor}.$CI_PIPELINE_IID
+    - tar --directory=dist -cf - . | gzip > sdutil.tar.gz
+    - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file sdutil.tar.gz "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/sdutil/$PACKAGE_VERSION/sdutil.tar.gz"'
+  only:
+    refs:
+      - master
