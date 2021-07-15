@@ -6,14 +6,15 @@
         "  *subproject   : the seismic store subproject path. sd://<tenant>/<subproject>\n",
         "  (options)     | --ltag=<value> the legal tag",
         "                | --recursive apply the patch recursively (subproject only)",
-        "                | --idtoken=<value>  pass id token to use, rather than generating a new one\n",
+        "                | --idtoken=<value>  pass id token to use, rather than generating a new one",
+        "                | --access-policy=<dataset> access policy of the subproject to be patched. allowed value is dataset\n",
         "> python sdutil patch *dataset (options)\n",
         "  patch a seismic store dataset\n",
         "  *dataset      : the seismic store dataset path. sd://<tenant>/<subproject>/<path>/<dataset>\n",
         "  (options)     | --seismicmeta=<value> the seismic storage metadata file (json format for dataset only)",
         "                | --ltag=<value> the legal tag",
         "                | --readonly=<true|false> set the dataset as readonly ",
-        "                | --idtoken=<value>  pass id token to use, rather than generating a new one"        
+        "                | --idtoken=<value>  pass id token to use, rather than generating a new one"
     ],
     "name": "patch"
 }

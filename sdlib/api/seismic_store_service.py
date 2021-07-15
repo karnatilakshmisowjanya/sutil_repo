@@ -35,7 +35,7 @@ class SeismicStoreService(object):
 
 
     def create_subproject(self, tenant, subproject, owner_email, gcsclass,
-                          gcsloc, legal_tag):
+                          gcsloc, legal_tag, access_policy):
 
         url = Config.get_svc_url() + '/subproject/tenant/' + \
             tenant + '/subproject/' + subproject
@@ -43,7 +43,8 @@ class SeismicStoreService(object):
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey(),
-            'ltag': legal_tag
+            'ltag': legal_tag,
+            'access-policy': access_policy
         }
 
         if gcsclass is not None and gcsloc is not None:
@@ -56,6 +57,10 @@ class SeismicStoreService(object):
             body = {
                 'admin': owner_email
             }
+
+        if access_policy:
+            body["access_policy"] = access_policy
+        
 
         resp = requests.post(url=url, json=body, headers=header, verify=Config.get_ssl_verify())
         if resp.status_code != 200:
@@ -92,7 +97,7 @@ class SeismicStoreService(object):
 
         return resp.json()
 
-    def patch_subproject(self, sdpath, legal_tag, recursive = None):
+    def patch_subproject(self, sdpath, legal_tag, recursive = None, access_policy = None):
 
         sdpath = SDPath(sdpath)
 
@@ -107,7 +112,13 @@ class SeismicStoreService(object):
 
         querystring = {"recursive": "true" if recursive is not None else "false"}
 
-        resp = requests.patch(url=url, headers=header, params=querystring,verify=Config.get_ssl_verify())
+        if access_policy:
+            body = {
+                "access_policy": access_policy
+            }
+            resp = requests.patch(url=url, headers=header, json=body, params=querystring,verify=Config.get_ssl_verify())
+        else:    
+            resp = requests.patch(url=url, headers=header, params=querystring,verify=Config.get_ssl_verify())
         if resp.status_code != 200:
             raise Exception('\n[' + str(resp.status_code) + '] ' + resp.text)
 

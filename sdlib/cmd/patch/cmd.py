@@ -139,5 +139,5 @@ class Patch(SDUtilCMD):
 
             # patch the subproject
             print('\n Patching the subproject ' + sdpath + ': ', end='')
-            SeismicStoreService(self._auth).patch_subproject(sdpath, subproject_ltag, keyword_args.recursive)
+            SeismicStoreService(self._auth).patch_subproject(sdpath, subproject_ltag, keyword_args.recursive, keyword_args.access_policy)
             print('OK')

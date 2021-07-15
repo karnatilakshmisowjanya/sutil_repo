@@ -13,12 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from __future__ import print_function
 
 import os
 import sys
 
+import six
 from sdlib.api.seismic_store_service import SeismicStoreService
 from sdlib.api.storage_service import StorageFactory
 from sdlib.cmd.cmd import SDUtilCMD
@@ -27,14 +27,12 @@ from sdlib.shared.utils import Utils
 
 
 class Mk(SDUtilCMD):
-
     def __init__(self, auth):
         self._auth = auth
 
     @staticmethod
     def help():
-        reg = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                           'reg.json')
+        reg = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'reg.json')
         CMDHelper.cmd_help(reg)
 
     def execute(self, args, keyword_args):
@@ -46,18 +44,15 @@ class Mk(SDUtilCMD):
         args.pop(0)
 
         if Utils.isSubProject(sdpath):
-            self.mk_subproject(sdpath, args)
+            self.mk_subproject(sdpath, args, keyword_args)
         else:
-            raise Exception(
-                '\n' +
-                'Wrong Command: ' + sdpath +
-                ' is not a valid subproject path.\n'
-                '               The valid arguments is '
-                'sd://<tenant_name>/<subproject_name>.\n'
-                '               For more information type "python sdutil mk"'
-                ' to open the command help menu.')
+            raise Exception('\n' + 'Wrong Command: ' + sdpath + ' is not a valid subproject path.\n'
+                            '               The valid arguments is '
+                            'sd://<tenant_name>/<subproject_name>.\n'
+                            '               For more information type "python sdutil mk"'
+                            ' to open the command help menu.')
 
-    def mk_subproject(self, sdpath, args):
+    def mk_subproject(self, sdpath, args, keyword_args: dict):
         if len(args) < 2:
             self.help()
         owner_email = str(args[0]).lower()
@@ -70,7 +65,7 @@ class Mk(SDUtilCMD):
 
         cl = None
         loc = None
-        if(cloud_provider=="google"):
+        if (cloud_provider == "google"):
 
             storage_provider = StorageFactory.build(sd.get_cloud_provider(sdpath), auth=self._auth)
 
@@ -85,7 +80,7 @@ class Mk(SDUtilCMD):
                 raise Exception("\nInvalid choice.")
             if idx < 1 or idx > len(storage_provider.get_storage_classes()):
                 raise Exception("\nInvalid choice.")
-            cl = storage_provider.get_storage_classes()[idx-1]
+            cl = storage_provider.get_storage_classes()[idx - 1]
 
             if cl == 'REGIONAL':
                 locs = storage_provider.get_storage_regions()
@@ -97,7 +92,7 @@ class Mk(SDUtilCMD):
             print('')
 
             for idx, loc in enumerate(locs):
-                print("["+str(idx+1)+"] " + loc)
+                print("[" + str(idx + 1) + "] " + loc)
             print("\nSelect the bucket storage location: ", end='')
             sys.stdout.flush()
             idx = sys.stdin.readline()
@@ -107,24 +102,26 @@ class Mk(SDUtilCMD):
                 raise Exception("\nInvalid choice.")
             if idx < 1 or idx > len(locs):
                 raise Exception("\nInvalid choice.")
-            loc = locs[idx-1]
-
+            loc = locs[idx - 1]
 
         tenant = Utils.getTenant(sdpath)
         subproject = Utils.getSubproject(sdpath)
 
+        if ('access_policy' in keyword_args.__dict__):
+            access_policy = getattr(keyword_args, 'access_policy')
+            if (access_policy == 'dataset'):
+                question = 'Are you sure the access policy is dataset? If you set it to dataset access policy, then you will be unable to update it to uniform access policy later. Enter'
+                if not six.moves.input(question + " (y/n): ").lower().strip()[:1] == "y":
+                    sys.exit(1)
+        else:
+            access_policy = 'uniform'
+
         print('')
-        message = ('> Registering the subproject {subproject}(tenant={tenant})'
-                   ' with {owner} as admin ... ')
-        print(message.format(**{
-            "subproject": subproject,
-            "tenant": tenant,
-            "owner": owner_email
-        }), end='')
+        message = ('> Registering the subproject {subproject}(tenant={tenant})' ' with {owner} as admin ... ')
+        print(message.format(**{"subproject": subproject, "tenant": tenant, "owner": owner_email}), end='')
         sys.stdout.flush()
 
-        sd.create_subproject(
-            tenant, subproject, owner_email, cl, loc, legal_tag)
+        sd.create_subproject(tenant, subproject, owner_email, cl, loc, legal_tag, access_policy)
 
         print('OK')
         sys.stdout.flush()
