@@ -50,12 +50,12 @@ class TestApiSeismicStore(SdUtilTestCase):
     @patch('requests.post')
     def test_create_subproject(self, mock_request_post):
         mock_request_post.return_value = self.mock_response()
-        self.assertEqual(self.ss.create_subproject('tnx01', 'spx01', 'user@email.com', 'gcsclass', 'gcsloc', 'ltag'),
+        self.assertEqual(self.ss.create_subproject('tnx01', 'spx01', 'user@email.com', 'gcsclass', 'gcsloc', 'ltag', 'uniform'),
                          None)
 
         with self.assertRaises(Exception):
             mock_request_post.return_value = self.mock_response(status=404)
-            self.ss.create_subproject('tnx01', 'spx01', 'user@email.com', 'gcsclass', 'gcsloc', 'ltag')
+            self.ss.create_subproject('tnx01', 'spx01', 'user@email.com', 'gcsclass', 'gcsloc', 'ltag', 'uniform')
 
     @patch('requests.get')
     def test_get_subproject(self, mock_request_get):

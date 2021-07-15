@@ -7,7 +7,9 @@
         "  *sdpath       : the seismic store subproject path. sd://<tenant>/<subproject>",
         "  *admin@email  : the email of the user to be set as the subproject admin",
         "  *legaltag     : the default legal tag for the created subproject\n",
-        "  (options)     | --idtoken=<token> pass the credential token to use, rather than generating a new one"
+        "  (options)     | --idtoken=<token> pass the credential token to use, rather than generating a new one\n",
+        "                | --access-policy=<uniform|dataset> pass the access policy for the subproject. allowed values are uniform or dataset.",
+        "                                                    if the policy is set to dataset, then updating this to uniform later is not allowed."
     ],
     "name": "mk"
 }

@@ -16,16 +16,15 @@
 
 from __future__ import print_function
 
-import sys
 import os
-
-from sdlib.cmd.cmd import SDUtilCMD
-from sdlib.cmd.helper import CMDHelper
-from sdlib.shared.utils import Utils
-from sdlib.shared.config import Config
-from sdlib.shared.sdpath import SDPath
+import sys
 
 from sdlib.api.seismic_store_service import SeismicStoreService
+from sdlib.cmd.cmd import SDUtilCMD
+from sdlib.cmd.helper import CMDHelper
+from sdlib.shared.config import Config
+from sdlib.shared.sdpath import SDPath
+from sdlib.shared.utils import Utils
 
 
 class User(SDUtilCMD):
@@ -75,30 +74,30 @@ class User(SDUtilCMD):
 
         sdpath = str(args[0])
 
-        if Utils.isSubProject(sdpath):
-            args.pop(0)
-            if not args:
-                self.help()
+    
+        args.pop(0)
+        if not args:
+            self.help()
 
-            role = str(args[0])
+        role = str(args[0])
 
-            if role.upper() not in Config.USER_ROLES:
-                raise Exception(
-                    '\nWrong Command: %s is not a valid role' % role +
-                    '               The valid roles are '
-                    '[admin, viewer].\n'
-                    '               For more information type '
-                    '"python sdutil user"'
-                    ' to open the command help menu.')
+        if role.upper() not in Config.USER_ROLES:
+            raise Exception(
+                '\nWrong Command: %s is not a valid role' % role +
+                '               The valid roles are '
+                '[admin, viewer].\n'
+                '               For more information type '
+                '"python sdutil user"'
+                ' to open the command help menu.')
 
-            print('')
-            print('> Register %s as %s in the subproject %s ...'
-                  % (useremail, role, sdpath), end='')
-            sys.stdout.flush()
-            SeismicStoreService(self._auth).user_add(sdpath, useremail, role)
-            print('OK')
-            sys.stdout.flush()
-            return
+        print('')
+        print('> Register %s as %s in the subproject %s ...'
+                % (useremail, role, sdpath), end='')
+        sys.stdout.flush()
+        SeismicStoreService(self._auth).user_add(sdpath, useremail, role)
+        print('OK')
+        sys.stdout.flush()
+        return
 
         raise Exception(
             '\n' +

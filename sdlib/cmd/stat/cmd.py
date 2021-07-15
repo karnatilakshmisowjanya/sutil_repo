@@ -94,6 +94,8 @@ class Stat(SDUtilCMD):
             print(' - Storage Class: ' + res['storage_class'])
         if 'storage_location' in res:
             print(' - Storage Location: ' + res['storage_location'])
+        
+        print(' - Access Policy: ' +  res['access_policy'])
         sys.stdout.flush()
 
     def display_dataset(self, sdpath, detailed_flag):

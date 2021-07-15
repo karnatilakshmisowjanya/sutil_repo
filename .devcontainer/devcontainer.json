@@ -8,19 +8,11 @@
 			"VARIANT": "3"
 		}
 	},
-
-	// Set values for Oauth2
-	// "OAUTH2_CLIENT_ID": "123456789123456789123"
-	// "OAUTH2_CLIENT_SECRET": "1a2b3c4d5e6f7g8h9i1k2"
-	"containerEnv": {
-		"OAUTH2_CLIENT_ID": "123456789123456789123",
-		"OAUTH2_CLIENT_SECRET": "1a2b3c4d5e6f7g8h9i1k2"
-	},
-
-	// Sets *default* container specific settings.json values on container create.
-	// These settings override the settings.json from within the .vscode directory
+	// "containerEnv": {
+	// 	"OAUTH2_CLIENT_ID": "123456789123456789123",
+	// 	"OAUTH2_CLIENT_SECRET": "1a2b3c4d5e6f7g8h9i1k2"
+	// },
 	"settings": {
-		"terminal.integrated.shell.linux": "/bin/bash",
 		"python.linting.enabled": true,
 		"python.linting.pylintEnabled": true,
 		"python.formatting.autopep8Path": "/usr/local/py-utils/venvs/autopep8/bin/autopep8",
@@ -34,14 +26,12 @@
 		"python.linting.pylintPath": "/usr/local/py-utils/venvs/pylint/bin/pylint",
 		"python.testing.pytestPath": "/usr/local/py-utils/venvs/pytest/bin/pytest"
 	},
-
 	// Add the IDs of vs code extensions you want installed when the container is created.
 	"extensions": [
 		"ms-python.python"
 	],
-
-	"postStartCommand": "./../session/post-create/sync_deps.py",
-
-	// This username comes with the prebuilt python image. Prevents interaction as root user.
-	"remoteUser": "vscode"
+	"remoteUser": "vscode",
+	"forwardPorts": [
+		4300
+	]
 }
