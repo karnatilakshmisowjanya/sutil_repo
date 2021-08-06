@@ -16,20 +16,13 @@
 # ***************************************************************************
 
 seistore:
-  # the base URL for the Seismic Store API
-  service: '{"aws": {"awsEnv":{"url": "<api_gateway>/api/seismic-store/v3", "appkey": ""}}}'
-  # service: '{"aws": "value1"}'
-  url: '<api_gateway>/api/seismic-store/v3'
-  cloud_provider: 'aws'
-  key: ''
-  env: 'awsEnv'
-  auth-mode: 'JWT Token'
-  ssl_verify: False
-  APPKEY: ''
-  APPKEY_NAME: ''
+  service: '{
+    "aws":{
+      "awsEnv":{"url":"<osdu_base_url>/api/seismic-store/v3"}
+    }
+  }'
 auth_provider:
-  # the code dynamically creates classes based on this value
-  default: 'aws'
-# the code expects this value to be here, it must match auth_provider.default - don't remove
-aws:
-  empty: 'none'
+  aws: '{
+    "provider":"<cognito_domain_name>", 
+    "cognito_client_id":"<cognito_client_id"
+  }'
