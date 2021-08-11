@@ -19,13 +19,12 @@ from __future__ import print_function
 import os
 import sys
 
-from azure.storage.blob import ContainerClient
-from lxml import html
+from sdlib.api.seismic_store_service import SeismicStoreService
+from sdlib.api.storage_service import StorageFactory, StorageService
 from six.moves import urllib
 from tqdm import tqdm
 
-from sdlib.api.seismic_store_service import SeismicStoreService
-from sdlib.api.storage_service import StorageFactory, StorageService
+from azure.storage.blob import ContainerClient
 
 from ....shared.config import Config
 

@@ -21,4 +21,3 @@ mock
 coverage
 xmlrunner
 unittest-xml-reporting
-lxml
