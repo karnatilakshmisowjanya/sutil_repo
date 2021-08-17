@@ -13,10 +13,13 @@
 # limitations under the License.
 
 from __future__ import print_function
-
+import math
+import sys
+import time
 import os
 import boto3
-from boto3.s3.transfer import S3Transfer
+from boto3.s3.transfer import S3Transfer, TransferConfig
+from botocore.client import Config
 import tqdm
 from sdlib.api.dataset import Dataset
 from sdlib.api.seismic_store_service import SeismicStoreService
@@ -25,11 +28,15 @@ from sdlib.api.storage_service import StorageFactory, StorageService
 @StorageFactory.register(provider="aws")
 class AwsStorageService(StorageService):
     __STORAGE_CLASSES = ['REGIONAL']
+    _s3_client = None
+    _s3_resource = None
+    _signature_version = 's3v4'
 
     def __init__(self, auth):
         super().__init__(auth=auth)
         self._seistore_svc = SeismicStoreService(auth=auth)
         self.aws_bucketname_string_separator = '$$'
+        self._chunkSize = 20 * 1048576
 
     def upload(self, file_name:str, dataset: Dataset, object_name=None):
         """Upload file to S3 bucket
@@ -42,32 +49,28 @@ class AwsStorageService(StorageService):
         Returns:
             bool: did the upload succeed?
         """
-        response = self._seistore_svc.get_storage_access_token(tenant=dataset.tenant, subproject=dataset.subproject, readonly=False)
-        # the response will be "acess_key_id:secret_key:session_token", so we parse it
-        access_key_id, secret_key, session_token = response.split(":")
 
         # for now AWS's gcsurl is "bucket_name$$subproject_folder/dataset_folder"
         bucket_name, s3_folder_name = dataset.gcsurl.split(self.aws_bucketname_string_separator)
         print(dataset.gcsurl)
 
-        # If S3 object_name was not specified, use file_name
+        # If S3 object_name was not specified, use "0"
         if object_name is None:
-            object_name = f"{s3_folder_name}/{dataset.name}"
+            object_name = f"{s3_folder_name}/0"
 
-        s3_client = boto3.client(
-            's3',
-            aws_access_key_id=access_key_id,
-            aws_secret_access_key=secret_key,
-            aws_session_token=session_token
-        )
-        transfer = S3Transfer(s3_client)
+        if self._s3_client is None:
+            self._s3_client = self.get_s3_client(self, dataset)
+        
+        transfer_config = TransferConfig(multipart_threshold=9999999999999999, use_threads=True, max_concurrency=10)
+        transfer = S3Transfer(client=self._s3_client, config=transfer_config)
 
         bar_format = '- Uploading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
         
         # Upload the file
         with tqdm.tqdm(total=os.path.getsize(file_name), bar_format=bar_format, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
             transfer.upload_file(file_name, bucket_name, object_name, callback=AwsStorageService._progress_hook(pbar))
-            
+        print("File [" + file_name + "] uploaded successfully")
+        
         return True
 
     def download(self, local_filename:str, dataset: Dataset):
@@ -84,32 +87,70 @@ class AwsStorageService(StorageService):
             bool: did the download succeed?
         """
 
-        response = self._seistore_svc.get_storage_access_token(tenant=dataset.tenant, subproject=dataset.subproject, readonly=False)
-        # the response will be "acess_key_id:secret_key:session_token", so we parse it
-        access_key_id, secret_key, session_token = response.split(":")
-
         bucket_name, s3_folder_name = dataset.gcsurl.split(self.aws_bucketname_string_separator)
-        # parse object name from the URL
-        object_name = f"{s3_folder_name}/{dataset.name}"
-        
-        # get object's size from attr
-        object_size = dataset.filemetadata['size']
-        # create tqdm progress bar template
-        bar_format = '- Downloading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
-        
-        s3_client = boto3.client(
-            's3',
-            aws_access_key_id=access_key_id,
-            aws_secret_access_key=secret_key,
-            aws_session_token=session_token
-        )        
-        transfer = S3Transfer(s3_client)
+        start_time = time.time()
 
-        # Download the file
-        with tqdm.tqdm(total=object_size, bar_format=bar_format, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
-            transfer.download_file(bucket_name, object_name, local_filename, callback=AwsStorageService._progress_hook(pbar))
+        # download partial objects
+        cursize = 0
+        with open(local_filename, 'wb') as localFile:
+            nobjects = dataset.filemetadata['nobjects']
+            for obj in range(0, nobjects):
+                object_name = f"{s3_folder_name}/" + str(obj)
+                print(f"{object_name!r}")
+                cursize_incr = self.downloadObject(localFile, bucket_name, object_name, dataset, cursize)
+                cursize =+ cursize_incr
+            ctime = time.time() - start_time + sys.float_info.epsilon
+            speed = str(round(((dataset.filemetadata['size'] / 1048576.0) / ctime), 3))
+            print('- Transfer completed: ' + speed + ' [MB/s]')
             
         return True
+
+    def downloadObject(self, localFile, bucket, obj, dataset, cursize):
+        """download an object from s3 ( one of many )
+
+        Args:
+            localFile (FileIO): a local file object
+            bucket (str): the s3 bucket name
+            obj (int): a number representing this objects index out of all the objects
+            dataset (Dataset): a Dataset object, from sdlib.api.dataset
+            cursize (int): the current size of the most recent object ( or the size of a stray dog... get it? )
+
+        Returns:
+            objsize: the size of the object
+        """
+
+        if self._s3_client is None:
+            self._s3_client = self.get_s3_client(self, dataset)
+    
+        objsize = int(self._s3_resource.Object(bucket, obj).content_length)
+        num_transfers = int(math.floor(objsize / self._chunkSize))
+        remaining_transfer_size = objsize - num_transfers * self._chunkSize
+
+        bar='- Downloading Data in Chunks [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
+        # with tqdm.tqdm(total=dataset.filemetadata['size'], bar_format=bar, unit='B', unit_scale=True) as pbar:
+        # TODO: provide progress bar based on bytes for download
+        
+        # With the upload, we provide a progress bar based on bytes.
+        # With the download we provide a progress bar based on for loop iterations
+        for ii in tqdm.tqdm(range(0, num_transfers), bar_format=bar, unit_scale=True):
+            start_byte = self._chunkSize * ii
+            stop_byte = self._chunkSize * (ii + 1) - 1
+            # download next chunk of the object
+            resp = self._s3_client.get_object(Bucket=bucket, Key=obj, Range='bytes={}-{}'.format(start_byte, stop_byte))
+            for i in resp['Body']:
+                localFile.write(i)
+
+            cursize = cursize + self._chunkSize
+
+        if remaining_transfer_size != 0:
+            start_byte = self._chunkSize * num_transfers
+            stop_byte = self._chunkSize * num_transfers + remaining_transfer_size - 1
+            # download any remainder of the object smaller than standard chunksize
+            resp = self._s3_client.get_object(Bucket=bucket, Key=obj, Range='bytes={}-{}'.format(start_byte, stop_byte))
+            for i in resp['Body']:
+                localFile.write(i)
+
+        return objsize
     
     @staticmethod
     def _progress_hook(tqdm_instance):
@@ -157,3 +198,37 @@ class AwsStorageService(StorageService):
             list: applicable regions
         """
         return ["us-east-1", "US-CENTRAL1"]
+
+    @staticmethod
+    def get_s3_client(self, dataset):
+        """create a new boto3 s3 resource object
+
+        Args:
+            dataset (sdlib.api.dataset.Dataset): the dataset object being handled
+
+        Returns:
+            boto3.resource.meta.client: a boto3 S3 client, created from an s3 resource
+        """
+
+        response = self._seistore_svc.get_storage_access_token(tenant=dataset.tenant, subproject=dataset.subproject,readonly=False)
+
+        access_key_id, secret_key, session_token = response.split(":")
+
+        if self._s3_resource is None:
+            self._s3_resource = boto3.resource(
+                's3',
+                aws_access_key_id=access_key_id,
+                aws_secret_access_key=secret_key,
+                aws_session_token=session_token,
+                config=Config(
+                    signature_version=self._signature_version,
+                    connect_timeout=6000,
+                    read_timeout=6000,
+                    retries={
+                        'total_max_attempts':10,
+                        'mode': 'standard'
+                }),
+                )
+
+        s3_client = self._s3_resource.meta.client
+        return s3_client
