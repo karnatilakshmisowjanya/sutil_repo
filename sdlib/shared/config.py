@@ -119,6 +119,12 @@ class Config(object):
             import urllib3
             urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
+        if "sdms_target_audience" in config_service[cls.__user_configuration["cloudprovider"]][cls.__user_configuration["env"]]:
+            cls.__user_configuration["sdms_target_audience"] = config_service[cls.__user_configuration["cloudprovider"]][cls.__user_configuration["env"]]['sdms_target_audience']
+        
+        if "de_target_audience" in config_service[cls.__user_configuration["cloudprovider"]][cls.__user_configuration["env"]]:
+            cls.__user_configuration["de_target_audience"] = config_service[cls.__user_configuration["cloudprovider"]][cls.__user_configuration["env"]]['de_target_audience']
+
     @classmethod
     def get_auth_provider_configurations(cls):
         return cls.__configuration['auth_provider'][list(cls.__configuration['auth_provider'].keys())[0]]
@@ -156,6 +162,17 @@ class Config(object):
     def get_ssl_verify(cls):
         # pylint: disable=no-member
         return cls.__user_configuration["verify_ssl"]
+
+    @classmethod
+    def get_svc_target_audiences(cls):
+        aud = ''
+        if 'sdms_target_audience' in cls.__user_configuration:
+            aud += cls.__user_configuration['sdms_target_audience']
+        if 'de_target_audience' in cls.__user_configuration:
+            if(len(aud) > 0):
+                aud += ' '
+            aud += cls.__user_configuration['de_target_audience']
+        return aud
 
     @staticmethod
     def save_config(provider, env, appkey):
