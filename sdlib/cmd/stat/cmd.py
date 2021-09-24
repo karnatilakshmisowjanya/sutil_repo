@@ -116,8 +116,12 @@ class Stat(SDUtilCMD):
                 print(' - No of Objects: ' + str(ds.filemetadata['nobjects']))
         if detailed_flag and ds.legaltag is not None:
             print(' - Legal Tag: ' + ds.legaltag)
+        
         if ds.readonly is True:
             print(' - ReadOnly: true')
+        else:
+            print(' - ReadOnly: false')
+        
         if detailed_flag and ds.sbit is not None:
             if str(ds.sbit).startswith('R'):
                 print(' - Lock Mode: read')
