@@ -13,12 +13,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from __future__ import print_function
 
 import os
 import sys
 
+from alive_progress import alive_bar
 from sdlib.api.seismic_store_service import SeismicStoreService
 from sdlib.api.storage_service import StorageFactory, StorageService
 from six.moves import urllib
@@ -31,7 +31,6 @@ from ....shared.config import Config
 
 @StorageFactory.register(provider="azure")
 class AzureStorageService(StorageService):
-
     def __init__(self, auth):
         super(AzureStorageService, self).__init__(auth=auth)
         self._seistore_svc = SeismicStoreService(auth=auth)
@@ -54,59 +53,65 @@ class AzureStorageService(StorageService):
         with open(filename, "rb") as lfile:
             print('- Initializing transfer session ... ', end='')
             sys.stdout.flush()
-            with ContainerClient.from_container_url(container_url=sas_url, 
-                                                    max_block_size=self._chunkSize, 
-                                                    use_byte_buffer=True, 
-                                                    max_concurrency=self._max_concurrency, 
-                                                    max_single_put_size=self._max_single_put_size) as container_client:
+            with ContainerClient.from_container_url(container_url=sas_url,
+                                                    max_block_size=self._chunkSize,
+                                                    use_byte_buffer=True,
+                                                    max_concurrency=self._max_concurrency,
+                                                    max_single_put_size=self._max_single_put_size,
+                                                    connection_timeout=100) as container_client:
                 with container_client.get_blob_client("0") as blob_client:
-                    bar='- Uploading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
-                    with tqdm(total=os.path.getsize(filename), bar_format=bar, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
+                    fsize = os.path.getsize(filename)
+                    with alive_bar(fsize, manual=True, title="Uploading") as bar:    
                         def callback(response):
                             current = response.context['upload_stream_current']
+                            
                             if current is not None:
-                                pbar.update(current)
-
-                        blob_client.upload_blob(lfile, validate_content=True, raw_response_hook=callback)
-            lfile.close()                                                
-            print('- Transfer completed')
+                                total = response.context["data_stream_total"]
+                                bar(current/total)
+                        
+                        blob_client.upload_blob(lfile, validate_content=False, 
+                        raw_response_hook=callback)
+                        
+            lfile.close()
+            print('Transfer completed')
 
         return True
+
+    def upload_test(self, filename, dataset):
+        sas_url = self._get_sas_url(dataset, False)
 
     def download(self, localfilename, dataset):
         """Downloads dataset(blob) from azure storage container"""
         print('Begin Download')
         gcsurl = dataset.gcsurl.split("/")
         dataset_id = gcsurl[1]
-        blob_size = dataset.filemetadata["size"]
+        dataset_size = dataset.filemetadata["size"]
         sas_url = self._get_sas_url(dataset, False)
         counter = 0
         current_size = 0
         try:
-            with open(localfilename, 'wb') as lfile:
-                while(current_size < blob_size):
-                    with ContainerClient.from_container_url(container_url=sas_url,
-                                                            max_block_size=self._chunkSize, 
-                                                            use_byte_buffer=True, 
-                                                            max_concurrency=self._max_concurrency, 
-                                                            max_single_put_size=self._max_single_put_size) as container_client:
-                        with container_client.get_blob_client(str(counter)) as blob_client:
-                           # bar='- Downloading Chunk Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
-                           # with tqdm(total=blob_size, bar_format=bar, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
-                           #     def callback(response):
-                           #         current = response.context['download_stream_current']
-                           #         if current is not None:
-                           #             pbar.update(current)
-                            print("Downloading Chunk # " + str(counter + 1))
-                            blob_client.download_blob(validate_content=True).readinto(lfile)
-                            counter=counter+1
-                            current_size = os.fstat(lfile.fileno()).st_size
-                            print("Current: " + str(current_size) + " of " + str(blob_size))
-        except:                   
+            with alive_bar(dataset_size, manual=True) as bar:
+                with open(localfilename, 'wb') as lfile:
+                    while (current_size < dataset_size):
+                        with ContainerClient.from_container_url(
+                                container_url=sas_url,
+                                max_block_size=self._chunkSize,
+                                use_byte_buffer=True,
+                                max_concurrency=self._max_concurrency,
+                                max_single_put_size=self._max_single_put_size, 
+                                connection_timeout=100) as container_client:
+                            with container_client.get_blob_client(str(counter)) as blob_client:
+                                print("Downloading Chunk # " + str(counter + 1))
+                                blob_client.download_blob(validate_content=True).readinto(lfile)
+                                counter = counter + 1
+                                current_size = os.fstat(lfile.fileno()).st_size
+                                bar(current_size/dataset_size)
+                                print("Current: " + str(current_size) + " of " + str(dataset_size))
+        except:
             print("Finished Chunks")
-            
+
         lfile.close()
-        print('- Transfer completed')
+        print('Transfer completed')
 
         if dataset.seismicmeta is not None:
             with open(localfilename + '_seismicmeta.json', 'w') as outfile:
@@ -114,3 +119,7 @@ class AzureStorageService(StorageService):
             outfile.close()
 
         return True
+
+
+
+
