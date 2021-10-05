@@ -17,3 +17,4 @@ seistore:
   service: '#{config.seistore.svc.params}#'
 auth_provider:
   default: '#{config.auth_provider.default}#'
+read_only_file_formats: '[".zgy",".sgy",".segy"]'

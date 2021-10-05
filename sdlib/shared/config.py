@@ -17,7 +17,9 @@
 import json
 import os
 import sys
+
 import yaml
+
 
 class Config(object):
 
@@ -38,6 +40,8 @@ class Config(object):
             service: "service configurations as stringify JSON"
         auth_provider:
             "auth_provider_name": "auth provider configurations as stringify JSON"
+        read_only_file_formats:
+            "read_only_file_formats": "file formats which are considered as readonly for all upload operations "
         '''
 
         cls.__configuration = forced_configuration
@@ -62,13 +66,16 @@ class Config(object):
         if not os.path.isdir(os.path.join(*[os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "auth", "providers", auth_provider_name])):
             raise Exception("\nThe \""+auth_provider_name+"\" implementation has not been found."); 
 
-        # load configurations as json
+        # load auth provider configurations as json
         cls.__configuration['seistore']['service'] = json.loads(cls.__configuration['seistore']['service'])
         auth_config = cls.__configuration['auth_provider'][auth_provider_name]
         if auth_config != '#{config.auth_provider.default}#' and auth_config != None and len(auth_config) > 0 :
             cls.__configuration['auth_provider'][auth_provider_name] = json.loads(cls.__configuration['auth_provider'][auth_provider_name])
 
-
+        # load default readonly file formats 
+        if  cls.__configuration.get('read_only_file_formats', False):
+            cls.__configuration['read_only_file_formats'] = json.loads(cls.__configuration['read_only_file_formats'])
+        
     @classmethod
     def load_user_config(cls,  forced_configuration=None):
         ''' Load configuration'''
@@ -195,3 +202,8 @@ class Config(object):
     def get_auth_provider(cls):
         # pylint: disable=no-member
         return list(cls.__configuration['auth_provider'].keys())[0]
+
+
+    @classmethod
+    def get_readonly_file_formats(cls):
+        return cls.__configuration.get('read_only_file_formats', [])

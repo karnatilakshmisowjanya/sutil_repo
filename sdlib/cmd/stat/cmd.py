@@ -118,9 +118,9 @@ class Stat(SDUtilCMD):
             print(' - Legal Tag: ' + ds.legaltag)
         
         if ds.readonly is True:
-            print(' - ReadOnly: true')
+            print(' - ReadOnly: True')
         else:
-            print(' - ReadOnly: false')
+            print(' - ReadOnly: False')
         
         if detailed_flag and ds.sbit is not None:
             if str(ds.sbit).startswith('R'):

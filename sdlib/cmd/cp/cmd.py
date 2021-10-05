@@ -25,6 +25,7 @@ from sdlib.api.seismic_store_service import SeismicStoreService
 from sdlib.api.storage_service import StorageFactory
 from sdlib.cmd.cmd import SDUtilCMD
 from sdlib.cmd.helper import CMDHelper
+from sdlib.shared.config import Config
 from sdlib.shared.utils import Utils
 
 
@@ -125,6 +126,9 @@ class Cp(SDUtilCMD):
         """
         seismicmeta = None
         seismicmeta_file = None
+        read_write_flag = None
+        read_only_file_flag = None 
+
         if keyword_args.seismicmeta is not None:
             seismicmeta_file = keyword_args.seismicmeta
 
@@ -132,6 +136,20 @@ class Cp(SDUtilCMD):
                 # flag given just as --seismicmeta with no =XXX
                 print("seismicmeta argument declared but not defined")
                 self.help()
+        
+        if keyword_args.read_only is not None:
+            read_only_file_flag =  True
+        
+        if keyword_args.read_write is not None:
+            read_write_flag = True
+
+        if read_only_file_flag and read_write_flag:
+                raise Exception(
+                '\n' + 'Wrong Command: ' 
+                'Both read-only and read-write flags cannot be passed at once'
+                '\n               For more information type "python sdutil cp"'
+                ' to open the command help menu.')
+
 
         local_file = None
         legal_tag = None
@@ -179,6 +197,11 @@ class Cp(SDUtilCMD):
                     'nobjects': 1
                 }
             }
+
+            if read_write_flag:
+                patch['readonly'] = False
+            elif sdpath.endswith(tuple(Config.get_readonly_file_formats()))  or read_only_file_flag:
+                patch['readonly'] = True
             sd.dataset_patch(sdpath, patch, ds.sbit)
         else:
             sd.dataset_delete(sdpath)
