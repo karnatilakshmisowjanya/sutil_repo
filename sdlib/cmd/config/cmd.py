@@ -16,14 +16,13 @@
 
 from __future__ import print_function
 
+import json
 import os
 import sys
-import json
 
 from sdlib.cmd.cmd import SDUtilCMD
 from sdlib.cmd.helper import CMDHelper
 from sdlib.shared.config import Config as Configuration
-
 from six.moves import input
 
 
@@ -116,12 +115,14 @@ class Config(SDUtilCMD):
     def show(self, args):
         Configuration.load_user_config()
         print()
-        print('Provider    : ' + Configuration.get_cloud_provider())
-        print('Service Url : ' + Configuration.get_svc_url())
+        print('Provider                    : ' + Configuration.get_cloud_provider())
+        print('Service Url                 : ' + Configuration.get_svc_url())
         if Configuration.get_svc_appkey():
-            print('Serivce Key : ' + Configuration.get_svc_appkey())
-        print('Serivce Env : ' + Configuration.get_svc_env())
+            print('Serivce Key                 : ' + Configuration.get_svc_appkey())
+        print('Serivce Env                 : ' + Configuration.get_svc_env())
         if os.path.isfile(self._auth.get_service_account_file()):
-            print('Auth Mode   : Service Workload Credentials')
+            print('Auth Mode                    : Service Workload Credentials')
         else:
-            print('Auth Mode   : User Credentials')
+            print('Auth Mode                   : User Credentials')
+        if Configuration.get_readonly_file_formats():
+            print('ReadOnly file formats       : ' + str(Configuration.get_readonly_file_formats()))
