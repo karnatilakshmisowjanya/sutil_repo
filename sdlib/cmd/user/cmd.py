@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017-2019, Schlumberger
+# Copyright 2017-2021, Schlumberger
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -97,16 +97,7 @@ class User(SDUtilCMD):
         SeismicStoreService(self._auth).user_add(sdpath, useremail, role)
         print('OK')
         sys.stdout.flush()
-        return
 
-        raise Exception(
-            '\n' +
-            'Wrong Command: ' + sdpath +
-            ' is not a valid subproject path.\n' +
-            '               The valid argument is'
-            ' sd://<tenant_name>/<subproject_name>.\n' +
-            '               For more information type "python sdutil user"'
-            ' to open the command help menu.')
 
     def list(self, args):
         if not args:
@@ -186,7 +177,7 @@ class User(SDUtilCMD):
                 '               For more information type "python sdutil user"'
                 ' to open the command help menu.')
 
-        print('> Retriving seismic store roles ...', end=' ')
+        print('\n> Retriving seismic store roles ...', end=' ')
         sys.stdout.flush()
         sd = SDPath(sdpath)
         rx = SeismicStoreService(self._auth).user_roles(sdpath)
@@ -199,21 +190,26 @@ class User(SDUtilCMD):
             for item in rx['roles']:
                 if item[0] not in groupedRoles:
                     groupedRoles[item[0]] = []
-                groupedRoles[item[0]].append(item[1])
+                if item[1] != 'editor': # old service project still have the editor role (merged with the admin)
+                    groupedRoles[item[0]].append(item[1])
 
             # Determine spacing for roles alignment
-            lmax = 0
+            lenMax = 0
             for subproject in groupedRoles:
-                lmax = max(lmax, len(subproject))
+                lenMax = max(lenMax, len(subproject))
 
             # Print out roles
             for subproject, roles in groupedRoles.items():
+
+                if len(roles) == 2:
+                    roles = ['admin'] # no reason to display admin, viewer (admin should be the only one displayed )
+
                 #  if subproject is admin we then use max spacing
                 path = sd.tenant
-                spacing = lmax
+                spacing = lenMax
                 if subproject != '/admin':
                     path += subproject
-                    spacing = lmax - len(subproject)
+                    spacing = lenMax - len(subproject)
 
                 print(' - %s %s %s' % (path, ' ' * spacing,
                                        ', '.join(roles)))
