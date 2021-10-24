@@ -1,11 +1,12 @@
-include: 
+include:
   # pipeline logic
   - project: "osdu/platform/ci-cd-pipelines"
     file: "standard-setup.yml"
+    ref: release/0.12
 
   # build
   - local: "/devops/osdu/compile/seismic-store-sdutil.yml"
-  
+
   # scan
   # scan for secrets
   - local: "/devops/osdu/scanners/scan-for-secrets-python.yml"
