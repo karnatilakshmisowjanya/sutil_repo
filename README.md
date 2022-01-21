@@ -390,7 +390,21 @@ pip install -r requirements.txt
 
 ```
 
-* Replace/edit config.yaml in sdlib/config.yaml by this [config-aws.yaml](https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil/-/blob/master/docs/config-aws.yaml)
+* Replace/edit config.yaml in sdlib/config.yaml by this [config-aws.yaml](https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil/-/blob/master/docs/config-aws.yaml). Here is one example:
+
+```
+seistore:
+  service: '{
+    "aws":{
+      "awsEnv":{"url":"https://someplace.dev.osdu.aws/api/seismic-store/v3"}
+    }
+  }'
+auth_provider:
+  aws: '{
+    "provider":"https://someaccount.auth.us-east-1.amazoncognito.com", 
+    "cognito_client_id":"someclientid"
+  }'
+```
 
 * You need to provide the OSDU HTTPS url and the Cognito client id. Use the default Cognito client id without the client secret
 
@@ -401,10 +415,11 @@ pip install -r requirements.txt
 export AWS_PROFILE=aws-profile-name
 ```
 
-* Optionally export or set below environment variables to simplify authentication process
+* Export or set below environment variables to simplify authentication process. AWS_REGION is bucket region.
 ```
-export COGNITO_USER=cognito-username
-export COGNITO_PASSWORD=cognito-password
+export COGNITO_USER=admin@testing.com
+export COGNITO_PASSWORD=somepassword
+export AWS_REGION=us-east-1
 ```
 
 * Run below commands to login, list, upload and download

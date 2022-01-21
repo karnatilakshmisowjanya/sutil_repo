@@ -30,6 +30,7 @@ class AwsStorageService(StorageService):
     __STORAGE_CLASSES = ['REGIONAL']
     _s3_client = None
     _s3_resource = None
+    _region = None
     _signature_version = 's3v4'
 
     def __init__(self, auth):
@@ -37,6 +38,7 @@ class AwsStorageService(StorageService):
         self._seistore_svc = SeismicStoreService(auth=auth)
         self.aws_bucketname_string_separator = '$$'
         self._chunkSize = 20 * 1048576
+        self._region = os.getenv("AWS_REGION", "us-east-1")
 
     def upload(self, file_name:str, dataset: Dataset, object_name=None):
         """Upload file to S3 bucket
@@ -228,7 +230,7 @@ class AwsStorageService(StorageService):
                         'total_max_attempts':10,
                         'mode': 'standard'
                 }),
-                )
+                region_name=self._region)
 
         s3_client = self._s3_resource.meta.client
         return s3_client
