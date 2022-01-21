@@ -25,9 +25,8 @@ SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 echo $SCRIPTPATH
 
 
-
-AWS_COGNITO_PWD=$ADMIN_PASSWORD
-AWS_COGNITO_USER=$ADMIN_USER
+export AWS_COGNITO_AUTH_PARAMS_USER=${ADMIN_USER} #set by env script
+export AWS_COGNITO_AUTH_PARAMS_PASSWORD=${ADMIN_PASSWORD} #set by codebuild 
 client_id=$AWS_COGNITO_CLIENT_ID
 svc_url=$SEISMIC_DMS_URL
 tenant='opendes'
@@ -39,8 +38,16 @@ echo $subproject
 
 #### RUN INTEGRATION TEST #########################################################################
 
+pushd "$SCRIPT_SOURCE_DIR"/../../  #going up to ../bin
+echo $(pwd)
+python3 -m venv sdutilenv
+source sdutilenv/bin/activate
+pip install -r aws-test/build-aws/requirements.txt
+
+
 echo 'Generating token...'
-token=$(aws cognito-idp initiate-auth --auth-flow USER_PASSWORD_AUTH --client-id $client_id --auth-parameters USERNAME=$AWS_COGNITO_USER,PASSWORD=$AWS_COGNITO_PWD --output=text --query AuthenticationResult.{AccessToken:AccessToken})
+pip3 install -r aws-test/build-aws/requirements.txt
+token=$(python3 aws-test/build-aws/aws_jwt_client.py)
 
 echo 'Registering a subproject for testing...'
 
@@ -51,17 +58,13 @@ echo 'Registering a subproject for testing...'
  --header 'Content-Type: application/json' \
  --header 'ltag: opendes-sdmstestlegaltag' \
  --data-raw '{
- 	"admin": "admin@testing.com",
- 	"storage_class": "REGIONAL",
- 	"storage_location": "US-CENTRAL1"
-	 }'
+    "admin": "admin@testing.com",
+    "storage_class": "REGIONAL",
+    "storage_location": "US-CENTRAL1"
+     }'
 
-#### RUN INTEGRATION TEST #########################################################################
 
-pushd "$SCRIPT_SOURCE_DIR"/../../  #going up to ../bin
-echo $(pwd)
-pip install crc32c
-pip install -r aws-test/build-aws/requirements.txt
+
 rm -rf test-reports/
 mkdir test-reports
 chmod +x ./run_regression_tests.sh
@@ -69,12 +72,13 @@ echo Running SDUTIL Integration Tests...
 ./run_regression_tests.sh  --service-url=$svc_url --service-key='xx' --cloud-provider='aws' --idtoken=$token --tenant=$tenant --subproject=$subproject
 
 TEST_EXIT_CODE=$?
+deactivate
 popd
 
 echo 'Cleaning up the  subproject after testing...'
  ## cleanup delete subproject
  curl --location --request DELETE "$svc_url"'/subproject/tenant/'"$tenant"'/subproject/'"$subproject" \
-	 --header 'Authorization: Bearer '"$token" \
+     --header 'Authorization: Bearer '"$token" \
  --header 'x-api-key: #{SVC_API_KEY}#' \
  --header 'Content-Type: application/json'
 

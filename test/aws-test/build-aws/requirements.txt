@@ -29,10 +29,15 @@ six==1.13.0
 tqdm==4.41.0
 urllib3==1.25.8
 Werkzeug==0.16.0
+lxml==4.6.2
+crc32c==2.2
+PyJWT==1.7.1
 pytest
 pytest-timeout
 mock
 coverage
 xmlrunner
 unittest-xml-reporting
+boto3
+
 
