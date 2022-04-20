@@ -24,3 +24,4 @@ urllib3==1.26.8
 crc32c==2.2.post0
 boto3==1.21.0
 alive-progress<2.0.0
+Werkzeug==2.0.0
