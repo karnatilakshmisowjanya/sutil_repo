@@ -47,6 +47,7 @@ class AzureStorageService(StorageService):
     def upload(self, filename, dataset):
         """ Uploads dataset(blob) to azure storage container"""
         print('')
+        start_time = time.time()
         sas_url = self._get_sas_url(dataset, False)
         dataset_id = dataset.gcsurl.split("/")[1]
 
@@ -73,7 +74,9 @@ class AzureStorageService(StorageService):
                         raw_response_hook=callback)
                         
             lfile.close()
-            print('Transfer completed')
+            ctime = time.time() - start_time + sys.float_info.epsilon
+            speed = str(round(((fsize / 1048576.0) / ctime), 3))
+            print('- Transfer completed: ' + speed + ' [MB/s]')
 
         return True
 
@@ -83,6 +86,7 @@ class AzureStorageService(StorageService):
     def download(self, localfilename, dataset):
         """Downloads dataset(blob) from azure storage container"""
         print('Begin Download')
+        start_time = time.time()
         gcsurl = dataset.gcsurl.split("/")
         dataset_id = gcsurl[1]
         dataset_size = dataset.filemetadata["size"]
@@ -111,7 +115,9 @@ class AzureStorageService(StorageService):
             print("Finished Chunks")
 
         lfile.close()
-        print('Transfer completed')
+        ctime = time.time() - start_time + sys.float_info.epsilon
+        speed = str(round(((dataset_size / 1048576.0) / ctime), 3))
+        print('- Transfer completed: ' + speed + ' [MB/s]')
 
         if dataset.seismicmeta is not None:
             with open(localfilename + '_seismicmeta.json', 'w') as outfile:
