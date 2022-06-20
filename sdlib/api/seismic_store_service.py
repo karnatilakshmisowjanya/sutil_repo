@@ -179,8 +179,7 @@ class SeismicStoreService(object):
                + '/subproject/'
                + sdpath.subproject
                + '/dataset/'
-               + sdpath.dataset)
-
+               + urllib.parse.quote(sdpath.dataset, safe=''))
         querystring = {"path": sdpath.path}
         header = {
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
@@ -216,7 +215,7 @@ class SeismicStoreService(object):
                + '/subproject/'
                + sdpath.subproject
                + '/dataset/'
-               + sdpath.dataset)
+               + urllib.parse.quote(sdpath.dataset))
 
         querystring = {"path": sdpath.path, "seismicmeta": seismicmeta}
         header = {
@@ -240,7 +239,7 @@ class SeismicStoreService(object):
                + '/subproject/'
                + sdpath.subproject
                + '/dataset/'
-               + sdpath.dataset
+               + urllib.parse.quote(sdpath.dataset, safe=''),
                + '/lock')
 
         querystring = {"path": sdpath.path, "openmode": openmode}
@@ -266,7 +265,7 @@ class SeismicStoreService(object):
                + '/subproject/'
                + sdpath.subproject
                + '/dataset/'
-               + sdpath.dataset
+               + urllib.parse.quote(sdpath.dataset, safe='')
                + '/unlock')
 
         querystring = {"path": sdpath.path}
@@ -290,7 +289,7 @@ class SeismicStoreService(object):
                + '/subproject/'
                + sdpath.subproject
                + '/dataset/'
-               + sdpath.dataset)
+               + urllib.parse.quote(sdpath.dataset, safe=''))
 
         if closeid is None:
             querystring = {"path": sdpath.path}
@@ -318,7 +317,7 @@ class SeismicStoreService(object):
                + '/subproject/'
                + sdpath.subproject
                + '/dataset/'
-               + sdpath.dataset)
+               + urllib.parse.quote(sdpath.dataset, safe=''))
         querystring = {"path": sdpath.path}
         header = {
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
