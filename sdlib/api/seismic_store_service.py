@@ -239,7 +239,7 @@ class SeismicStoreService(object):
                + '/subproject/'
                + sdpath.subproject
                + '/dataset/'
-               + urllib.parse.quote(sdpath.dataset, safe=''),
+               + urllib.parse.quote(sdpath.dataset, safe='')
                + '/lock')
 
         querystring = {"path": sdpath.path, "openmode": openmode}

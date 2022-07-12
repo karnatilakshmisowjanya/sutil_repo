@@ -15,18 +15,16 @@
 
 from __future__ import print_function
 
+import json
 import os
 import sys
+import time
 
 from alive_progress import alive_bar
 from sdlib.api.seismic_store_service import SeismicStoreService
 from sdlib.api.storage_service import StorageFactory, StorageService
-from six.moves import urllib
-from tqdm import tqdm
 
 from azure.storage.blob import ContainerClient
-
-from ....shared.config import Config
 
 
 @StorageFactory.register(provider="azure")
@@ -48,6 +46,7 @@ class AzureStorageService(StorageService):
         """ Uploads dataset(blob) to azure storage container"""
         print('')
         start_time = time.time()
+
         sas_url = self._get_sas_url(dataset, False)
         dataset_id = dataset.gcsurl.split("/")[1]
 
@@ -87,8 +86,10 @@ class AzureStorageService(StorageService):
         """Downloads dataset(blob) from azure storage container"""
         print('Begin Download')
         start_time = time.time()
+
         gcsurl = dataset.gcsurl.split("/")
         dataset_id = gcsurl[1]
+
         dataset_size = dataset.filemetadata["size"]
         sas_url = self._get_sas_url(dataset, False)
         counter = 0
@@ -125,7 +126,3 @@ class AzureStorageService(StorageService):
             outfile.close()
 
         return True
-
-
-
-
