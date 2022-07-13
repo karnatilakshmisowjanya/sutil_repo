@@ -218,7 +218,7 @@ Requirements
 
   ```bash
   # install required dependencies:  
-  pip install -r test/e2e/requirements.txt
+  pip install -r test/requirements.txt
   ```
 
 Integral/Unit tests
