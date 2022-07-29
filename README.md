@@ -2,13 +2,14 @@
 
 A command line python utility designed to easily with seismic store.
 
-Seismic store is a cloud-based solution designed to store and manage datasets of any size in the cloud by enabling a secure way to access them through a scoped authorization mechanism. Seismic Store overcomes the object size limitations imposed by a cloud provider, by managing generic datasets as multi independent objects and, therefore, provides a generic, reliable and a better performed solution to handle data on a cloud storage.
+Seismic store is a cloud-based solution designed to store and manage datasets of any size in the cloud by enabling a secure way to access them through a scoped authorization mechanism. Seismic Store overcomes the object size limitations imposed by a cloud provider, by managing generic datasets as multi-independent objects and, therefore, provides a generic, reliable and a better performed solution to handle data on a cloud storage.
 
 The **sdutil** is an intuitive command line utility tool to interact with seismic store and perform some basic operations like upload or download datasets to or from seismic store, manage users, list folders content and more.
 
 - [Seismic Store SDUTIL](#seismic-store-sdutil)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
+  - [Configuration](#configuration)
   - [Usage](#usage)
   - [Seistore Resources](#seistore-resources)
   - [Subprojects](#subprojects)
@@ -40,13 +41,13 @@ Other requirements are addressed in the INSTALLATION section below.
 
 The utility is released as a zip package:
 
-unzip the utility to a folder
+Unzip the utility to a folder
 
 ```sh
 unzip sdutil-1.0.0
 ```
 
-The utility requires additional modules noted in [requirements.txt](requirements.txt). You could either install the modules as is or install them in virtualenv to keep your host clean from package conflicts. if you don't want to install them in a virtual environment please jump directly to the step 3.
+The utility requires additional modules noted in [requirements.txt](requirements.txt). You could either install the modules as is or install them in virtualenv to keep your host clean from package conflicts. if you do not want to install them in a virtual environment please jump directly to the step 3.
 
 ```sh
 # check if virtualenv is already installed
@@ -63,11 +64,89 @@ Windows:    sdutilenv/Scripts/activate
 Linux:      source sdutilenv/bin/activate
 ```
 
-install required dependencies:
+On Windows, you may need to change the execution policy to activate the virtual environment. To do that, open run PowerShell as Administrator and execute the command and when prompted choose **A**:
+
+```bash
+Set-ExecutionPolicy RemoteSigned
+```
+
+Install required dependencies:
 
 ```bash
 # run it from the extracted sdutil folder
 pip install -r requirements.txt
+```
+
+On Windows, you may need to install [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/).
+
+## Configuration
+
+Create `sdlib/config.yaml` by editing [config.sample.yaml](/sdlib/config.sample.yaml) or copying a CSP config from [/docs](/docs/).
+
+On AWS, you need to provide the OSDU HTTPS URL and the Cognito client id. Use the default Cognito client id without the client secret. You will also need to ensure that you have AWS credentials set up on your development machine with a profile defined for the AWS account that hosts your OSDU.
+
+<p>
+<details>
+<summary>Click to view an example of AWS config</summary>
+
+<pre><code>
+seistore:
+  service: '{
+    "aws":{
+      "awsEnv":{"url":"https://someplace.dev.osdu.aws/api/seismic-store/v3"}
+    }
+  }'
+auth_provider:
+  aws: '{
+    "provider":"https://someaccount.auth.us-east-1.amazoncognito.com", 
+    "cognito_client_id":"someclientid"
+  }'
+</code></pre>
+</details>
+</p>
+
+On Azure, you need to provide the refresh token for the environment in config.yaml. Follow the directions in [osduauth](https://community.opengroup.org/osdu/platform/deployment-and-operations/infra-azure-provisioning/-/tree/master/tools/rest/osduauth) to obtain a token and once obtained save the value in settings.
+
+Export or set environment variables:
+
+```bash
+# Azure
+export AZURE_TENANT_ID=check-env-provisioning-team-as-specific-to-cluster
+export AZURE_CLIENT_ID=check-env-provisioning-team-as-specific-to-cluster
+export AZURE_CLIENT_SECRET=check-env-provisioning-team-as-specific-to-cluster
+
+# AWS
+# AWS_REGION is bucket region
+export AWS_PROFILE=aws-profile-name
+export COGNITO_USER=admin@testing.com
+export COGNITO_PASSWORD=somepassword
+export AWS_REGION=us-east-1
+
+# IBM
+export OAUTH2_CLIENT_ID=check-env-provisioning-team-as-specific-to-cluster
+export OAUTH2_CLIENT_SECRET=check-env-provisioning-team-as-specific-to-cluster
+export OAUTH2_CLIENT_REDIRECT_URL=http://localhost:4300/auth/callback
+export COS_URL=minio-url-specific-to-the-cluster
+export COS_REGION=us-east-1
+
+# Azure on Win
+$env:AZURE_TENANT_ID = "check-env-provisioning-team-as-specific-to-cluster"
+$env:AZURE_CLIENT_ID = "check-env-provisioning-team-as-specific-to-cluster"
+$env:AZURE_CLIENT_SECRET = "check-env-provisioning-team-as-specific-to-cluster"
+
+# AWS on Windows
+# AWS_REGION is bucket region
+$env:AWS_PROFILE = "aws-profile-name"
+$env:COGNITO_USER = "admin@testing.com"
+$env:COGNITO_PASSWORD = "somepassword"
+$env:AWS_REGION = "us-east-1"
+
+# IBM
+$env:OAUTH2_CLIENT_ID = "check-env-provisioning-team-as-specific-to-cluster"
+$env:OAUTH2_CLIENT_SECRET = "check-env-provisioning-team-as-specific-to-cluster"
+$env:OAUTH2_CLIENT_REDIRECT_URL = "http://localhost:4300/auth/callback"
+$env:COS_URL = "minio-url-specific-to-the-cluster"
+$env:COS_REGION= "us-east-1"
 ```
 
 ## Usage
@@ -108,23 +187,23 @@ At first usage time, the utility required to be initialized by invoking the sdut
 python sdutil config init
 ```
 
-Before start using the utility and perform any operation, you must login into the system. By running the following login command, sdutil will open a sign-in page in a web browser.
+Before start using the utility and performing any operation, you must log in the system. By running the following login command, sdutil will open a sign-in page in a web browser.
 
 ```sh
 python sdutil auth login
 ```
 
-Once you have successfully logged in, your credentials will be valid for a week. You don't need to login again unless the credentials expired (after 1 week), in this case the system will require you to login again.
+Once you have successfully logged in, your credentials will be valid for a week. You do not need to log in again unless the credentials expired (after 1 week), in this case, the system will require you to log in again. On AWS, the credentials expiry set to 1 hour.
 
 ## Seistore Resources
 
-Before start using the system it's important to understand how resources are addressed in seismic store. There are 3 different types of resources managed by seismic store:
+Before you start using the system, it is important to understand how resources are addressed in seismic store. There are 3 different types of resources managed by seismic store:
 
 - `Tenant Project`: the main project. This is the first section of the seismic store path
 
-- `Subproject`: the working sub-project, directly linked under the main tenant project. This is the second section of the seismic store path.
+- `Subproject`: the working sub-project, directly linked to the main tenant project. This is the second section of the seismic store path.
 
-- `Dataset`: the seismic store dataset entity. This is the third and last section of the seismic store path. The Dataset resource can be specified by using the form `path/dataset_name` where `path` is optional and have the same meaning of a directory in a generic file-system and `dataset_name` is the name of the dataset entity.
+- `Dataset`: the seismic store dataset entity. This is the third and last section of the seismic store path. The Dataset resource can be specified by using the form `path/dataset_name` where `path` is optional and have the same meaning as a directory in a generic file system and `dataset_name` is the name of the dataset entity.
 
 The seismic store uri is a string used to uniquely address a resource in the system and can be obtained by appending the prefix `sd://` before the required resource path:
 
@@ -132,13 +211,13 @@ The seismic store uri is a string used to uniquely address a resource in the sys
 sd://<tenant>/<subproject>/<path>*/<dataset>
 ```
 
-For example if we have a dataset `results.segy` stored in the directory structure `qadata/ustest` in the `carbon` subproject under the `gtc` tenant project, then the corresponding sdpath will be:
+For example, if we have a dataset `results.segy` stored in the directory structure `qadata/ustest` in the `carbon` subproject under the `gtc` tenant project, then the corresponding sdpath will be:
 
 ```code
 sd://gtc/carbon/qadata/ustest/results.segy
 ```
 
-Every resource can be address by using the corresponding sdpath section
+Every resource can be addressed by using the corresponding sdpath section
 
 ```code
 Tenant: sd://gtc
@@ -148,12 +227,12 @@ Dataset: sd://gtc/carbon/qadata/ustest/results.segy
 
 ## Subprojects
 
-A subproject in Seismic Store is a working unit where datasets can be saved. The system can handles multiple subprojects under a tenant project.
+A subproject in Seismic Store is a working unit where datasets can be saved. The system can handle multiple subprojects under a tenant project.
 
 A subproject resource can be created by a `Tenant Admin Only` with the following sdutil command:
 
 ```code
-> python sdutil mk python sdutil mk *sdpath *admin@email *legaltag (options)
+> python sdutil mk *sdpath *admin@email *legaltag (options)
 
   create a new subproject resource in the seismic store. user can interactively
   set the storage class for the subproject. only tenant admins are allowed to create subprojects.
@@ -264,175 +343,4 @@ run the [changelog script](./changelog-generator.sh) to automatically generate t
 
 ```bash
 ./scripts/changelog_gen.sh
-```
-## Setup and Usage for IBM env
-Below steps are for windows subsystem linux - ubuntu 20.04
-* Checkout the source code from community [gitlab](https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil.git)
-
-* In case python virtual env is not installed, use below commands else skip to next section
-```
-sudo apt-get update
-sudo apt-get install python3-venv --fix-missing
-```
-
-* create new venv and install package
-```
-#create new virtual env with name : sdutilenv
-python3 -m venv sdutilenv
-
-#activate the virtual end
-source sdutilenv/bin/Activate
-
-#install python package for sdutil
-pip install -r requirements.txt
-
-```
-
-* replace/edit config.yaml in sdlib/config.yaml by this [config.yaml](https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil/-/raw/master/docs/config-ibm.yaml)
-
-* export or set below environment variables
-```
-export OAUTH2_CLIENT_ID=check-env-provisioning-team-as-specific-to-cluster
-export OAUTH2_CLIENT_SECRET=check-env-provisioning-team-as-specific-to-cluster
-export OAUTH2_CLIENT_REDIRECT_URL=http://localhost:4300/auth/callback
-export COS_URL=minio-url-specific-to-the-cluster
-export COS_REGION=us-east-1
-```
-* Run below commands to login, list, upload and download
-```
-python sdutil config init
-python sdutil auth login
-
-# it will result in the pop up and will redirect user to authentication from keycloak. Enter the username and password.
-python sdutil ls sd://osdu
-python sdutil ls sd://osdu/testsubp
-#upload file
-python sdutil cp local-dir/file-name-at-source.txt sd://osdu/testsubp/file-name-at-destination.txt
-
-#download file
-python sdutil cp sd://osdu/testsubp/file-name-at-ddms.txt local-dir/file-name-a-tdestination.txt
-```
-
-
-## Setup and Usage for Azure env
-Below steps are for windows subsystem linux - ubuntu 20.04
-* Checkout the source code from community [gitlab](https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil.git)
-
-* In case python virtual env is not installed, use below commands else skip to next section
-```
-sudo apt-get update
-sudo apt-get install python3-venv 
-```
-
-* create new venv and install package
-```
-#create new virtual env with name : sdutilenv
-python3 -m venv sdutilenv
-
-#activate the virtual end
-source sdutilenv/bin/Activate
-
-#install python package for sdutil
-pip install -r requirements.txt
-
-```
-
-* replace/edit config.yaml in sdlib/config.yaml by this [config-azure.yaml](https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil/-/blob/master/docs/config-azure.yaml)
-
-* You need to provide the refresh token for the environment in config.yaml. Follow the directions in [osduauth](https://community.opengroup.org/osdu/platform/deployment-and-operations/infra-azure-provisioning/-/tree/master/tools/rest/osduauth) to obtain a token and once obtained save the value in settings.
-
-* export or set below environment variables
-```
-export AZURE_TENANT_ID=check-env-provisioning-team-as-specific-to-cluster
-export AZURE_CLIENT_ID=check-env-provisioning-team-as-specific-to-cluster
-export AZURE_CLIENT_SECRET=check-env-provisioning-team-as-specific-to-cluster
-
-```
-* Run below commands to login, list, upload and download
-```
-python sdutil config init
-python sdutil auth login
-
-# Should display login success message. Credentials expiry set to 1 hour. 
-python sdutil ls sd://<tenant> e.g. sd://opendes
-python sdutil ls sd://<tenant>/<subproject> e.g. sd://opendes/test
-#upload file
-python sdutil cp local-dir/file-name-at-source.txt sd://opendes/test/file-name-at-destination.txt
-
-#download file
-python sdutil cp sd://opendes/test/file-name-at-ddms.txt local-dir/file-name-at-destination.txt
-```
-
-## Setup and Usage for AWS env
-* Checkout the source code from community [gitlab](https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil.git)
-
-* In case python virtual env is not installed, use below commands else skip to next section
-```
-pip install virtualenv
-# Note that you may need to add the installed virtualenv command to your PATH
-```
-
-* Create new virtual environment and install package
-```
-# Create new virtual environment with name : sdutilenv
-virtualenv sdutilenv
-
-# Activate the virtual environment
-## Windows CMD
-./sdutilenv/scripts/activate.bat
-## Windows Powershell
-./sdutilenv/scripts/Activate.ps1
-## Linux Bash
-source ./sdutilenv/bin/activate
-
-#install python package for sdutil
-pip install -r requirements.txt
-
-```
-
-* Replace/edit config.yaml in sdlib/config.yaml by this [config-aws.yaml](https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil/-/blob/master/docs/config-aws.yaml). Here is one example:
-
-```
-seistore:
-  service: '{
-    "aws":{
-      "awsEnv":{"url":"https://someplace.dev.osdu.aws/api/seismic-store/v3"}
-    }
-  }'
-auth_provider:
-  aws: '{
-    "provider":"https://someaccount.auth.us-east-1.amazoncognito.com", 
-    "cognito_client_id":"someclientid"
-  }'
-```
-
-* You need to provide the OSDU HTTPS url and the Cognito client id. Use the default Cognito client id without the client secret
-
-* You will also need to ensure that you have AWS credentials set up on your development machine with a profile defined for the AWS account that hosts your OSDU
-
-* Export or set below environment variables
-```
-export AWS_PROFILE=aws-profile-name
-```
-
-* Export or set below environment variables to simplify authentication process. AWS_REGION is bucket region.
-```
-export COGNITO_USER=admin@testing.com
-export COGNITO_PASSWORD=somepassword
-export AWS_REGION=us-east-1
-```
-
-* Run below commands to login, list, upload and download
-```
-python sdutil config init
-python sdutil auth login
-
-# Should display login success message. Credentials expiry set to 1 hour. 
-python sdutil ls sd://<tenant> e.g. sd://opendes
-python sdutil ls sd://<tenant>/<subproject> e.g. sd://opendes/test
-# Upload file
-python sdutil cp local-dir/file-name-at-source.txt sd://opendes/test/file-name-at-destination.txt
-
-# Download file
-python sdutil cp sd://opendes/test/file-name-at-ddms.txt local-dir/file-name-at-destination.txt
 ```

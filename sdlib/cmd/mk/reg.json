@@ -1,7 +1,7 @@
 {
     "description": "create a subproject resource",
     "help": [
-        "> python sdutil mk python sdutil mk *sdpath *admin@email *legaltag (options)\n",
+        "> python sdutil mk *sdpath *admin@email *legaltag (options)\n",
         "  create a new subproject resource in the seismic store. user can interactively ",
         "  set the storage class for the subproject. only tenant admins are allowed to create subprojects.\n",
         "  *sdpath       : the seismic store subproject path. sd://<tenant>/<subproject>",
