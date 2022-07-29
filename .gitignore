@@ -141,3 +141,6 @@ dmypy.json
 .pytype/
 
 .idea
+
+# configuration
+sdlib/config.yaml

@@ -21,7 +21,8 @@ requests==2.27.1
 six==1.16.0
 tqdm==4.62.3
 urllib3==1.26.8
-crc32c==2.2.post0
+# Some versions of crc32c may have problems working on different platforms (for example Windows)
+crc32c==2.3
 boto3==1.21.0
 alive-progress<2.0.0
 Werkzeug==2.0.0
