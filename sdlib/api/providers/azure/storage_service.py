@@ -112,13 +112,13 @@ class AzureStorageService(StorageService):
                                 current_size = os.fstat(lfile.fileno()).st_size
                                 bar(current_size/dataset_size)
                                 print("Current: " + str(current_size) + " of " + str(dataset_size))
-        except:
-            print("Finished Chunks")
+                print('- Transfer completed')
+        except Exception as e:
+            print("Exception: " + str(e))
 
         lfile.close()
         ctime = time.time() - start_time + sys.float_info.epsilon
         speed = str(round(((dataset_size / 1048576.0) / ctime), 3))
-        print('- Transfer completed: ' + speed + ' [MB/s]')
 
         if dataset.seismicmeta is not None:
             with open(localfilename + '_seismicmeta.json', 'w') as outfile:
