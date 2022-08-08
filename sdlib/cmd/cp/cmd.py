@@ -85,9 +85,9 @@ class Cp(SDUtilCMD):
                 ' to open the command help menu.')
 
         print('')
-       
+
         SeismicStoreService(self._auth).dataset_cp(sdpath_from, sdpath_to)
-        
+
         sys.stdout.flush()
 
     def cp_sd_to_local(self, args, keyword_args):
@@ -117,9 +117,10 @@ class Cp(SDUtilCMD):
         if ds.filemetadata['type'] != 'GENERIC':
             raise Exception('Dataset is of type ' + ds.filemetadata['type'] +
                             '. This type is not currently supported')
-        storage_service = StorageFactory.build(sd.get_cloud_provider(sdpath), auth=self._auth)
+        storage_service = StorageFactory.build(
+            sd.get_cloud_provider(sdpath), auth=self._auth)
         storage_service.download(local_file, ds)
-        sd.dataset_patch(sdpath, None, ds.sbit)   
+        sd.dataset_patch(sdpath, None, ds.sbit)
 
     def cp_local_to_sd(self, args, keyword_args):
         """ Copy a local file to seismic store
@@ -127,7 +128,7 @@ class Cp(SDUtilCMD):
         seismicmeta = None
         seismicmeta_file = None
         read_write_flag = None
-        read_only_file_flag = None 
+        read_only_file_flag = None
 
         if keyword_args.seismicmeta is not None:
             seismicmeta_file = keyword_args.seismicmeta
@@ -136,20 +137,29 @@ class Cp(SDUtilCMD):
                 # flag given just as --seismicmeta with no =XXX
                 print("seismicmeta argument declared but not defined")
                 self.help()
-        
+
         if keyword_args.read_only is not None:
-            read_only_file_flag =  True
-        
+            read_only_file_flag = True
+
         if keyword_args.read_write is not None:
             read_write_flag = True
 
         if read_only_file_flag and read_write_flag:
-                raise Exception(
-                '\n' + 'Wrong Command: ' 
+            raise Exception(
+                '\n' + 'Wrong Command: '
                 'Both read-only and read-write flags cannot be passed at once'
                 '\n               For more information type "python sdutil cp"'
                 ' to open the command help menu.')
 
+        if keyword_args.chunk_size is True:
+            raise Exception(
+                '\n' + 'Wrong Command: '
+                'The chunk-size argument has been declared but not defined (not provided value)'
+                '\n               For more information type "python sdutil cp"'
+                ' to open the command help menu.')
+
+        if keyword_args.chunk_size is None:
+            chunk_size = 0
 
         local_file = None
         legal_tag = None
@@ -187,20 +197,23 @@ class Cp(SDUtilCMD):
                 'the local file does not exist.\n' +
                 '               For more information type "python sdutil cp"'
                 ' to open the command help menu.')
-        storage_service = StorageFactory.build(sd.get_cloud_provider(sdpath), auth=self._auth)
+        storage_service = StorageFactory.build(
+            sd.get_cloud_provider(sdpath), auth=self._auth)
 
-        if storage_service.upload(local_file, ds):
+        upload_response = storage_service.upload(local_file, ds, chunk_size=chunk_size)
+
+        if "num_of_objects" in upload_response:
             patch = {
                 'filemetadata': {
                     'type': 'GENERIC',
                     'size':  os.path.getsize(local_file),
-                    'nobjects': 1
+                    'nobjects': upload_response["num_of_objects"]
                 }
             }
 
             if read_write_flag:
                 patch['readonly'] = False
-            elif sdpath.endswith(tuple(Config.get_readonly_file_formats()))  or read_only_file_flag:
+            elif sdpath.endswith(tuple(Config.get_readonly_file_formats())) or read_only_file_flag:
                 patch['readonly'] = True
             sd.dataset_patch(sdpath, patch, ds.sbit)
         else:
