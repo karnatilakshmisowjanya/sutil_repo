@@ -46,7 +46,7 @@ class GoogleStorageService(StorageService):
 
     def object_delete(self, objname, dataset):
         url = self.__STORAGE_EP \
-              + '/b/' \
+            + '/b/' \
               + dataset.gcsurl.split("/")[0] \
               + "/o/" + dataset.gcsurl.split("/")[1] \
               + "%2F" \
@@ -68,7 +68,7 @@ class GoogleStorageService(StorageService):
     # to add an empty object / dummy object
     def object_add(self, objname, dataset):
         url = self.__STORAGE_UPlOAD_EP \
-              + '/b/' \
+            + '/b/' \
               + dataset.gcsurl.split("/")[0] \
               + "/o?uploadType=media&name=" \
               + dataset.gcsurl.split("/")[1] \
@@ -90,7 +90,7 @@ class GoogleStorageService(StorageService):
 
     def object_upload(self, bucket, objname, data, tenant, subproject):
         url = self.__STORAGE_UPlOAD_EP \
-              + '/b/' \
+            + '/b/' \
               + bucket \
               + "/o?uploadType=media&name=" \
               + urllib.parse.quote(objname, safe='')
@@ -109,7 +109,7 @@ class GoogleStorageService(StorageService):
 
     def upload_resumable_start(self, bucket, objname, dataset, totsize):
         url = self.__STORAGE_UPlOAD_EP \
-              + '/b/' \
+            + '/b/' \
               + bucket \
               + "/o?uploadType=resumable&name=" \
               + urllib.parse.quote(objname, safe='')
@@ -195,7 +195,7 @@ class GoogleStorageService(StorageService):
 
     def object_attribute(self, bucket, objname, attribute, tenant, subproject):
         url = self.__STORAGE_EP \
-              + '/b/' \
+            + '/b/' \
               + bucket \
               + '/o/' \
               + urllib.parse.quote(objname, safe='') \
@@ -220,7 +220,7 @@ class GoogleStorageService(StorageService):
                                      'size', tenant, subproject)
 
     # Abstracted from Uploader
-    def upload(self, filename, dataset):
+    def upload(self, filename, dataset, **kwargs):
         print('')
         print('- Initializing transfer session ... ', end='')
         fsize = os.path.getsize(filename)
@@ -239,14 +239,14 @@ class GoogleStorageService(StorageService):
         with open(filename, "rb") as fx:
             bts = 0
 
-            bar='- Uploading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
+            bar = '- Uploading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
             with tqdm(total=fsize, bar_format=bar, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
                 for ii in range(0, nread):
                     bts = fx.read(self._chunkSize)
                     crc32c_local_digest = crc32c.crc32(bts, crc32c_local_digest)
                     self.upload_resumable_continue(
                         location, bts, ii * self._chunkSize,
-                                        (ii + 1) * self._chunkSize - 1,
+                        (ii + 1) * self._chunkSize - 1,
                         fsize, dataset.tenant,
                         dataset.subproject)
                     pbar.update(self._chunkSize)
@@ -255,22 +255,22 @@ class GoogleStorageService(StorageService):
                 crc32c_local_digest = crc32c.crc32(bts, crc32c_local_digest)
                 self.upload_resumable_continue(
                     location, bts, nread *
-                                    self._chunkSize,
-                                    nread * self._chunkSize + rest - 1,
+                    self._chunkSize,
+                    nread * self._chunkSize + rest - 1,
                     fsize, dataset.tenant, dataset.subproject)
                 pbar.update(rest)
 
-            crc32c_local_digest = base64.b64encode(struct.pack(">I", crc32c_local_digest)).decode("utf-8")    
+            crc32c_local_digest = base64.b64encode(struct.pack(">I", crc32c_local_digest)).decode("utf-8")
             crc32c_remote = self.object_attribute(bucket, objname, 'crc32c', dataset.tenant, dataset.subproject)
             if crc32c_local_digest == crc32c_remote:
                 ctime = time.time() - start_time + sys.float_info.epsilon
                 print('- Transfer completed: ' +
-                    str((fsize / 1048576.0) / ctime) + ' [MB/s]')
+                      str((fsize / 1048576.0) / ctime) + ' [MB/s]')
                 sys.stdout.flush()
-                return True
+                return {"num_of_objects": 1}
             else:
                 print('- Transfer failed: crc32c mistmatch, please try again')
-                return False
+                raise Exception("Transfer failed: crc32c mistmatch, please try again ")
 
     # Abstracted from Downloader
     def download(self, localfilename, dataset):
@@ -288,16 +288,16 @@ class GoogleStorageService(StorageService):
             nobjects = dataset.filemetadata['nobjects']
             for obj in range(0, nobjects):
                 cursize_incr, crc32c_local = self.downloadObject(lfile, bucket, objname + '/' +
-                    str(obj), dataset, cursize)
+                                                                 str(obj), dataset, cursize)
                 crc32c_remote = self.object_attribute(bucket, objname + '/' +
-                    str(obj), 'crc32c', dataset.tenant, dataset.subproject) 
-                crc32c_local = base64.b64encode(struct.pack(">I", crc32c_local)).decode("utf-8")  
+                                                      str(obj), 'crc32c', dataset.tenant, dataset.subproject)
+                crc32c_local = base64.b64encode(struct.pack(">I", crc32c_local)).decode("utf-8")
                 if crc32c_remote != crc32c_local:
                     lfile.close()
                     os.remove(localfilename)
                     print('- Transfer failed: crc32c mistmatch, please try again')
-                    
-                cursize =+ cursize_incr                                              
+
+                cursize += cursize_incr
 
             lfile.close()
             ctime = time.time() - start_time + sys.float_info.epsilon
@@ -322,7 +322,7 @@ class GoogleStorageService(StorageService):
         rtrx_size = objsize - ntrx * self._chunkSize
         crc32c_local_digest = 0
 
-        bar='- Downloading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
+        bar = '- Downloading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
         with tqdm(total=dataset.filemetadata['size'], bar_format=bar, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
             for ii in range(0, ntrx):
                 sstart = self._chunkSize * ii
