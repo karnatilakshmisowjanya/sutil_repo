@@ -3,7 +3,7 @@
     "help": [
         "> python sdutil cp [ *upload | *download | *inplace ]\n",
         "  *upload     $ python sdutil cp [localFile] [sdpath] [legaltag] (options)",
-        "                upload a dataset to seismic store\n",
+        "                upload a dataset to seismic store (for Azure only, by default, dataset is upload as multiple object of 32MB each)\n",
         "                [localFile]  : path of the local file to upload",
         "                [sdpath]     : seistore path",
         "                [legaltag]   : legal tag to be set to the dataset, if not provided, the suproject one will be used\n",
@@ -11,7 +11,7 @@
         "                             | --idtoken=<token> pass the credential token to use, rather than generating a new one",
         "                             | --read-only= upload the file as readonly. This overrides the default read-only file formats in sdutil. For more info on default read-only file formats use sdutil config show command",
         "                             | --read-write=upload the file as read-write. This overrides the default read-only file formats in sdutil. For more info on default read-only formats use sdutil config show command",
-        "                             | --chunk-size=size of the chunk to be used for multi-object upload in MiB. If the value is set to 0 then, the file is uploaded as a single object. Enabled for azure cloud provider only\n",  
+        "                             | --chunk-size=size of the chunk to be used for multi-object upload in MiB. If the value is set to 0 then, the file is uploaded as a single object. Default value is 32MB if not specified. Enabled for Azure cloud provider only\n",  
         "  *download   $ python sdutil cp [sdpath] [localFile] (options)",
         "                download a dataset from seismic store\n",
         "                [sdpath]     : seistore path",
