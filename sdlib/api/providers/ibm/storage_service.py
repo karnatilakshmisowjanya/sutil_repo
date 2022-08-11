@@ -13,17 +13,20 @@
 # limitations under the License.
 
 from __future__ import print_function
+
 import math
 import os
 import sys
 import time
+
 import boto3
+import tqdm
 from boto3.s3.transfer import S3Transfer, TransferConfig
 from botocore.client import Config
-import tqdm
 from sdlib.api.dataset import Dataset
-from sdlib.api.storage_service import StorageFactory, StorageService
 from sdlib.api.seismic_store_service import SeismicStoreService
+from sdlib.api.storage_service import StorageFactory, StorageService
+
 
 @StorageFactory.register(provider="ibm")
 class IbmStorageService(StorageService):
@@ -42,7 +45,7 @@ class IbmStorageService(StorageService):
         self._region = os.getenv("COS_REGION", "NA")
         self._chunkSize = 20 * 1048576
 
-    def upload(self, file_name: str, dataset: Dataset, object_name=None):
+    def upload(self, file_name: str, dataset: Dataset, object_name=None, **kwargs):
         """Upload file to S3 bucket
 
                Args:
@@ -64,13 +67,14 @@ class IbmStorageService(StorageService):
 
         bar_format = '- Uploading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
         with tqdm.tqdm(
-            total=os.path.getsize(file_name), bar_format=bar_format, 
-            unit='B', unit_scale=True, unit_divisor=1024) as pbar:
-                transfer.upload_file(filename=file_name, bucket=bucket_name, key=object_name, callback=IbmStorageService._progress_hook(pbar))
+                total=os.path.getsize(file_name), bar_format=bar_format,
+                unit='B', unit_scale=True, unit_divisor=1024) as pbar:
+            transfer.upload_file(filename=file_name, bucket=bucket_name, key=object_name,
+                                 callback=IbmStorageService._progress_hook(pbar))
         print("File [" + file_name + "] uploaded successfully")
 
         self._seistore_svc._auth.refresh()
-        return True
+        return {"num_of_objects": 1}
 
     def download(self, local_filename: str, dataset: Dataset):
         """download object from S3
@@ -96,7 +100,7 @@ class IbmStorageService(StorageService):
             for obj in range(0, nobjects):
                 object_name = f"{s3_folder_name}/" + str(obj)
                 cursize_incr = self.downloadObject(localFile, bucket_name, object_name, dataset, cursize)
-                cursize =+ cursize_incr
+                cursize += cursize_incr
             ctime = time.time() - start_time + sys.float_info.epsilon
             speed = str(round(((dataset.filemetadata['size'] / 1048576.0) / ctime), 3))
             print('- Transfer completed: ' + speed + ' [MB/s]')
@@ -107,7 +111,7 @@ class IbmStorageService(StorageService):
 
         if self._s3_client is None:
             self._s3_client = self.get_s3_client(self, dataset)
-    
+
         objsize = int(self._s3_resource.Object(bucket, obj).content_length)
         ntrx = int(math.floor(objsize / self._chunkSize))
         rtrx_size = objsize - ntrx * self._chunkSize
@@ -132,7 +136,6 @@ class IbmStorageService(StorageService):
 
         return objsize
 
-    
     @staticmethod
     def _progress_hook(tqdm_instance):
         """update tqdm progress bar
@@ -150,7 +153,7 @@ class IbmStorageService(StorageService):
     def get_s3_client(self, dataset):
 
         response = self._seistore_svc.get_storage_access_token(
-            tenant=dataset.tenant, subproject=dataset.subproject,readonly=False)
+            tenant=dataset.tenant, subproject=dataset.subproject, readonly=False)
 
         access_key_id, secret_key, session_token = response.split(":")
 
@@ -162,13 +165,13 @@ class IbmStorageService(StorageService):
                 aws_secret_access_key=secret_key,
                 aws_session_token=session_token,
                 config=Config(
-                signature_version=self._signature_version,
-                connect_timeout=6000,
-                read_timeout=6000,
-                retries={
-                    'total_max_attempts':10,
-                    'mode': 'standard'
-                }),
+                    signature_version=self._signature_version,
+                    connect_timeout=6000,
+                    read_timeout=6000,
+                    retries={
+                        'total_max_attempts': 10,
+                        'mode': 'standard'
+                    }),
                 region_name=self._region)
 
         s3_client = self._s3_resource.meta.client
