@@ -13,17 +13,20 @@
 # limitations under the License.
 
 from __future__ import print_function
+
 import math
+import os
 import sys
 import time
-import os
+
 import boto3
+import tqdm
 from boto3.s3.transfer import S3Transfer, TransferConfig
 from botocore.client import Config
-import tqdm
 from sdlib.api.dataset import Dataset
 from sdlib.api.seismic_store_service import SeismicStoreService
 from sdlib.api.storage_service import StorageFactory, StorageService
+
 
 @StorageFactory.register(provider="aws")
 class AwsStorageService(StorageService):
@@ -40,7 +43,7 @@ class AwsStorageService(StorageService):
         self._chunkSize = 20 * 1048576
         self._region = os.getenv("AWS_REGION", "us-east-1")
 
-    def upload(self, file_name:str, dataset: Dataset, object_name=None):
+    def upload(self, file_name: str, dataset: Dataset, object_name=None, **kwargs):
         """Upload file to S3 bucket
 
         Args:
@@ -62,20 +65,20 @@ class AwsStorageService(StorageService):
 
         if self._s3_client is None:
             self._s3_client = self.get_s3_client(self, dataset)
-        
+
         transfer_config = TransferConfig(multipart_threshold=9999999999999999, use_threads=True, max_concurrency=10)
         transfer = S3Transfer(client=self._s3_client, config=transfer_config)
 
         bar_format = '- Uploading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
-        
+
         # Upload the file
         with tqdm.tqdm(total=os.path.getsize(file_name), bar_format=bar_format, unit='B', unit_scale=True, unit_divisor=1024) as pbar:
             transfer.upload_file(file_name, bucket_name, object_name, callback=AwsStorageService._progress_hook(pbar))
         print("File [" + file_name + "] uploaded successfully")
-        
-        return True
 
-    def download(self, local_filename:str, dataset: Dataset):
+        return {"num_of_objects": 1}
+
+    def download(self, local_filename: str, dataset: Dataset):
         """download object from S3
 
         Args:
@@ -100,11 +103,11 @@ class AwsStorageService(StorageService):
                 object_name = f"{s3_folder_name}/" + str(obj)
                 print(f"{object_name!r}")
                 cursize_incr = self.downloadObject(localFile, bucket_name, object_name, dataset, cursize)
-                cursize =+ cursize_incr
+                cursize += cursize_incr
             ctime = time.time() - start_time + sys.float_info.epsilon
             speed = str(round(((dataset.filemetadata['size'] / 1048576.0) / ctime), 3))
             print('- Transfer completed: ' + speed + ' [MB/s]')
-            
+
         return True
 
     def downloadObject(self, localFile, bucket, obj, dataset, cursize):
@@ -123,15 +126,15 @@ class AwsStorageService(StorageService):
 
         if self._s3_client is None:
             self._s3_client = self.get_s3_client(self, dataset)
-    
+
         objsize = int(self._s3_resource.Object(bucket, obj).content_length)
         num_transfers = int(math.floor(objsize / self._chunkSize))
         remaining_transfer_size = objsize - num_transfers * self._chunkSize
 
-        bar='- Downloading Data in Chunks [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
+        bar = '- Downloading Data in Chunks [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'
         # with tqdm.tqdm(total=dataset.filemetadata['size'], bar_format=bar, unit='B', unit_scale=True) as pbar:
         # TODO: provide progress bar based on bytes for download
-        
+
         # With the upload, we provide a progress bar based on bytes.
         # With the download we provide a progress bar based on for loop iterations
         for ii in tqdm.tqdm(range(0, num_transfers), bar_format=bar, unit_scale=True):
@@ -153,7 +156,7 @@ class AwsStorageService(StorageService):
                 localFile.write(i)
 
         return objsize
-    
+
     @staticmethod
     def _progress_hook(tqdm_instance):
         """update tqdm progress bar
@@ -191,7 +194,7 @@ class AwsStorageService(StorageService):
             list: applicable regions
         """
         return AwsStorageService._get_regions()
-    
+
     @staticmethod
     def _get_regions():
         """return simplistic regions. # TODO: do this dynamically
@@ -212,7 +215,8 @@ class AwsStorageService(StorageService):
             boto3.resource.meta.client: a boto3 S3 client, created from an s3 resource
         """
 
-        response = self._seistore_svc.get_storage_access_token(tenant=dataset.tenant, subproject=dataset.subproject,readonly=False)
+        response = self._seistore_svc.get_storage_access_token(
+            tenant=dataset.tenant, subproject=dataset.subproject, readonly=False)
 
         access_key_id, secret_key, session_token = response.split(":")
 
@@ -227,9 +231,9 @@ class AwsStorageService(StorageService):
                     connect_timeout=6000,
                     read_timeout=6000,
                     retries={
-                        'total_max_attempts':10,
+                        'total_max_attempts': 10,
                         'mode': 'standard'
-                }),
+                    }),
                 region_name=self._region)
 
         s3_client = self._s3_resource.meta.client
