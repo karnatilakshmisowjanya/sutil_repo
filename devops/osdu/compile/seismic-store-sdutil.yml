@@ -7,11 +7,15 @@ compile-and-unit-test:
         - ./devops/scripts/run_unit_tests.sh
         - mkdir -p dist
         - rm -rf dist/*
-        - cp -r README.md requirements.txt sdlib sdutil sdutil.py dist
+        - cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py dist
+        - pip3 freeze > all-requirements.txt
     artifacts:
         name: sdutil
         paths:
         - dist/
+        name: all-requirements
+        paths:
+        - all-requirements.txt
     
 clean-package:
   stage: build
@@ -23,7 +27,7 @@ clean-package:
     - apt-get install gzip -y
     - apt-get install git -y
     - apt-get install jq -y
-    - version_major=3
+    - version_major=2
     - version_minor=2
     - PACKAGE_VERSION=${version_major}.${version_minor}.$CI_PIPELINE_IID
     - package_id=$(curl --header "JOB-TOKEN:\ $CI_JOB_TOKEN" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages" | jq ".[] | select(.version==\"$PACKAGE_VERSION\") | .id")
