@@ -159,7 +159,7 @@ class Cp(SDUtilCMD):
                 ' to open the command help menu.')
 
         if keyword_args.chunk_size is None:
-            chunk_size = 0
+            chunk_size = 32
 
         local_file = None
         legal_tag = None
