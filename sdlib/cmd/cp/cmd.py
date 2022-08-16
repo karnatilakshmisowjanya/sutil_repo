@@ -151,15 +151,29 @@ class Cp(SDUtilCMD):
                 '\n               For more information type "python sdutil cp"'
                 ' to open the command help menu.')
 
-        if keyword_args.chunk_size is True:
+        chunk_size = 32
+        if keyword_args.chunk_size is True: # discard option with no value (--chunk-size)
             raise Exception(
                 '\n' + 'Wrong Command: '
                 'The chunk-size argument has been declared but not defined (not provided value)'
                 '\n               For more information type "python sdutil cp"'
                 ' to open the command help menu.')
+        if keyword_args.chunk_size is not None: 
+            try:
+                chunk_size = int(keyword_args.chunk_size)
+            except ValueError: # discard option with value "not an int" (--chunk-size=test)
+                raise Exception(
+                    '\n' + 'Wrong Command: '
+                    'The chunk-size argument must be an integer value greater than zero'
+                    '\n               For more information type "python sdutil cp"'
+                    ' to open the command help menu.')
 
-        if keyword_args.chunk_size is None:
-            chunk_size = 32
+            if chunk_size < 0:  # discard option with value < 0 (--chunk-size=-16)
+                raise Exception(
+                    '\n' + 'Wrong Command: '
+                    'The chunk-size argument must be an integer value greater than zero'
+                    '\n               For more information type "python sdutil cp"'
+                    ' to open the command help menu.')
 
         local_file = None
         legal_tag = None
