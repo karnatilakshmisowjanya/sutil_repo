@@ -36,7 +36,8 @@ fi
 cd ${mnt_volume}
 
 # create temporary configuration for unit test
-cp sdlib/config.yaml config_original.yaml
+cp sdlib/config.sample.yaml config_original.yaml
+mv sdlib/config.sample.yaml sdlib/config.yaml
 echo "seistore:" > sdlib/config.yaml
 echo "    service: '{\"provider\": {\"env\" : {\"url\": \"dummy-url\", \"appkey\": \"dummy-apkey\"}}}'" >> sdlib/config.yaml
 echo "auth_provider:" >> sdlib/config.yaml
@@ -59,6 +60,7 @@ coverage xml -o coverage/coverage.xml
 chmod -R 777 coverage
 
 # restore configuration and clear temporary files
-cp config_original.yaml sdlib/config.yaml
+cp config_original.yaml sdlib/config.sample.yaml
 rm config_original.yaml
+rm sdlib/config.yaml
 if [ $exit_status -ne 0 ]; then exit 1; fi
