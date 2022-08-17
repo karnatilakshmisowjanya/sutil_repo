@@ -27,8 +27,8 @@ clean-package:
     - apt-get install gzip -y
     - apt-get install git -y
     - apt-get install jq -y
-    - version_major=2
-    - version_minor=2
+    - version_major=3
+    - version_minor=0
     - PACKAGE_VERSION=${version_major}.${version_minor}.$CI_PIPELINE_IID
     - package_id=$(curl --header "JOB-TOKEN:\ $CI_JOB_TOKEN" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages" | jq ".[] | select(.version==\"$PACKAGE_VERSION\") | .id")
     - 'curl --request DELETE --header "PRIVATE-TOKEN: $PRIVATE_ACCESS_TOKEN" "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/$package_id"'
