@@ -10,7 +10,7 @@ osdu-package:
     - apt-get install gzip -y
     - apt-get install git -y
     - version_major=3
-    - version_minor=2
+    - version_minor=0
     - PACKAGE_VERSION=${version_major}.${version_minor}.$CI_PIPELINE_IID
     - tar --directory=dist -cf - . | gzip > sdutil.tar.gz
     - 'curl --header "JOB-TOKEN: $CI_JOB_TOKEN" --upload-file sdutil.tar.gz "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/sdutil/$PACKAGE_VERSION/sdutil.tar.gz"'
