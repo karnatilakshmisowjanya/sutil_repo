@@ -10,6 +10,10 @@ include:
   # scan
   # scan for secrets
   - local: "/devops/osdu/scanners/scan-for-secrets-python.yml"
+  
+  # fossa
+  - project: "osdu/platform/ci-cd-pipelines"
+    file: "scanners/fossa-python.yml"
 
   # build
   - local: "devops/osdu/deploy/seismic-store-sdutil.yml"
