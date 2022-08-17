@@ -8,14 +8,14 @@ compile-and-unit-test:
         - mkdir -p dist
         - rm -rf dist/*
         - cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py dist
+        - ls dist
         - pip3 freeze > all-requirements.txt
     artifacts:
         name: sdutil
         paths:
         - dist/
-        name: all-requirements
-        paths:
         - all-requirements.txt
+        
     
 clean-package:
   stage: build
