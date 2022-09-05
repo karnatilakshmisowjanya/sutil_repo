@@ -54,9 +54,10 @@ class Ls(SDUtilCMD):
             if len(names) > 1 and not recursive_flag:
                 print('')
                 print(sdpath + "/")
-            self.executeLs(sdpath, recursive_flag, full_path_flag)
+            print('')
+            self.executeLs(sdpath, None, recursive_flag, full_path_flag)
 
-    def executeLs(self, sdpath, recursive_flag, full_path_flag):
+    def executeLs(self, sdpath, provider, recursive_flag, full_path_flag):
 
         if Utils.isSDPath(sdpath) is False:
             raise Exception(
@@ -65,44 +66,108 @@ class Ls(SDUtilCMD):
                 ' is not a valid seismic store path.\n' +
                 '               The seismic store dataset path should '
                 'match the standard form '
-                'sd://<tenant_nane>/<subproject_name>/<path>/<dataset_name>.\n'
+                'sd://<tenant_name>/<subproject_name>/<path>/<dataset_name>.\n'
                 '               For more information type "python sdutil ls"'
                 ' to open the command help menu.')
 
-        res = SeismicStoreService(self._auth).ls(sdpath)
+        seismicStoreClient = SeismicStoreService(self._auth)
+        if provider is None:
+            res, headers = seismicStoreClient.status()
+            provider = headers['Service-Provider']
 
-        # The backend returns all the subfolders before the datasets.
-        # Keep this behavior for backwards compatibility.
-        # Apart from that the items are returned in an arbitrarily
-        # scrambled order. I want them sorted to improve usability.
-        res_1st = sorted([e for e in res if e[-1] == '/'])
-        res_2nd = sorted([e for e in res if e[-1] != '/'])
-        res = list(res_1st) + list(res_2nd)
+        if provider == 'azure':
 
-        if not recursive_flag:
-            print('')
-        for item in res:
-            # If this item represents a folder or a subproject, set "folder"
-            # to the name (sans trailing slash) of that folder.
-            if "/" not in sdpath[5:]:
-                folder = item
-            elif item[-1] == '/':
-                folder = item[:-1]
-            else:
-                folder = None
-            # Print the item (file or folder) itself, except for -lr
-            # where we don't show folders at all.
-            if recursive_flag and full_path_flag and folder:
-                pass
-            elif full_path_flag or (recursive_flag and folder):
-                print(sdpath + "/" + item)
-            else:
-                print(item)
+            next_page_cursor = None
+            limit = 10000
+            working_mode = 'all'
+            while True:
 
-            if recursive_flag and folder:
-                self.executeLs(sdpath + "/" + folder, recursive_flag,
-                               full_path_flag)
-                if not (recursive_flag and full_path_flag):
-                    print('')
+                res = seismicStoreClient.ls(
+                    sdpath, limit=limit, next_page_cursor=next_page_cursor, working_mode=working_mode)
 
-        sys.stdout.flush()
+                if sdpath == 'sd://' or Utils.isTenant(sdpath):
+                    for item in res:
+                        if full_path_flag:
+                            print(sdpath + "/" + item)
+                        else:
+                            print(item)
+                    return
+
+                # folders returned with the first call, after only  pagination calls for datasets  
+                working_mode = 'datasets'
+
+                # The backend returns all the sub-folders before the datasets.
+                # Keep this behavior for backwards compatibility.
+                # Apart from that the items are returned in an arbitrarily
+                # scrambled order. I want them sorted to improve usability.
+                dirs = sorted([e for e in res['datasets'] if e[-1] == '/'])
+                datasets = sorted([e for e in res['datasets'] if e[-1] != '/'])
+
+                for item in (list(dirs) + list(datasets)):
+
+                    # If this item represents a folder or a subproject, set "folder"
+                    # to the name (sans trailing slash) of that folder.
+                    if "/" not in sdpath[5:]:
+                        folder = item
+                    elif item[-1] == '/':
+                        folder = item[:-1]
+                    else:
+                        folder = None
+
+                    # Print the item (file or folder) itself, except for -lr
+                    # where we don't show folders at all.
+                    if recursive_flag and full_path_flag and folder:
+                        pass
+                    elif full_path_flag or (recursive_flag and folder):
+                        print(sdpath + "/" + item)
+                    else:
+                        print(item)
+
+                    if recursive_flag and folder:
+                        self.executeLs(sdpath + "/" + folder, provider, recursive_flag, full_path_flag)
+
+                sys.stdout.flush()
+
+                if 'nextPageCursor' not in res or res['nextPageCursor'] is None:
+                    break
+
+                next_page_cursor = res['nextPageCursor']
+        
+        else: # provider != 'azure' // for these pagination of the ls method should be checked/reviewed
+            
+            res = seismicStoreClient.ls(sdpath)
+
+            # The backend returns all the sub-folders before the datasets.
+            # Keep this behavior for backwards compatibility.
+            # Apart from that the items are returned in an arbitrarily
+            # scrambled order. I want them sorted to improve usability.
+            dirs = sorted([e for e in res if e[-1] == '/'])
+            datasets = sorted([e for e in res if e[-1] != '/'])
+
+            if not recursive_flag:
+                print('')
+
+            for item in (list(dirs) + list(datasets)):
+                # If this item represents a folder or a subproject, set "folder"
+                # to the name (sans trailing slash) of that folder.
+                if "/" not in sdpath[5:]:
+                    folder = item
+                elif item[-1] == '/':
+                    folder = item[:-1]
+                else:
+                    folder = None
+                # Print the item (file or folder) itself, except for -lr
+                # where we don't show folders at all.
+                if recursive_flag and full_path_flag and folder:
+                    pass
+                elif full_path_flag or (recursive_flag and folder):
+                    print(sdpath + "/" + item)
+                else:
+                    print(item)
+                if recursive_flag and folder:
+                    self.executeLs(sdpath + "/" + folder, recursive_flag,
+                                full_path_flag)
+                    if not (recursive_flag and full_path_flag):
+                        print('')
+
+            sys.stdout.flush()
