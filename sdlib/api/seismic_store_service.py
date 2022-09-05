@@ -34,6 +34,20 @@ class SeismicStoreService(object):
         return Config.get_cloud_provider()
 
 
+    def status(self):
+        url = Config.get_svc_url() + '/svcstatus'
+        header = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + self._auth.get_id_token(),
+            Config.get_svc_appkey_name(): Config.get_svc_appkey(),
+        }
+
+        resp = requests.get(url=url, headers=header,verify=Config.get_ssl_verify())
+        if resp.status_code != 200:
+            raise Exception('\n[' + str(resp.status_code) + '] ' + resp.text)
+
+        return resp.text, resp.headers
+
     def create_subproject(self, tenant, subproject, owner_email, gcsclass,
                           gcsloc, legal_tag, access_policy):
 
@@ -138,11 +152,19 @@ class SeismicStoreService(object):
         if resp.status_code != 200:
             raise Exception('\n[' + str(resp.status_code) + '] ' + resp.text)
 
-    def ls(self, sdpath):
+    def ls(self, sdpath, limit=None, next_page_cursor=None, working_mode=None):
 
         url = (Config.get_svc_url()
                + '/utility/ls?sdpath='
                + urllib.parse.quote(sdpath, safe=''))
+
+        if limit is not None:
+            url = url + '&limit=' + str(limit)
+        if next_page_cursor is not None:
+            url = url + '&cursor=' + urllib.parse.quote(next_page_cursor, safe='')
+        if working_mode is not None:
+            url = url + '&wmode=' + working_mode
+
         header = {
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()

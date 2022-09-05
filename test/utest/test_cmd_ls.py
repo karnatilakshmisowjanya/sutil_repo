@@ -42,6 +42,7 @@ class TestCmdLs(SdUtilTestCase):
             with self.assertRaises(Exception):
                 cmd.execute(args, KeywordArguments())
 
-            with patch('sdlib.api.seismic_store_service.SeismicStoreService.ls', return_value=['item']):
-                args = ['sd://tnx01/spx01/a/b/c/dsx01']
-                cmd.execute(args, KeywordArguments())
+            with patch('sdlib.api.seismic_store_service.SeismicStoreService.status', return_value=[None, {'Service-Provider': 'any'}]):
+                with patch('sdlib.api.seismic_store_service.SeismicStoreService.ls', return_value=['item']):
+                    args = ['sd://tnx01/spx01/a/b/c/dsx01']
+                    cmd.execute(args, KeywordArguments())
