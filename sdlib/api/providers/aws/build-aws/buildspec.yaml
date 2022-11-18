@@ -23,6 +23,10 @@ phases:
       # - if [ $(echo $CODEBUILD_SOURCE_VERSION | grep -c  ^refs/heads.*) -eq 1 ]; then echo "Branch name found"; else echo "This build only supports branch builds" && exit 1; fi
       # - apt-get update -y
       # Install git secrets.
+      #TODO temporarily adding hotfix, due to https://github.com/awslabs/git-secrets/issues/220
+      - export SAY_LOCATION=`ln -s "$(which echo)" say`
+      - export PATH="$PATH:$SAY_LOCATION"
+
       - git clone https://github.com/awslabs/git-secrets.git
       - cd git-secrets && make install && cd ..
       - git secrets --install && git secrets --register-aws

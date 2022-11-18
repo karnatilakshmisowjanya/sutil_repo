@@ -119,7 +119,7 @@ The following software have components provided under the terms of this license:
 - azure-storage-blob (from https://github.com/Azure/azure-sdk-for-python/tree/main/sdk/storage/azure-storage-blob)
 - botocore (from https://github.com/boto/botocore)
 - cffi
-- charset-normalizer (from https://github.com/ousret/charset_normalizer)
+- charset-normalizer (from https://github.com/Ousret/charset_normalizer, https://github.com/ousret/charset_normalizer)
 - coverage (from https://github.com/nedbat/coveragepy)
 - iniconfig (from http://github.com/RonnyPfannschmidt/iniconfig)
 - jmespath (from https://github.com/jmespath/jmespath.py)
@@ -148,13 +148,14 @@ MPL-1.1
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- charset-normalizer (from https://github.com/ousret/charset_normalizer)
+- charset-normalizer (from https://github.com/Ousret/charset_normalizer, https://github.com/ousret/charset_normalizer)
 
 ========================================================================
 MPL-2.0
 ========================================================================
 The following software have components provided under the terms of this license:
 
+- botocore (from https://github.com/boto/botocore)
 - certifi (from https://github.com/certifi/python-certifi)
 - tqdm (from https://tqdm.github.io)
 
@@ -173,9 +174,24 @@ The following software have components provided under the terms of this license:
 - lxml (from https://lxml.de/)
 
 ========================================================================
+Python-2.0
+========================================================================
+The following software have components provided under the terms of this license:
+
+- boto3 (from https://github.com/boto/boto3)
+- botocore (from https://github.com/boto/botocore)
+
+========================================================================
 Zlib
 ========================================================================
 The following software have components provided under the terms of this license:
 
 - crc32c (from https://github.com/ICRAR/crc32c)
 - lxml (from https://lxml.de/)
+
+========================================================================
+public-domain
+========================================================================
+The following software have components provided under the terms of this license:
+
+- botocore (from https://github.com/boto/botocore)
