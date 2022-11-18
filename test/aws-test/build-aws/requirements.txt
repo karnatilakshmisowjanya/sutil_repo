@@ -15,6 +15,7 @@
 
 Authlib==0.13
 azure-storage-blob==12.3.2
+boto3==1.26.6
 certifi==2019.11.28
 chardet==3.0.4
 Click==7.0
@@ -24,10 +25,10 @@ itsdangerous==1.1.0
 Jinja2==2.10.3
 MarkupSafe==1.1.1
 PyYAML==5.3.1
-requests==2.22.0
+requests==2.28.1
 six==1.13.0
 tqdm==4.41.0
-urllib3==1.25.8
+urllib3==1.26.5
 Werkzeug==0.16.0
 lxml==4.6.2
 crc32c==2.2
@@ -38,6 +39,4 @@ mock
 coverage
 xmlrunner
 unittest-xml-reporting
-boto3
-
 
