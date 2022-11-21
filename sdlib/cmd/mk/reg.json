@@ -9,7 +9,9 @@
         "  *legaltag     : the default legal tag for the created subproject\n",
         "  (options)     | --idtoken=<token> pass the credential token to use, rather than generating a new one\n",
         "                | --access-policy=<uniform|dataset> pass the access policy for the subproject. allowed values are uniform or dataset.",
-        "                                                    if the policy is set to dataset, then updating this to uniform later is not allowed."
+        "                                                    if the policy is set to dataset, then updating this to uniform later is not allowed.",
+        "                | --admin_acl=<value> the acl admin groups",
+        "                | --viewer_acl=<value> the acl viewer groups"
     ],
     "name": "mk"
 }

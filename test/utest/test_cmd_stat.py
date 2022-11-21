@@ -53,7 +53,8 @@ class TestCmdStat(SdUtilTestCase):
             sp = {
                 'storage_class': 'storage_class',
                 'storage_location': 'storage_location',
-                'access_policy': 'uniform'
+                'access_policy': 'uniform',
+                'acls': {}
             }
             with patch('sdlib.api.seismic_store_service.SeismicStoreService.get_subproject', return_value=sp):
                 args = ['sd://tnx01/spx01']

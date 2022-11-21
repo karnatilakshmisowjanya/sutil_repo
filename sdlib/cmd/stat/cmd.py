@@ -15,6 +15,7 @@
 
 
 from __future__ import print_function
+import json
 
 import os
 import sys
@@ -96,6 +97,7 @@ class Stat(SDUtilCMD):
             print(' - Storage Location: ' + res['storage_location'])
         
         print(' - Access Policy: ' +  res['access_policy'])
+        print(' - ACLs: ' +  json.dumps(res['acls']))
         sys.stdout.flush()
 
     def display_dataset(self, sdpath, detailed_flag):

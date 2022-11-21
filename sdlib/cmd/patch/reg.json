@@ -8,6 +8,8 @@
         "                | --recursive apply the patch recursively (subproject only)",
         "                | --idtoken=<value>  pass id token to use, rather than generating a new one",
         "                | --access-policy=<dataset> access policy of the subproject to be patched. allowed value is dataset\n",
+        "                | --admin_acl=<value> the acl admin groups",
+        "                | --viewer_acl=<value> the acl viewer groups",
         "> python sdutil patch *dataset (options)\n",
         "  patch a seismic store dataset\n",
         "  *dataset      : the seismic store dataset path. sd://<tenant>/<subproject>/<path>/<dataset>\n",

@@ -136,8 +136,17 @@ class Patch(SDUtilCMD):
             # the patch method for subnproject require the ltag
             if subproject_ltag is None:
                 self.help()
+            
+            admins = None
+            viewers = None
+
+            if ('admin_acl' in keyword_args.__dict__):
+                admins = getattr(keyword_args, 'admin_acl')
+            
+            if ('viewer_acl' in keyword_args.__dict__):
+                viewers = getattr(keyword_args, 'viewer_acl')
 
             # patch the subproject
             print('\n Patching the subproject ' + sdpath + ': ', end='')
-            SeismicStoreService(self._auth).patch_subproject(sdpath, subproject_ltag, keyword_args.recursive, keyword_args.access_policy)
+            SeismicStoreService(self._auth).patch_subproject(sdpath, subproject_ltag, keyword_args.recursive, keyword_args.access_policy, admins, viewers)
             print('OK')
