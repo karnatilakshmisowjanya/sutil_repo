@@ -49,7 +49,7 @@ class SeismicStoreService(object):
         return resp.text, resp.headers
 
     def create_subproject(self, tenant, subproject, owner_email, gcsclass,
-                          gcsloc, legal_tag, access_policy):
+                          gcsloc, legal_tag, access_policy, admins = None, viewers = None):
 
         url = Config.get_svc_url() + '/subproject/tenant/' + \
             tenant + '/subproject/' + subproject
@@ -74,9 +74,14 @@ class SeismicStoreService(object):
 
         if access_policy:
             body["access_policy"] = access_policy
-        
 
+        body['acls'] = {
+            'admins': [] if admins is None else [admins],
+            'viewers': [] if viewers is None else [viewers]
+        }
+        
         resp = requests.post(url=url, json=body, headers=header, verify=Config.get_ssl_verify())
+
         if resp.status_code != 200:
             raise Exception('\n[' + str(resp.status_code) + '] ' + resp.text)
 
@@ -111,7 +116,9 @@ class SeismicStoreService(object):
 
         return resp.json()
 
-    def patch_subproject(self, sdpath, legal_tag, recursive = None, access_policy = None):
+    def patch_subproject(self, sdpath, legal_tag, recursive = None, access_policy = None, admins = None, viewers = None):
+
+        body = None
 
         sdpath = SDPath(sdpath)
 
@@ -130,9 +137,17 @@ class SeismicStoreService(object):
             body = {
                 "access_policy": access_policy
             }
-            resp = requests.patch(url=url, headers=header, json=body, params=querystring,verify=Config.get_ssl_verify())
-        else:    
-            resp = requests.patch(url=url, headers=header, params=querystring,verify=Config.get_ssl_verify())
+        
+        if admins is not None or viewers is not None:
+            if body is None:
+                body = {}
+            body['acls'] = {
+                'admins': [admins] if admins is not None else [],
+                'viewers': [viewers] if viewers is not None else []
+            }
+            
+        resp = requests.patch(url=url, headers=header, json=body, params=querystring,verify=Config.get_ssl_verify())
+
         if resp.status_code != 200:
             raise Exception('\n[' + str(resp.status_code) + '] ' + resp.text)
 

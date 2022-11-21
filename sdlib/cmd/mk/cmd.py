@@ -116,12 +116,21 @@ class Mk(SDUtilCMD):
         else:
             access_policy = 'uniform'
 
+        admins = None
+        viewers = None
+
+        if ('admin_acl' in keyword_args.__dict__):
+            admins = getattr(keyword_args, 'admin_acl')
+        
+        if ('viewer_acl' in keyword_args.__dict__):
+            viewers = getattr(keyword_args, 'viewer_acl')
+
         print('')
         message = ('> Registering the subproject {subproject}(tenant={tenant})' ' with {owner} as admin ... ')
         print(message.format(**{"subproject": subproject, "tenant": tenant, "owner": owner_email}), end='')
         sys.stdout.flush()
 
-        sd.create_subproject(tenant, subproject, owner_email, cl, loc, legal_tag, access_policy)
+        sd.create_subproject(tenant, subproject, owner_email, cl, loc, legal_tag, access_policy, admins, viewers)
 
         print('OK')
         sys.stdout.flush()
