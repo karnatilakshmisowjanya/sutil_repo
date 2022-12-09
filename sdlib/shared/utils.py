@@ -14,6 +14,7 @@
 # limitations under the License.
 
 
+import os
 import re
 from six.moves import urllib
 from sdlib.shared.config import Config
@@ -188,3 +189,10 @@ class Utils(object):
                 return "%3.1f %s%s" % (num, unit, suffix)
             num /= 1024.0
         return "%.1f %s%s" % (num, 'Y', suffix)
+
+    @staticmethod
+    def getFileName(filePath):
+        fileName = filePath
+        if ("/" in fileName or "\\" in fileName):
+            fileName = os.path.split(fileName)[-1]
+        return fileName
