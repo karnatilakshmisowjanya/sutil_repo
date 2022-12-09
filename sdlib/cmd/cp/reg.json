@@ -5,7 +5,7 @@
         "  *upload     $ python sdutil cp [localFile] [sdpath] [legaltag] (options)",
         "                upload a dataset to seismic store (for Azure only, by default, dataset is upload as multiple object of 32MB each)\n",
         "                [localFile]  : path of the local file to upload",
-        "                [sdpath]     : seistore path",
+        "                [sdpath]     : seistore path. If path ends with '/', localFile will be append at end.",
         "                [legaltag]   : legal tag to be set to the dataset, if not provided, the suproject one will be used\n",
         "                (options)    | --seismicmeta=filepath seismic metadata file (json)",
         "                             | --idtoken=<token> pass the credential token to use, rather than generating a new one",

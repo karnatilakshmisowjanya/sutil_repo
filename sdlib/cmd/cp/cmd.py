@@ -179,13 +179,28 @@ class Cp(SDUtilCMD):
         legal_tag = None
         sdpath = None
 
-        if Utils.isDatasetPath(args[-1]):
-            local_file = args[0]
+        local_file = args[0]
+
+        if (Utils.isDatasetPath(args[-1])):
             sdpath = args[-1]
-        elif Utils.isDatasetPath(args[-2]):
-            local_file = args[0]
+        elif (Utils.isDatasetPath(args[-2])):
             sdpath = args[-2]
             legal_tag = args[-1]
+        elif (Utils.isSDPath(args[-1]) and str(args[-1]).endswith("/")):
+            cleanedFileName = Utils.getFileName(local_file)
+            print("\nPath ends with '/', based on " + local_file + ", sdpath will be " + str(args[-1]) + cleanedFileName + ". Continue? [y/n]", end='')
+            sys.stdout.flush()
+            confirm = sys.stdin.readline().rstrip().lower()
+            if (confirm == 'y'):
+                sdpath = str(args[-1]) + cleanedFileName
+        elif (Utils.isSDPath(args[-2]) and str(args[-2]).endswith("/")):
+            cleanedFileName = Utils.getFileName(local_file)
+            print("\nPath ends with '/', based on " + local_file + ", sdpath will be " + str(args[-2]) + cleanedFileName + ". Continue? [y/n]", end='')
+            sys.stdout.flush()
+            confirm = sys.stdin.readline().rstrip().lower()
+            if (confirm == 'y'):
+                sdpath = str(args[-2]) + cleanedFileName
+            legal_tag = args[-1] 
 
         if Utils.isDatasetPath(sdpath) is False:
             raise Exception(
