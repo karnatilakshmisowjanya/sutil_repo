@@ -12,7 +12,7 @@ The following software have components provided under the terms of this license:
 - botocore (from https://github.com/boto/botocore)
 - coverage (from https://github.com/nedbat/coveragepy)
 - cryptography (from https://github.com/pyca/cryptography)
-- packaging (from https://github.com/pypa/packaging)
+- packaging (from https://pypi.org/project/packaging/22.0/, https://pypi.org/project/packaging/23.0/)
 - python-dateutil (from https://github.com/dateutil/dateutil)
 - requests (from http://python-requests.org, https://requests.readthedocs.io)
 - s3transfer (from https://github.com/boto/s3transfer)
@@ -24,7 +24,7 @@ BSD-2-Clause
 The following software have components provided under the terms of this license:
 
 - mock (from http://mock.readthedocs.org/en/latest/)
-- packaging (from https://github.com/pypa/packaging)
+- packaging (from https://pypi.org/project/packaging/22.0/, https://pypi.org/project/packaging/23.0/)
 - unittest-xml-reporting (from http://github.com/xmlrunner/unittest-xml-reporting/tree/master/)
 
 ========================================================================
@@ -38,11 +38,11 @@ The following software have components provided under the terms of this license:
 - MarkupSafe (from https://palletsprojects.com/p/markupsafe/)
 - Werkzeug (from https://palletsprojects.com/p/werkzeug/)
 - alive-progress (from https://github.com/rsalmei/alive-progress)
-- click (from http://github.com/mitsuhiko/click, https://palletsprojects.com/p/click/)
+- click (from https://palletsprojects.com/p/click/)
 - crc32c (from https://github.com/ICRAR/crc32c)
 - cryptography (from https://github.com/pyca/cryptography)
-- idna (from https://github.com/kjd/idna, https://pypi.org/project/idna/3.4/)
-- isodate (from http://cheeseshop.python.org/pypi/isodate)
+- idna (from https://pypi.org/project/idna/3.4/)
+- isodate (from https://github.com/gweis/isodate/)
 - itsdangerous (from https://palletsprojects.com/p/itsdangerous/)
 - lxml (from https://lxml.de/)
 - oauthlib (from https://github.com/oauthlib/oauthlib)
@@ -86,7 +86,7 @@ The following software have components provided under the terms of this license:
 - Flask (from https://palletsprojects.com/p/flask)
 - Jinja2 (from http://jinja.pocoo.org/, https://palletsprojects.com/p/jinja/)
 - Werkzeug (from https://palletsprojects.com/p/werkzeug/)
-- click (from http://github.com/mitsuhiko/click, https://palletsprojects.com/p/click/)
+- click (from https://palletsprojects.com/p/click/)
 - itsdangerous (from https://palletsprojects.com/p/itsdangerous/)
 - requests-oauthlib (from https://github.com/requests/requests-oauthlib)
 
@@ -103,7 +103,6 @@ LGPL-2.1-or-later
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- botocore (from https://github.com/boto/botocore)
 - crc32c (from https://github.com/ICRAR/crc32c)
 
 ========================================================================
@@ -119,9 +118,9 @@ The following software have components provided under the terms of this license:
 - azure-storage-blob (from https://github.com/Azure/azure-sdk-for-python/tree/main/sdk/storage/azure-storage-blob)
 - botocore (from https://github.com/boto/botocore)
 - cffi
-- charset-normalizer (from https://github.com/Ousret/charset_normalizer, https://github.com/ousret/charset_normalizer)
+- charset-normalizer (from https://github.com/Ousret/charset_normalizer)
 - coverage (from https://github.com/nedbat/coveragepy)
-- iniconfig (from http://github.com/RonnyPfannschmidt/iniconfig)
+- iniconfig (from https://pypi.org/project/iniconfig/2.0.0/)
 - jmespath (from https://github.com/jmespath/jmespath.py)
 - lxml (from https://lxml.de/)
 - msrest (from https://github.com/Azure/msrest-for-python)
@@ -148,7 +147,7 @@ MPL-1.1
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- charset-normalizer (from https://github.com/Ousret/charset_normalizer, https://github.com/ousret/charset_normalizer)
+- charset-normalizer (from https://github.com/Ousret/charset_normalizer)
 
 ========================================================================
 MPL-2.0
@@ -179,7 +178,6 @@ Python-2.0
 The following software have components provided under the terms of this license:
 
 - boto3 (from https://github.com/boto/boto3)
-- botocore (from https://github.com/boto/botocore)
 
 ========================================================================
 Zlib
@@ -188,10 +186,3 @@ The following software have components provided under the terms of this license:
 
 - crc32c (from https://github.com/ICRAR/crc32c)
 - lxml (from https://lxml.de/)
-
-========================================================================
-public-domain
-========================================================================
-The following software have components provided under the terms of this license:
-
-- botocore (from https://github.com/boto/botocore)

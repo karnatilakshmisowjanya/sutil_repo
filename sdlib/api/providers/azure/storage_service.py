@@ -82,7 +82,7 @@ class AzureStorageService(StorageService):
                                 total = response.context["data_stream_total"]
                                 bar(current/total)
 
-                        blob_client.upload_blob(lfile, validate_content=False,
+                        blob_client.upload_blob(lfile, validate_content=True,
                                                 raw_response_hook=callback)
 
             lfile.close()
@@ -126,7 +126,7 @@ class AzureStorageService(StorageService):
                                     break
 
                                 block_id = base64.b64encode(uuid.uuid4().hex.encode())
-                                blob_client.stage_block(block_id, chunk, len(chunk))
+                                blob_client.stage_block(block_id, chunk, len(chunk), validate_content=True)
                                 block_id_lst.append(block_id)
 
                                 if len(block_id_lst) >= max_allowed_uncommmited_blocks:
