@@ -45,7 +45,7 @@ class MinioStorageService(AwsStorageService):
                 aws_access_key_id=access_key_id,
                 aws_secret_access_key=secret_key,
                 aws_session_token=session_token,
-                endpoint_url=os.getenv("MINIO_ENDPOINT"),
+                endpoint_url=os.environ["MINIO_ENDPOINT"], 
                 config=Config(
                     signature_version=self._signature_version,
                     connect_timeout=6000,
