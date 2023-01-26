@@ -147,6 +147,9 @@ $env:OAUTH2_CLIENT_SECRET = "check-env-provisioning-team-as-specific-to-cluster"
 $env:OAUTH2_CLIENT_REDIRECT_URL = "http://localhost:4300/auth/callback"
 $env:COS_URL = "minio-url-specific-to-the-cluster"
 $env:COS_REGION= "us-east-1"
+
+# Reference/Anthos
+export MINIO_ENDPOINT="<minio_api_endpoint>"
 ```
 
 ## Usage
