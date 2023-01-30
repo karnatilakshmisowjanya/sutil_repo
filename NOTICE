@@ -178,6 +178,7 @@ Python-2.0
 The following software have components provided under the terms of this license:
 
 - boto3 (from https://github.com/boto/boto3)
+- cryptography (from https://github.com/pyca/cryptography)
 
 ========================================================================
 Zlib
