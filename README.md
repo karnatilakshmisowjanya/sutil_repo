@@ -228,7 +228,7 @@ Subproject: sd://gtc/carbon
 Dataset: sd://gtc/carbon/qadata/ustest/results.segy
 ```
 
-## Subprojects
+## Subproject
 
 A subproject in Seismic Store is a working unit where datasets can be saved. The system can handle multiple subprojects under a tenant project.
 
@@ -243,8 +243,27 @@ A subproject resource can be created by a `Tenant Admin Only` with the following
   *sdpath       : the seismic store subproject path. sd://<tenant>/<subproject>
   *admin@email  : the email of the user to be set as the subproject admin
   *legaltag     : the default legal tag for the created subproject
-
   (options)     | --idtoken=<token> pass the credential token to use, rather than generating a new one
+                | --access-policy=<uniform|dataset> pass the access policy for the subproject. allowed values are uniform or dataset. 
+                                                    if the policy is set to dataset, then updating this to uniform later is not allowed.
+                | --admin_acl=<value> the acl admin groups
+                | --viewer_acl=<value> the acl viewer groups
+```
+
+A subproject resource can be patched by a `Subproject Admin Only` with the following sdutil command:
+
+```code
+> python sdutil patch *subproject (options)
+
+  patch a seismic store subproject
+
+  *subproject       : the seismic store subproject path. sd://<tenant>/<subproject>
+  (options)         | --ltag=<value> the legal tag
+                    | --recursive apply the patch recursively (subproject only)
+                    | --idtoken=<value>  pass id token to use, rather than generating a new one
+                    | --access-policy=<dataset> access policy of the subproject to be patched. allowed value is dataset
+                    | --admin_acl=<value> the acl admin groups
+                    | --viewer_acl=<value> the acl viewer groups
 ```
 
 ## Users Management
