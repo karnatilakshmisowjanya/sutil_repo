@@ -16,9 +16,8 @@
 
 import os
 import re
-from six.moves import urllib
 from sdlib.shared.config import Config
-
+from urllib.parse import quote
 
 class Utils(object):
 
@@ -174,7 +173,7 @@ class Utils(object):
         names = ['', '', '', '']
         names[0] = splitpath[0]
         names[1] = splitpath[1]
-        names[3] = urllib.parse.quote(splitpath[-1], safe='')
+        names[3] = quote(splitpath[-1], safe='')
         splitpath = splitpath[2:-1]
         if splitpath:
             names[2] += ('%2F'.join(map(str, splitpath)))

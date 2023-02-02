@@ -23,7 +23,6 @@ import sys
 from sdlib.cmd.cmd import SDUtilCMD
 from sdlib.cmd.helper import CMDHelper
 from sdlib.shared.config import Config as Configuration
-from six.moves import input
 
 
 class Config(SDUtilCMD):

@@ -18,7 +18,6 @@ from __future__ import print_function
 import os
 import sys
 
-import six
 from sdlib.api.seismic_store_service import SeismicStoreService
 from sdlib.api.storage_service import StorageFactory
 from sdlib.cmd.cmd import SDUtilCMD
@@ -110,12 +109,11 @@ class Mk(SDUtilCMD):
         if ('access_policy' in keyword_args.__dict__):
             access_policy = getattr(keyword_args, 'access_policy')
             if (access_policy == 'dataset'):
-                question = 'Are you sure the access policy is dataset? If you set it to dataset access policy, then you will be unable to update it to uniform access policy later. Enter'
-                if not six.moves.input(question + " (y/n): ").lower().strip()[:1] == "y":
+                res = input('Are you sure the access policy is dataset?\nIf you set it to dataset access policy, then you will be unable to update it to "uniform" later.\nEnter (y/n): ')
+                if res.lower().strip()[:1] != "y":
                     sys.exit(1)
         else:
             access_policy = 'uniform'
-
         admins = None
         viewers = None
 

@@ -19,9 +19,9 @@ import sys
 import logging
 import webbrowser
 import stat
+import pickle
 
 from authlib.integrations.flask_client import OAuth
-from six.moves import cPickle as pickle
 
 from flask import Flask, request
 cli = sys.modules['flask.cli']

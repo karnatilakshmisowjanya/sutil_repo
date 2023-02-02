@@ -13,9 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-from six.moves import urllib
-
+from urllib.parse import quote
 
 class SDPath(object):
 
@@ -42,11 +40,11 @@ class SDPath(object):
                 splitpath = sdpath.split('/')
                 self.tenant = splitpath[0]
                 self.subproject = splitpath[1]
-                self.path = urllib.parse.quote('/', safe='')
-                self.dataset = splitpath[2]
+                self.path = quote('/', safe='')
+                self.dataset = quote(splitpath[2], safe='')
             else:  # full
                 splitpath = sdpath.split('/')
                 self.tenant = splitpath[0]
                 self.subproject = splitpath[1]
-                self.dataset = urllib.parse.quote(splitpath[-1], safe='')
-                self.path = '/'.join(splitpath[2:-1])
+                self.dataset = quote(splitpath[-1], safe='')
+                self.path = quote('/'.join(splitpath[2:-1]), safe='')

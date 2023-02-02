@@ -20,7 +20,7 @@ import time
 import requests
 from sdlib.shared.config import Config
 from sdlib.shared.sdpath import SDPath
-from six.moves import urllib
+from urllib.parse import quote
 
 
 class SeismicStoreService(object):
@@ -171,12 +171,12 @@ class SeismicStoreService(object):
 
         url = (Config.get_svc_url()
                + '/utility/ls?sdpath='
-               + urllib.parse.quote(sdpath, safe=''))
+               + quote(sdpath, safe=''))
 
         if limit is not None:
             url = url + '&limit=' + str(limit)
         if next_page_cursor is not None:
-            url = url + '&cursor=' + urllib.parse.quote(next_page_cursor, safe='')
+            url = url + '&cursor=' + quote(next_page_cursor, safe='')
         if working_mode is not None:
             url = url + '&wmode=' + working_mode
 
@@ -216,7 +216,7 @@ class SeismicStoreService(object):
                + '/subproject/'
                + sdpath.subproject
                + '/dataset/'
-               + urllib.parse.quote(sdpath.dataset, safe=''))
+               + sdpath.dataset)
         querystring = {"path": sdpath.path}
         header = {
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
@@ -252,7 +252,7 @@ class SeismicStoreService(object):
                + '/subproject/'
                + sdpath.subproject
                + '/dataset/'
-               + urllib.parse.quote(sdpath.dataset))
+               + sdpath.dataset)
 
         querystring = {"path": sdpath.path, "seismicmeta": seismicmeta}
         header = {
@@ -276,7 +276,7 @@ class SeismicStoreService(object):
                + '/subproject/'
                + sdpath.subproject
                + '/dataset/'
-               + urllib.parse.quote(sdpath.dataset, safe='')
+               + sdpath.dataset
                + '/lock')
 
         querystring = {"path": sdpath.path, "openmode": openmode}
@@ -302,7 +302,7 @@ class SeismicStoreService(object):
                + '/subproject/'
                + sdpath.subproject
                + '/dataset/'
-               + urllib.parse.quote(sdpath.dataset, safe='')
+               + sdpath.dataset
                + '/unlock')
 
         querystring = {"path": sdpath.path}
@@ -326,7 +326,7 @@ class SeismicStoreService(object):
                + '/subproject/'
                + sdpath.subproject
                + '/dataset/'
-               + urllib.parse.quote(sdpath.dataset, safe=''))
+               + sdpath.dataset)
 
         if closeid is None:
             querystring = {"path": sdpath.path}
@@ -354,7 +354,7 @@ class SeismicStoreService(object):
                + '/subproject/'
                + sdpath.subproject
                + '/dataset/'
-               + urllib.parse.quote(sdpath.dataset, safe=''))
+               + sdpath.dataset)
         querystring = {"path": sdpath.path}
         header = {
             'Authorization': 'Bearer ' + self._auth.get_id_token(),

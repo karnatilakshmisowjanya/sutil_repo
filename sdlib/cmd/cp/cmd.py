@@ -120,7 +120,8 @@ class Cp(SDUtilCMD):
         storage_service = StorageFactory.build(
             sd.get_cloud_provider(sdpath), auth=self._auth)
         storage_service.download(local_file, ds)
-        sd.dataset_patch(sdpath, None, ds.sbit)
+        if ds.sbit is not None:
+            sd.dataset_patch(sdpath, None, ds.sbit)
 
     def cp_local_to_sd(self, args, keyword_args):
         """ Copy a local file to seismic store
