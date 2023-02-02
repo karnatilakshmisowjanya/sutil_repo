@@ -15,7 +15,6 @@
 # limitations under the License.
 
 import os
-import re
 
 from sdlib.shared.config import Config
 import urllib.parse

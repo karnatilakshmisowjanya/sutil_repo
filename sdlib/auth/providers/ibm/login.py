@@ -21,7 +21,6 @@ import stat
 
 from authlib.integrations.flask_client import OAuth
 from authlib.integrations.requests_client import OAuth2Session
-from six.moves import cPickle as pickle
 
 from flask import Flask, request
 cli = sys.modules['flask.cli']

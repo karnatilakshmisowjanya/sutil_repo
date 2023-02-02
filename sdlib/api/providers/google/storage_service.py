@@ -28,7 +28,7 @@ import crc32c
 import requests
 from sdlib.api.seismic_store_service import SeismicStoreService
 from sdlib.api.storage_service import StorageFactory, StorageService
-from six.moves import urllib
+from urllib.parse import quote
 from tqdm import tqdm
 
 
@@ -50,7 +50,7 @@ class GoogleStorageService(StorageService):
               + dataset.gcsurl.split("/")[0] \
               + "/o/" + dataset.gcsurl.split("/")[1] \
               + "%2F" \
-              + urllib.parse.quote(objname, safe='')
+              + quote(objname, safe='')
 
         token = self._seistore_svc.get_storage_access_token(dataset.tenant,
                                                             dataset.subproject,
@@ -73,7 +73,7 @@ class GoogleStorageService(StorageService):
               + "/o?uploadType=media&name=" \
               + dataset.gcsurl.split("/")[1] \
               + "%2F" \
-              + urllib.parse.quote(objname, safe='')
+              + quote(objname, safe='')
 
         token = self._seistore_svc.get_storage_access_token(dataset.tenant,
                                                             dataset.subproject,
@@ -93,7 +93,7 @@ class GoogleStorageService(StorageService):
             + '/b/' \
               + bucket \
               + "/o?uploadType=media&name=" \
-              + urllib.parse.quote(objname, safe='')
+              + quote(objname, safe='')
 
         token = self._seistore_svc.get_storage_access_token(tenant,
                                                             subproject, False)
@@ -112,7 +112,7 @@ class GoogleStorageService(StorageService):
             + '/b/' \
               + bucket \
               + "/o?uploadType=resumable&name=" \
-              + urllib.parse.quote(objname, safe='')
+              + quote(objname, safe='')
 
         token = self._seistore_svc.get_storage_access_token(dataset.tenant,
                                                             dataset.subproject,
@@ -173,7 +173,7 @@ class GoogleStorageService(StorageService):
               + '.' \
               + 'storage.googleapis.com' \
               + '/' \
-              + urllib.parse.quote(obj, safe='') \
+              + quote(obj, safe='') \
               + '?alt=media'
 
         token = self._seistore_svc.get_storage_access_token(tenant,
@@ -198,7 +198,7 @@ class GoogleStorageService(StorageService):
             + '/b/' \
               + bucket \
               + '/o/' \
-              + urllib.parse.quote(objname, safe='') \
+              + quote(objname, safe='') \
               + "?fields=" \
               + attribute
 

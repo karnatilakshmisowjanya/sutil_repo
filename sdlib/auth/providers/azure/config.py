@@ -18,7 +18,6 @@ import os
 import re
 
 from sdlib.shared.config import Config
-import urllib.parse
 
 # auth_provider:
 #   oauth2: '{"provider": "#{oauth2.provider}#", "authorize_url": "#{oauth2.authorize_url}#", "authorize_params": "#{oauth2.authorize_params}#", "access_token_url": "#{oauth2.access_token_url}#", "access_token_params": "#{oauth2.access_token_params}#", "refresh_token_url": "#{oauth2.refresh_token_url}#", "refresh_token_params": "#{oauth2.refresh_token_params}#", "open_id_url": "#{oauth2.open_id_url}#", "scope": "#{oauth2.scope}#"}'

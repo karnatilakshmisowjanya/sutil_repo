@@ -144,3 +144,6 @@ dmypy.json
 
 # configuration
 sdlib/config.yaml
+
+# slb auth
+sauth

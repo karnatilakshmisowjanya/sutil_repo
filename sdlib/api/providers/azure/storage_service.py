@@ -58,10 +58,8 @@ class AzureStorageService(StorageService):
     def upload_single_object(self, filename, dataset):
         """ Uploads dataset(blob) to azure storage container"""
         print('')
-        start_time = time.time()
 
         sas_url = self._get_sas_url(dataset, False)
-        dataset_id = dataset.gcsurl.split("/")[1]
 
         with open(filename, "rb") as lfile:
             print('- Initializing transfer session ... ', end='')
@@ -86,9 +84,7 @@ class AzureStorageService(StorageService):
                                                 raw_response_hook=callback)
 
             lfile.close()
-            ctime = time.time() - start_time + sys.float_info.epsilon
-            speed = str(round(((fsize / 1048576.0) / ctime), 3))
-            print('- Transfer completed: ' + speed + ' [MB/s]')
+            print('\nTransfer completed ')
 
         return {"num_of_objects": 1}
 
@@ -96,24 +92,20 @@ class AzureStorageService(StorageService):
         """ Uploads dataset(blob) to azure storage container
             param: chunksize is in MiB
         """
-        print('')
-        sas_url = self._get_sas_url(dataset, False)
 
+        sas_url = self._get_sas_url(dataset, False)
         max_allowed_uncommmited_blocks = 1
         block_count = 0
-
         with ContainerClient.from_container_url(container_url=sas_url,
                                                 use_byte_buffer=True,
                                                 max_concurrency=self._max_concurrency,
                                                 connection_timeout=100) as container_client:
-
             totalFileSize = os.path.getsize(filename)
             totalBytesRead = 0
-
             if(totalFileSize > 0):
                 with open(filename, "rb") as lfile:
                     block_id_lst = list()
-                    with alive_bar(totalFileSize, manual=True, title="Uploading") as bar:
+                    with alive_bar(totalFileSize, manual=True, title="Uploading", theme='ascii') as bar:
                         while True:
                             with container_client.get_blob_client(str(block_count)) as blob_client:
                                 chunk = lfile.read(chunk_size*1048576)
@@ -134,25 +126,20 @@ class AzureStorageService(StorageService):
                                     bar(totalBytesRead/totalFileSize)
                                     block_count += 1
                                     block_id_lst = []
-                print('- Transfer completed ')
+                print('\nTransfer completed ')
                 return {"num_of_objects": block_count}
             else:
                 raise Exception(filename + " is empty ")
 
     def download(self, localfilename, dataset):
         """Downloads dataset(blob) from azure storage container"""
-        print('Begin Download')
-        start_time = time.time()
-
-        gcsurl = dataset.gcsurl.split("/")
-        dataset_id = gcsurl[1]
 
         dataset_size = dataset.filemetadata["size"]
         sas_url = self._get_sas_url(dataset, False)
         counter = 0
         current_size = 0
         try:
-            with alive_bar(dataset_size, manual=True) as bar:
+            with alive_bar(dataset_size, manual=True, theme='ascii') as bar:
                 with open(localfilename, 'wb') as lfile:
                     while (current_size < dataset_size):
                         with ContainerClient.from_container_url(
@@ -164,18 +151,15 @@ class AzureStorageService(StorageService):
                                 connection_timeout=100) as container_client:
                             with container_client.get_blob_client(str(counter)) as blob_client:
                                 print("Downloading Chunk # " + str(counter + 1))
-                                blob_client.download_blob(validate_content=True).readinto(lfile)
+                                current_size = current_size + blob_client.download_blob(validate_content=True).readinto(lfile)
                                 counter = counter + 1
-                                current_size = os.fstat(lfile.fileno()).st_size
                                 bar(current_size/dataset_size)
                                 print("Current: " + str(current_size) + " of " + str(dataset_size))
-                print('- Transfer completed')
+            print('\nTransfer completed')
         except Exception as e:
             print("Exception: " + str(e))
 
         lfile.close()
-        ctime = time.time() - start_time + sys.float_info.epsilon
-        speed = str(round(((dataset_size / 1048576.0) / ctime), 3))
 
         if dataset.seismicmeta is not None:
             with open(localfilename + '_seismicmeta.json', 'w') as outfile:

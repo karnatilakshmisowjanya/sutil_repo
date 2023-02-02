@@ -15,10 +15,8 @@
 # limitations under the License.
 
 import os
-import re
 
 from sdlib.shared.config import Config
-import urllib.parse
 
 # auth_provider:
 #   aws: '{"provider": "#{aws.provider}#", "cognito_client_id": "#{aws.cognito_client_id}#"}'

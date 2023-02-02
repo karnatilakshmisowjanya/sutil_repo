@@ -18,7 +18,6 @@ azure-storage-blob==12.9.0
 Authlib==0.15.5
 PyYAML==6.0
 requests==2.28.1
-six==1.16.0
 tqdm==4.62.3
 urllib3==1.26.8
 # Some versions of crc32c may have problems working on different platforms (for example Windows)

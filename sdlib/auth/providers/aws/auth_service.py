@@ -19,7 +19,7 @@ import os
 import stat
 import boto3
 import getpass
-from six.moves import cPickle as pickle
+import pickle
 
 from sdlib.auth.auth_service import AuthService, AuthFactory
 from sdlib.shared.config import Config
