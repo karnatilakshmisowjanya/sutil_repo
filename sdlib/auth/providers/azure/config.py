@@ -54,7 +54,7 @@ class Oauth2Configuration(object):
             raise Exception('\AZURE CLIENT SECRET is required but have not been found in the environement.')
 
         
-        self.oauht2_authorize_url = self.azure_authorize_url + self.azure_tenant_id + self.oauht2_token_host_end
+        self.oauth2_authorize_url = self.azure_authorize_url + self.azure_tenant_id + self.oauht2_token_host_end
         self.oauth2_scopes = self.oauth2_client_id + configuration["scope_end"]
 
         self.token_file_name = "auth.token"
@@ -63,3 +63,17 @@ class Oauth2Configuration(object):
         self.service_account_file_name = "service_auth_account.token"
         self.service_account_file = os.path.join(self.token_file_dir, self.service_account_file_name)
 
+        # Non-mandatory config params to enforce refreshing of tokens and a timeout for sdutil
+        self.force_refresh_token = configuration.get("force_refresh_token")
+        if self.force_refresh_token is not None:
+            self.force_refresh_token = self.force_refresh_token.lower()
+            if self.force_refresh_token == 'true':
+                self.sdutil_session_timeout = configuration.get("sdutil_session_timeout")
+                if self.sdutil_session_timeout is not None:
+                    self.sdutil_session_timeout = int(self.sdutil_session_timeout)
+                    # cap it to maximum of 8 hrs?, is this a sufficient value?
+                    if self.sdutil_session_timeout > 8:
+                        self.sdutil_session_timeout = 8
+                else:
+                    raise Exception('Both force_refresh_token and sdutil_session_timeout are to be used in conjunction, '
+                            'please specify values for both refer to docs/config-azure.yaml for usage example')
