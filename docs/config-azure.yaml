@@ -13,7 +13,9 @@ auth_provider:
          "scope_end":"/.default openid profile offline_access",
          "redirect_uri":"http://localhost:8080",
          "login_grant_type": "refresh_token",
-         "refresh_token": "<put refresh token here from auth_token.http authorize request>"
+         "refresh_token": "<put refresh token here from auth_token.http authorize request>",
+         "force_refresh_token": "<true/false, indicates whether sdutil will refresh the token automatically or not>",
+         "sdutil_session_timeout": <N hours, after these N hours, token will not be refreshed and you will need to login again once it expires >
          }'
 azure:
   empty: 'none'

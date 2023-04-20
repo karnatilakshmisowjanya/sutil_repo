@@ -13,6 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import base64
+import logging
 import os
 import json
 import time
@@ -43,7 +44,13 @@ class OAuth2Service(AuthService):
         self.__user_credential_loaded = False
         self.__custom_idtoken = idtoken
         self.__token = None
-
+        self._oauth_client = OAuth2Session(
+            client_id=self.__configuration.oauth2_client_id,
+            client_secret=self.__configuration.oauth2_client_secret,
+            scope=self.__configuration.oauth2_scopes,
+            redirect_uri=self.__configuration.oauth2_redirect_uri,
+            token=None
+        )
 
     def load_user_credentials(self):
         if not os.path.exists(self.__configuration.token_file):
@@ -64,16 +71,24 @@ class OAuth2Service(AuthService):
 
         payload = self.__token
         if int(payload['expiration']) < int(time.time()):
-            raise Exception('\nLogin credentials expired. Login to the application via "sdutil auth login" and try again')
+            if self.__configuration.force_refresh_token == "true" and \
+                    int(payload["sdutil_auth_session_end_time"]) < int(time.time()):
+                logging.info("refreshing the access token as its expired")
+                self.refresh()
+            else:
+                raise Exception('\nLogin credentials have expired and either the refresh mechanism is not enabled or '
+                                'the sdutil session has timed out. Login to the application via "sdutil auth login" '
+                                'and try again')
         
-        self.refresh()
-        
+
         return self.__token.get("access_token")
 
     def refresh(self):
         if self.__token.is_expired():
             self.__token = self._oauth_client.refresh_token(
-                url=self.__configuration.oauht2_refresh_token_url, refresh_token=self.__token.get("refresh_token"))
+                url=self.__configuration.oauth2_authorize_url, refresh_token=self.__token.get("refresh_token"))
+            self.__token["expiration"] = int(self.__token["expires_in"]) + time.time()
+            self.__token["sdutil_auth_session_end_time"] = int(self.__token["expiration"]) + self.__configuration.sdutil_session_timeout * 3600
         with open(self.__configuration.token_file, 'w') as fh:
             json.dump(self.__token, fh)
 
