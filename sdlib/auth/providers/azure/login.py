@@ -57,13 +57,14 @@ def login(configuration: Oauth2Configuration):
     x = requests.post(authority_uri, data = auth_obj)
         
     token = json.loads(x.text)
-    token["expiration"] = int(token["expires_in"]) + time.time()
     # At the time of login, we set the session end time for sdutil
-    token["sdutil_auth_session_end_time"] = int(token["expiration"])
+    token["sdutil_auth_session_end_time"] = token["expires_on"]
 
-    # sdutil_session_timeout will be set only iff force_refresh_token is true
+    # sdutil_session_timeout will be set once only at the time of login and,
+    # it will keep refreshing the token till that time,
+    # only iff force_refresh_token is true
     if _configuration.sdutil_session_timeout is not None:
-        token["sdutil_auth_session_end_time"] += _configuration.sdutil_session_timeout * 3600
+        token["sdutil_auth_session_end_time"] = int(time.time()) + _configuration.sdutil_session_timeout * 3600
 
     # ensure the directory exist if not create it
     if not os.path.isdir(_configuration.token_file_dir):
