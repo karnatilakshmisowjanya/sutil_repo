@@ -70,9 +70,9 @@ class OAuth2Service(AuthService):
             self.load_user_credentials()
 
         payload = self.__token
-        if int(payload['expiration']) < int(time.time()):
+        if int(payload['expires_on']) < int(time.time()):
             if self.__configuration.force_refresh_token == "true" and \
-                    int(payload["sdutil_auth_session_end_time"]) < int(time.time()):
+                    int(payload["sdutil_auth_session_end_time"]) > int(time.time()):
                 logging.info("refreshing the access token as its expired")
                 self.refresh()
             else:
@@ -84,11 +84,12 @@ class OAuth2Service(AuthService):
         return self.__token.get("access_token")
 
     def refresh(self):
-        if self.__token.is_expired():
-            self.__token = self._oauth_client.refresh_token(
-                url=self.__configuration.oauth2_authorize_url, refresh_token=self.__token.get("refresh_token"))
-            self.__token["expiration"] = int(self.__token["expires_in"]) + time.time()
-            self.__token["sdutil_auth_session_end_time"] = int(self.__token["expiration"]) + self.__configuration.sdutil_session_timeout * 3600
+        # removing un-necessary checks
+        # cache the variable that will be lost
+        end_time = self.__token["sdutil_auth_session_end_time"]
+        self.__token = self._oauth_client.refresh_token(
+            url=self.__configuration.oauth2_authorize_url, refresh_token=self.__token.get("refresh_token"))
+        self.__token["sdutil_auth_session_end_time"] = end_time
         with open(self.__configuration.token_file, 'w') as fh:
             json.dump(self.__token, fh)
 
