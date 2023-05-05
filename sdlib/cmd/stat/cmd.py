@@ -95,7 +95,7 @@ class Stat(SDUtilCMD):
             print(' - Storage Class: ' + res['storage_class'])
         if 'storage_location' in res:
             print(' - Storage Location: ' + res['storage_location'])
-        
+
         print(' - Access Policy: ' +  res['access_policy'])
         print(' - ACLs: ' +  json.dumps(res['acls']))
         sys.stdout.flush()
@@ -116,14 +116,16 @@ class Stat(SDUtilCMD):
                 print(' - Size: ' + Utils.sizeof_fmt(ds.filemetadata['size']))
             if 'nobjects' in ds.filemetadata and detailed_flag:
                 print(' - No of Objects: ' + str(ds.filemetadata['nobjects']))
+            if 'md5Checksum' in ds.filemetadata:
+                print(' - Checksum: ' + str(ds.filemetadata['md5Checksum']))
         if detailed_flag and ds.legaltag is not None:
             print(' - Legal Tag: ' + ds.legaltag)
-        
+
         if ds.readonly is True:
             print(' - ReadOnly: True')
         else:
             print(' - ReadOnly: False')
-        
+
         if detailed_flag and ds.sbit is not None:
             if str(ds.sbit).startswith('R'):
                 print(' - Lock Mode: read')
@@ -137,5 +139,5 @@ class Stat(SDUtilCMD):
         if ds.transfer_status is not None:
             print(' - Copy Transfer Status: ', end="")
             print(ds.transfer_status)
-            
+
         sys.stdout.flush()

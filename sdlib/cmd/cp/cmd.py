@@ -148,33 +148,33 @@ class Cp(SDUtilCMD):
         if read_only_file_flag and read_write_flag:
             raise Exception(
                 '\n' + 'Wrong Command: '
-                'Both read-only and read-write flags cannot be passed at once'
-                '\n               For more information type "python sdutil cp"'
-                ' to open the command help menu.')
+                       'Both read-only and read-write flags cannot be passed at once'
+                       '\n               For more information type "python sdutil cp"'
+                       ' to open the command help menu.')
 
         chunk_size = 32
         if keyword_args.chunk_size is True: # discard option with no value (--chunk-size)
             raise Exception(
                 '\n' + 'Wrong Command: '
-                'The chunk-size argument has been declared but not defined (not provided value)'
-                '\n               For more information type "python sdutil cp"'
-                ' to open the command help menu.')
-        if keyword_args.chunk_size is not None: 
+                       'The chunk-size argument has been declared but not defined (not provided value)'
+                       '\n               For more information type "python sdutil cp"'
+                       ' to open the command help menu.')
+        if keyword_args.chunk_size is not None:
             try:
                 chunk_size = int(keyword_args.chunk_size)
             except ValueError: # discard option with value "not an int" (--chunk-size=test)
                 raise Exception(
                     '\n' + 'Wrong Command: '
-                    'The chunk-size argument must be an integer value greater than zero'
-                    '\n               For more information type "python sdutil cp"'
-                    ' to open the command help menu.')
+                           'The chunk-size argument must be an integer value greater than zero'
+                           '\n               For more information type "python sdutil cp"'
+                           ' to open the command help menu.')
 
             if chunk_size < 0:  # discard option with value < 0 (--chunk-size=-16)
                 raise Exception(
                     '\n' + 'Wrong Command: '
-                    'The chunk-size argument must be an integer value greater than zero'
-                    '\n               For more information type "python sdutil cp"'
-                    ' to open the command help menu.')
+                           'The chunk-size argument must be an integer value greater than zero'
+                           '\n               For more information type "python sdutil cp"'
+                           ' to open the command help menu.')
 
         local_file = None
         legal_tag = None
@@ -201,7 +201,7 @@ class Cp(SDUtilCMD):
             confirm = sys.stdin.readline().rstrip().lower()
             if (confirm == 'y'):
                 sdpath = str(args[-2]) + cleanedFileName
-            legal_tag = args[-1] 
+            legal_tag = args[-1]
 
         if Utils.isDatasetPath(sdpath) is False:
             raise Exception(
@@ -230,14 +230,20 @@ class Cp(SDUtilCMD):
         storage_service = StorageFactory.build(
             sd.get_cloud_provider(sdpath), auth=self._auth)
 
-        upload_response = storage_service.upload(local_file, ds, chunk_size=chunk_size)
+        try:
+            upload_response = storage_service.upload(local_file, ds, chunk_size=chunk_size)
+        except Exception:
+            print('Error encountered during upload, deleting the partially created record from seismic store')
+            sd.dataset_delete(sdpath)
+            raise
 
         if "num_of_objects" in upload_response:
             patch = {
                 'filemetadata': {
                     'type': 'GENERIC',
                     'size':  os.path.getsize(local_file),
-                    'nobjects': upload_response["num_of_objects"]
+                    'nobjects': upload_response["num_of_objects"],
+                    'md5Checksum': upload_response.get("md5_checksum", None)
                 }
             }
 
