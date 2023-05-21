@@ -36,7 +36,7 @@ The following software have components provided under the terms of this license:
 - Flask (from https://pypi.org/project/Flask/2.3.2/)
 - Jinja2 (from http://jinja.pocoo.org/, https://palletsprojects.com/p/jinja/)
 - MarkupSafe (from https://palletsprojects.com/p/markupsafe/)
-- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.3/)
+- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.4/)
 - alive-progress (from https://github.com/rsalmei/alive-progress)
 - click (from https://palletsprojects.com/p/click/)
 - crc32c (from https://github.com/ICRAR/crc32c)
@@ -46,6 +46,7 @@ The following software have components provided under the terms of this license:
 - itsdangerous (from https://palletsprojects.com/p/itsdangerous/)
 - lxml (from https://lxml.de/)
 - oauthlib (from https://github.com/oauthlib/oauthlib)
+- packaging (from https://pypi.org/project/packaging/22.0/, https://pypi.org/project/packaging/23.1/)
 - pycparser (from https://github.com/eliben/pycparser)
 - pyparsing (from http://pyparsing.wikispaces.com/)
 - python-dateutil (from https://github.com/dateutil/dateutil)
@@ -55,14 +56,14 @@ CC-BY-2.5
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.3/)
+- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.4/)
 
 ========================================================================
 CC-BY-3.0
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.3/)
+- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.4/)
 
 ========================================================================
 GPL-2.0-only
@@ -129,7 +130,6 @@ The following software have components provided under the terms of this license:
 - pyparsing (from http://pyparsing.wikispaces.com/)
 - pytest (from http://pytest.org, https://docs.pytest.org/en/latest/)
 - pytest-timeout (from https://github.com/pytest-dev/pytest-timeout)
-- requests (from http://python-requests.org, https://requests.readthedocs.io)
 - six (from http://pypi.python.org/pypi/six/, https://github.com/benjaminp/six)
 - tomli (from https://pypi.org/project/tomli/1.2.2/, https://pypi.org/project/tomli/2.0.0/, https://pypi.org/project/tomli/2.0.1/)
 - tqdm (from https://tqdm.github.io)
@@ -179,6 +179,7 @@ The following software have components provided under the terms of this license:
 
 - boto3 (from https://github.com/boto/boto3)
 - cryptography (from https://github.com/pyca/cryptography)
+- python-dateutil (from https://github.com/dateutil/dateutil)
 
 ========================================================================
 Zlib
