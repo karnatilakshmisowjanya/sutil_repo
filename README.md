@@ -269,6 +269,8 @@ A subproject resource can be patched by a `Subproject Admin Only` with the follo
                     | --viewer_acl=<value> the acl viewer groups
 ```
 
+*Note:* The `-` character is reserved. 
+
 ## Users Management
 
 To be able to use seismic store, a user must be registered/added to at least a subproject resource with a role that define his access level. Seismic Store support three different roles scoped at subproject level:
