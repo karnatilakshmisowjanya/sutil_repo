@@ -269,7 +269,7 @@ A subproject resource can be patched by a `Subproject Admin Only` with the follo
                     | --viewer_acl=<value> the acl viewer groups
 ```
 
-*Note:* The `-` character is reserved. 
+*Note:* When deploying on AWS, the `-` character is reserved. 
 
 ## Users Management
 
