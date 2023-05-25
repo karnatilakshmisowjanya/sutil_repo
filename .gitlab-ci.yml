@@ -2,7 +2,7 @@ include:
   # pipeline logic
   - project: "osdu/platform/ci-cd-pipelines"
     file: "standard-setup.yml"
-    ref: release/0.21
+    ref: v0.21.1
 
   # build
   - local: "/devops/osdu/compile/seismic-store-sdutil.yml"
@@ -14,7 +14,7 @@ include:
   # fossa
   - project: "osdu/platform/ci-cd-pipelines"
     file: "scanners/fossa-python.yml"
-    ref: release/0.21
+    ref: v0.21.1
 
   # build
   - local: "devops/osdu/deploy/seismic-store-sdutil.yml"
