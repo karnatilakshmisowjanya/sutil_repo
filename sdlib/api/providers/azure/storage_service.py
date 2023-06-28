@@ -48,12 +48,13 @@ class AzureStorageService(StorageService):
             **kwargs: chunk_size is in MiB
         '''
         chunk_size = int(kwargs.get('chunk_size', 32))
+        storage_tier = (kwargs.get('storage_tier'))
         if chunk_size == 0:
-            return self.upload_single_object(filename, dataset)
+            return self.upload_single_object(filename, dataset, storage_tier)
         else:
-            return self.upload_multi_object(filename, dataset, chunk_size)
+            return self.upload_multi_object(filename, dataset, storage_tier, chunk_size)
 
-    def upload_single_object(self, filename, dataset):
+    def upload_single_object(self, filename, dataset, storage_tier):
         """ Uploads dataset(blob) to azure storage container"""
         print('')
 
@@ -89,8 +90,11 @@ class AzureStorageService(StorageService):
                                                 raw_response_hook=callback,
                                                 content_settings=ContentSettings(
                                                     content_md5=bytearray.fromhex(file_md5_hash)
-                                                ))
+                                                ),
+                                                standard_blob_tier=storage_tier)
                         blob_properties = blob_client.get_blob_properties()
+                        # Retrieve blob storage tier from blob properties
+                        blob_tier = str(blob_properties.blob_tier)
                         content_md5 = bytearray.hex(blob_properties.content_settings.get('content_md5'))
                         if content_md5 != file_md5_hash:
                             # delete the uploaded blob
@@ -101,9 +105,9 @@ class AzureStorageService(StorageService):
             print('\nTransfer completed\n'
                   'File Checksum: ' + file_md5_hash + '\n' +
                   'Checksum matches!!!\n')
-        return {"num_of_objects": 1, "md5_checksum": file_md5_hash}
+        return {"num_of_objects": 1, "md5_checksum": file_md5_hash, "blob_tier": blob_tier}
 
-    def upload_multi_object(self, filename, dataset, chunk_size):
+    def upload_multi_object(self, filename, dataset, storage_tier, chunk_size):
         """ Uploads dataset(blob) to azure storage container
             param: chunksize is in MiB
         """
@@ -119,6 +123,7 @@ class AzureStorageService(StorageService):
             totalBytesRead = 0
             md5_final_hash = hashlib.md5()
             uploaded_blob_properties = None
+            blob_tier = None
             if totalFileSize > 0:
                 with open(filename, "rb") as lfile:
                     block_id_lst = list()
@@ -130,7 +135,7 @@ class AzureStorageService(StorageService):
 
                                 if not chunk:
                                     if len(block_id_lst) > 0:
-                                        blob_client.commit_block_list(block_id_lst)
+                                        blob_client.commit_block_list(block_id_lst, standard_blob_tier=storage_tier)
                                         bar(totalBytesRead / totalFileSize)
                                     break
                                 # calculate the md5 for the current chunk
@@ -163,13 +168,17 @@ class AzureStorageService(StorageService):
                                                                   content_settings=ContentSettings(
                                                                       content_md5=bytearray.fromhex(
                                                                           md5_final_hash.hexdigest()
-                                                                      )))
+                                                                      )),
+                                                                      standard_blob_tier=storage_tier)
                                     bar(totalBytesRead / totalFileSize)
                                     block_count += 1
                                     block_id_lst = []
 
                                 # Retrieve blob properties, for validation that the content-md5 is indeed reflecting
                                 uploaded_blob_properties = blob_client.get_blob_properties()
+
+                                # Retrieve blob storage tier from blob properties
+                                blob_tier = str(uploaded_blob_properties.blob_tier)
 
                 content_md5_of_uploaded_blob = bytearray.hex(
                     uploaded_blob_properties.content_settings.get('content_md5'))
@@ -192,7 +201,7 @@ class AzureStorageService(StorageService):
                 print('\nTransfer completed\n'
                       'File Checksum: ' + md5_final_hash + '\n' +
                       'Checksum matches!!!\n')
-                return {"num_of_objects": block_count, "md5_checksum": md5_final_hash}
+                return {"num_of_objects": block_count, "md5_checksum": md5_final_hash, "blob_tier": blob_tier }
             else:
                 raise Exception(filename + " is empty ")
 

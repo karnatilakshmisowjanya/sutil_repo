@@ -118,6 +118,8 @@ class Stat(SDUtilCMD):
                 print(' - No of Objects: ' + str(ds.filemetadata['nobjects']))
             if 'md5Checksum' in ds.filemetadata:
                 print(' - Checksum: ' + str(ds.filemetadata['md5Checksum']))
+            if 'tier_class' in ds.filemetadata:
+                print(' - tier_class: ' + str(ds.filemetadata['tier_class']))
         if detailed_flag and ds.legaltag is not None:
             print(' - Legal Tag: ' + ds.legaltag)
 

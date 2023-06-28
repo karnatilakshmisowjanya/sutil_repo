@@ -27,6 +27,7 @@ from sdlib.cmd.cmd import SDUtilCMD
 from sdlib.cmd.helper import CMDHelper
 from sdlib.shared.config import Config
 from sdlib.shared.utils import Utils
+from sdlib.shared.storagetier import Tier
 
 
 class Cp(SDUtilCMD):
@@ -130,6 +131,13 @@ class Cp(SDUtilCMD):
         seismicmeta_file = None
         read_write_flag = None
         read_only_file_flag = None
+        storage_tier = None
+
+        if keyword_args.tier is not None:
+            if str(keyword_args.tier).capitalize() not in ('Hot', 'Cool'):
+                raise Exception(f'\'{keyword_args.tier}\' is not an acceptable Storage tier')
+            storage_tier = str(keyword_args.tier).capitalize()
+        tier = Tier(storage_tier)
 
         if keyword_args.seismicmeta is not None:
             seismicmeta_file = keyword_args.seismicmeta
@@ -231,7 +239,7 @@ class Cp(SDUtilCMD):
             sd.get_cloud_provider(sdpath), auth=self._auth)
 
         try:
-            upload_response = storage_service.upload(local_file, ds, chunk_size=chunk_size)
+            upload_response = storage_service.upload(local_file, ds, storage_tier=tier, chunk_size=chunk_size)
         except Exception:
             print('Error encountered during upload, deleting the partially created record from seismic store')
             sd.dataset_delete(sdpath)
@@ -243,7 +251,8 @@ class Cp(SDUtilCMD):
                     'type': 'GENERIC',
                     'size':  os.path.getsize(local_file),
                     'nobjects': upload_response["num_of_objects"],
-                    'md5Checksum': upload_response.get("md5_checksum", None)
+                    'md5Checksum': upload_response.get("md5_checksum", None),
+                    'tier_class': upload_response.get("blob_tier")
                 }
             }
 
