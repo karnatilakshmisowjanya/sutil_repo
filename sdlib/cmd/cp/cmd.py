@@ -27,6 +27,7 @@ from sdlib.cmd.cmd import SDUtilCMD
 from sdlib.cmd.helper import CMDHelper
 from sdlib.shared.config import Config
 from sdlib.shared.utils import Utils
+from sdlib.shared.sdpath import SDPath
 from sdlib.shared.storagetier import Tier
 
 
@@ -96,6 +97,19 @@ class Cp(SDUtilCMD):
         """
         sdpath = str(args[0])
         local_file = str(args[1])
+
+        if os.path.isdir(local_file):
+            local_file_name = SDPath(sdpath).dataset
+            temp_path = None
+            if (str(args[-1]).endswith("/")):
+                temp_path = local_file + local_file_name
+            else:
+                temp_path = local_file + "/" + local_file_name
+            print("\nLocal path is a directory, based on " + sdpath + ", local path will be " + temp_path + ". Continue? [y/n]", end='')
+            sys.stdout.flush()
+            confirm = sys.stdin.readline().rstrip().lower()
+            if (confirm == 'y'):
+                local_file = temp_path
 
         if Utils.isDatasetPath(sdpath) is False:
             raise Exception(
@@ -190,12 +204,7 @@ class Cp(SDUtilCMD):
 
         local_file = args[0]
 
-        if (Utils.isDatasetPath(args[-1])):
-            sdpath = args[-1]
-        elif (Utils.isDatasetPath(args[-2])):
-            sdpath = args[-2]
-            legal_tag = args[-1]
-        elif (Utils.isSDPath(args[-1]) and str(args[-1]).endswith("/")):
+        if (Utils.isSDPath(args[-1]) and str(args[-1]).endswith("/")):
             cleanedFileName = Utils.getFileName(local_file)
             print("\nPath ends with '/', based on " + local_file + ", sdpath will be " + str(args[-1]) + cleanedFileName + ". Continue? [y/n]", end='')
             sys.stdout.flush()
@@ -210,8 +219,17 @@ class Cp(SDUtilCMD):
             if (confirm == 'y'):
                 sdpath = str(args[-2]) + cleanedFileName
             legal_tag = args[-1]
+        elif (Utils.isDatasetPath(args[-1])):
+            sdpath = args[-1]
+        elif (Utils.isDatasetPath(args[-2])):
+            sdpath = args[-2]
+            legal_tag = args[-1]
 
         if Utils.isDatasetPath(sdpath) is False:
+            if (Utils.isSDPath(args[-1])):
+                sdpath = args[-1]
+            elif (Utils.isSDPath(args[-2])):
+                sdpath = args[-2]
             raise Exception(
                 '\n' + 'Wrong Command: ' + sdpath +
                 ' is not a valid seismic store dataset path.\n'
