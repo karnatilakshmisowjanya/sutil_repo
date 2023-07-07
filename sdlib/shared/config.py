@@ -30,6 +30,7 @@ class Config(object):
 
     __configuration = {}
     __user_configuration = {}
+    __data_partition_id = None
 
 
     @classmethod 
@@ -207,3 +208,11 @@ class Config(object):
     @classmethod
     def get_readonly_file_formats(cls):
         return cls.__configuration.get('read_only_file_formats', [])
+
+    @classmethod
+    def set_data_partition_id(cls, data_partition_id):
+        cls.__data_partition_id = data_partition_id
+
+    @classmethod
+    def get_data_partition_id(cls):
+        return cls.__data_partition_id

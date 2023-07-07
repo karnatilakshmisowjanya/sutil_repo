@@ -41,6 +41,7 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey(),
         }
+        self.update_header_if_data_partition_id_provided(header)
 
         resp = requests.get(url=url, headers=header,verify=Config.get_ssl_verify())
         if resp.status_code != 200:
@@ -60,6 +61,7 @@ class SeismicStoreService(object):
             'ltag': legal_tag,
             'access-policy': access_policy
         }
+        self.update_header_if_data_partition_id_provided(header)
 
         if gcsclass is not None and gcsloc is not None:
             body = {
@@ -93,6 +95,7 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey(),
         }
+        self.update_header_if_data_partition_id_provided(header)
 
         resp = requests.get(url=url, headers=header,verify=Config.get_ssl_verify())
         if resp.status_code != 200:
@@ -109,6 +112,7 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
 
         resp = requests.get(url=url, headers=header,verify=Config.get_ssl_verify())
         if resp.status_code != 200:
@@ -130,6 +134,7 @@ class SeismicStoreService(object):
             Config.get_svc_appkey_name(): Config.get_svc_appkey(),
             'ltag': legal_tag
         }
+        self.update_header_if_data_partition_id_provided(header)
 
         querystring = {"recursive": "true" if recursive is not None else "false"}
 
@@ -162,6 +167,7 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey(),
         }
+        self.update_header_if_data_partition_id_provided(header)
 
         resp = requests.delete(url=url, headers=header, verify=Config.get_ssl_verify())
         if resp.status_code != 200:
@@ -184,6 +190,7 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
 
         resp = requests.get(url=url, headers=header,verify=Config.get_ssl_verify())
 
@@ -199,6 +206,8 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
+
         resp = requests.post(url=url, headers=header, params=querystring,verify=Config.get_ssl_verify())
         
         if resp.status_code == 202 or resp.status_code == 200:
@@ -221,8 +230,9 @@ class SeismicStoreService(object):
         header = {
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey(),
-            'ltag': legal_tag
+            'ltag': legal_tag,
         }
+        self.update_header_if_data_partition_id_provided(header)
 
         body = {}
         body_none = True
@@ -259,6 +269,7 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
 
         resp = requests.get(url=url, headers=header, params=querystring,verify=Config.get_ssl_verify())
 
@@ -284,6 +295,7 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
 
         resp = requests.put(url=url, headers=header, params=querystring,verify=Config.get_ssl_verify())
 
@@ -310,6 +322,7 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
 
         resp = requests.put(url=url, headers=header, params=querystring,verify=Config.get_ssl_verify())
 
@@ -336,6 +349,7 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
 
         resp = requests.patch(url=url, headers=header,
                               json=patch, params=querystring,verify=Config.get_ssl_verify())
@@ -360,6 +374,7 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
 
         resp = requests.delete(url=url, headers=header, params=querystring,verify=Config.get_ssl_verify())
 
@@ -373,6 +388,8 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
+
         body = {'email': useremail}
 
         resp = requests.post(url=url, headers=header, json=body, verify=Config.get_ssl_verify())
@@ -388,6 +405,8 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
+
         body = {
             'email': email
         }
@@ -403,6 +422,8 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
+
         body = {
             'email': email,
             'path': sdpath,
@@ -423,6 +444,8 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
+
         body = {
             'email': email,
             'path': sdpath,
@@ -439,6 +462,8 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
+
         resp = requests.get(url=url, headers=header, verify=Config.get_ssl_verify())
 
         if resp.status_code != 200:
@@ -452,6 +477,8 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
+
         resp = requests.get(url=url, headers=header, verify=Config.get_ssl_verify())
 
         if resp.status_code != 200:
@@ -465,6 +492,8 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
+
         resp = requests.get(url=url, headers=header, verify=Config.get_ssl_verify())
 
         if resp.status_code != 200:
@@ -478,6 +507,8 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
+
         resp = requests.get(url=url, headers=header, verify=Config.get_ssl_verify())
 
         if resp.status_code != 200:
@@ -496,6 +527,8 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
+
         resp = requests.post(url=url, headers=header, verify=Config.get_ssl_verify())
 
         if resp.status_code != 200:
@@ -514,6 +547,8 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
+
         resp = requests.post(url=url, headers=header, verify=Config.get_ssl_verify())
 
         if resp.status_code != 200:
@@ -529,6 +564,8 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
+
         resp = requests.get(url=url, headers=header, verify=Config.get_ssl_verify())
 
         if resp.status_code != 200:
@@ -544,6 +581,8 @@ class SeismicStoreService(object):
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
             Config.get_svc_appkey_name(): Config.get_svc_appkey()
         }
+        self.update_header_if_data_partition_id_provided(header)
+
         payload = {
             'gcpid': gcpid,
             'esd': esd,
@@ -566,9 +605,16 @@ class SeismicStoreService(object):
                 'Authorization': 'Bearer ' + self._auth.get_id_token(),
                 Config.get_svc_appkey_name(): Config.get_svc_appkey()
             }
+            self.update_header_if_data_partition_id_provided(header)
+
             resp = requests.get(url=url, headers=header,verify=Config.get_ssl_verify())
             if resp.status_code != 200:
                 raise Exception('[' + str(resp.status_code) + '] ' + resp.text)
             self._storage_access_token = json.loads(resp.text)['access_token']
             self._storage_exp_time = time.time() + 3000
         return self._storage_access_token
+
+    @staticmethod
+    def update_header_if_data_partition_id_provided(header):
+        if Config.get_data_partition_id() is not None:
+            header['data-partition-id'] = Config.get_data_partition_id()

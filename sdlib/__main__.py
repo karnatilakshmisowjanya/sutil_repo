@@ -45,6 +45,7 @@ def main():
         cmd = import_from('sdlib.cmd.%s.cmd' % cmd_name.lower(),
                           cmd_name.capitalize())
 
+        Config.set_data_partition_id(keyword_args.data_partition_id)
         auth_provider = AuthFactory.build(Config.get_auth_provider(), keyword_args.idtoken)
         cmd(auth_provider).execute(positional_args, keyword_args)
 
