@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-Flask==2.0.3
+Flask==2.3.2
 azure-storage-blob==12.9.0
 Authlib==0.15.5
 PyYAML==6.0
@@ -24,4 +24,4 @@ urllib3==1.26.8
 crc32c==2.3
 boto3==1.26.6
 alive-progress<2.0.0
-Werkzeug==2.2.3
+Werkzeug==2.3.3

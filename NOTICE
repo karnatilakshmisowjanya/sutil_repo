@@ -12,6 +12,7 @@ The following software have components provided under the terms of this license:
 - botocore (from https://github.com/boto/botocore)
 - coverage (from https://github.com/nedbat/coveragepy)
 - cryptography (from https://github.com/pyca/cryptography)
+- importlib-metadata
 - packaging (from https://pypi.org/project/packaging/22.0/, https://pypi.org/project/packaging/23.1/)
 - python-dateutil (from https://github.com/dateutil/dateutil)
 - requests (from http://python-requests.org, https://requests.readthedocs.io)
@@ -38,6 +39,7 @@ The following software have components provided under the terms of this license:
 - MarkupSafe (from https://palletsprojects.com/p/markupsafe/)
 - Werkzeug (from https://pypi.org/project/Werkzeug/2.3.6/)
 - alive-progress (from https://github.com/rsalmei/alive-progress)
+- blinker (from https://pypi.org/project/blinker/1.6.2/)
 - click (from https://palletsprojects.com/p/click/)
 - crc32c (from https://github.com/ICRAR/crc32c)
 - cryptography (from https://github.com/pyca/cryptography)
@@ -50,20 +52,6 @@ The following software have components provided under the terms of this license:
 - pycparser (from https://github.com/eliben/pycparser)
 - pyparsing (from http://pyparsing.wikispaces.com/)
 - python-dateutil (from https://github.com/dateutil/dateutil)
-
-========================================================================
-CC-BY-2.5
-========================================================================
-The following software have components provided under the terms of this license:
-
-- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.6/)
-
-========================================================================
-CC-BY-3.0
-========================================================================
-The following software have components provided under the terms of this license:
-
-- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.6/)
 
 ========================================================================
 GPL-2.0-only
@@ -84,9 +72,6 @@ ISC
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- Flask (from https://pypi.org/project/Flask/2.3.2/)
-- Jinja2 (from http://jinja.pocoo.org/, https://palletsprojects.com/p/jinja/)
-- click (from https://palletsprojects.com/p/click/)
 - itsdangerous (from https://palletsprojects.com/p/itsdangerous/)
 - requests-oauthlib (from https://github.com/requests/requests-oauthlib)
 
@@ -110,12 +95,12 @@ MIT
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- Flask (from https://pypi.org/project/Flask/2.3.2/)
 - PyYAML (from http://pyyaml.org/wiki/PyYAML)
 - alive-progress (from https://github.com/rsalmei/alive-progress)
 - attrs (from https://attrs.readthedocs.io/, https://pypi.org/project/attrs/23.1.0/, https://www.attrs.org/)
 - azure-core (from https://github.com/Azure/azure-sdk-for-python/tree/main/sdk/core/azure-core)
 - azure-storage-blob (from https://github.com/Azure/azure-sdk-for-python/tree/main/sdk/storage/azure-storage-blob)
+- blinker (from https://pypi.org/project/blinker/1.6.2/)
 - botocore (from https://github.com/boto/botocore)
 - cffi
 - charset-normalizer (from https://github.com/Ousret/charset_normalizer)
@@ -133,6 +118,7 @@ The following software have components provided under the terms of this license:
 - tomli (from https://pypi.org/project/tomli/1.2.2/, https://pypi.org/project/tomli/2.0.0/, https://pypi.org/project/tomli/2.0.1/)
 - tqdm (from https://tqdm.github.io)
 - urllib3 (from https://pypi.org/project/urllib3/2.0.3/)
+- zipp (from https://github.com/jaraco/zipp)
 
 ========================================================================
 MIT-CMU
