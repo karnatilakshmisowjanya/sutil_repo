@@ -100,8 +100,8 @@ class Ls(SDUtilCMD):
                 # Keep this behavior for backwards compatibility.
                 # Apart from that the items are returned in an arbitrarily
                 # scrambled order. I want them sorted to improve usability.
-                dirs = sorted([e for e in res['datasets'] if e[-1] == '/'])
-                datasets = sorted([e for e in res['datasets'] if e[-1] != '/'])
+                dirs = sorted([e for e in res['datasets'] if e and e[-1] == '/'])
+                datasets = sorted([e for e in res['datasets'] if e and e[-1] != '/'])
 
                 for item in (list(dirs) + list(datasets)):
 
