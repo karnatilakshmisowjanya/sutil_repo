@@ -191,7 +191,5 @@ class Utils(object):
 
     @staticmethod
     def getFileName(filePath):
-        fileName = filePath
-        if ("/" in fileName or "\\" in fileName):
-            fileName = os.path.split(fileName)[-1]
-        return fileName
+        head, tail = os.path.split(filePath)
+        return tail

@@ -100,11 +100,7 @@ class Cp(SDUtilCMD):
 
         if os.path.isdir(local_file):
             local_file_name = SDPath(sdpath).dataset
-            temp_path = None
-            if (str(args[-1]).endswith("/")):
-                temp_path = local_file + local_file_name
-            else:
-                temp_path = local_file + "/" + local_file_name
+            temp_path = os.path.join(local_file,local_file_name)
             print("\nLocal path is a directory, based on " + sdpath + ", local path will be " + temp_path + ". Continue? [y/n]", end='')
             sys.stdout.flush()
             confirm = sys.stdin.readline().rstrip().lower()
