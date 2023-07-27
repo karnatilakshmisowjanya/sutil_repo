@@ -65,8 +65,8 @@ class AwsStorageService(StorageService):
 
         if self._s3_client is None:
             self._s3_client = self.get_s3_client(self, dataset)
-
-        transfer_config = TransferConfig(multipart_threshold=9999999999999999, use_threads=True, max_concurrency=10)
+        GB = 1024 ** 3
+        transfer_config = TransferConfig(multipart_threshold=5 * GB, use_threads=True, max_concurrency=10)
         transfer = S3Transfer(client=self._s3_client, config=transfer_config)
 
         bar_format = '- Uploading Data [ {percentage:3.0f}%  |{bar}|  {n_fmt}/{total_fmt}  -  {elapsed}|{remaining}  -  {rate_fmt}{postfix} ]'

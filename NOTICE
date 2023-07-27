@@ -17,7 +17,7 @@ The following software have components provided under the terms of this license:
 - python-dateutil (from https://github.com/dateutil/dateutil)
 - requests (from http://python-requests.org, https://requests.readthedocs.io)
 - s3transfer (from https://github.com/boto/s3transfer)
-- urllib3 (from https://pypi.org/project/urllib3/2.0.3/)
+- urllib3 (from https://pypi.org/project/urllib3/2.0.4/)
 
 ========================================================================
 BSD-2-Clause
@@ -117,7 +117,7 @@ The following software have components provided under the terms of this license:
 - six (from http://pypi.python.org/pypi/six/, https://github.com/benjaminp/six)
 - tomli (from https://pypi.org/project/tomli/1.2.2/, https://pypi.org/project/tomli/2.0.0/, https://pypi.org/project/tomli/2.0.1/)
 - tqdm (from https://tqdm.github.io)
-- urllib3 (from https://pypi.org/project/urllib3/2.0.3/)
+- urllib3 (from https://pypi.org/project/urllib3/2.0.4/)
 - zipp (from https://github.com/jaraco/zipp)
 
 ========================================================================

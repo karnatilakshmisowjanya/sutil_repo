@@ -20,6 +20,7 @@ import stat
 import boto3
 import getpass
 import pickle
+import time
 
 from sdlib.auth.auth_service import AuthService, AuthFactory
 from sdlib.shared.config import Config
@@ -36,20 +37,23 @@ class AwsAuthService(AuthService):
             self.__configuration = AwsAuthConfig(Config.get_auth_provider_configurations())
             self.__token = None
             self.__refresh_token = None
-
+            self.__expires_time = 0
             self.__user_credential_loaded = False
             
             self._aws_session = boto3.session.Session(profile_name=self.__configuration.aws_profile)
             self._cognito_client = self._aws_session.client('cognito-idp')
     
-    # get the idtoken
+    # get the access_token
     def get_id_token(self, force_refresh:bool=False):
         if self.__custom_idtoken:
             return self.__custom_idtoken
 
         if not self.__user_credential_loaded:
             self.load_user_credentials()
-        
+
+        # refresh 60 seconds before its expire
+        if int(self.__expires_time) < (int(time.time()) + 60):
+                self.refresh()
         return self.__token
     
     def load_user_credentials(self):
@@ -61,10 +65,11 @@ class AwsAuthService(AuthService):
             self.__configuration.cognito_user = token['username']
             self.__token = token['access_token']
             self.__refresh_token = token['refresh_token']
+            self.__expires_time = token['expires_time']
             print(f'Loaded cached credentials for {self.__configuration.cognito_user}')
         self.__user_credential_loaded = True
 
-    # refresh the idtoken
+    # refresh the access token
     def refresh(self):
         self.login()
 
@@ -88,6 +93,11 @@ class AwsAuthService(AuthService):
         )
         access_token = response['AuthenticationResult']['AccessToken']
         refresh_token = response['AuthenticationResult']['RefreshToken']
+        expires_time = response['AuthenticationResult']['ExpiresIn']+int(time.time())
+
+        self.__token = access_token
+        self.__refresh_token = refresh_token
+        self.__expires_time = expires_time
 
         # ensure the directory exist if not create it
         if not os.path.isdir(self.__configuration.token_file_dir):
@@ -98,7 +108,8 @@ class AwsAuthService(AuthService):
             pickle.dump({
                 "username": self.__configuration.cognito_user,
                 "access_token": access_token,
-                "refresh_token": refresh_token
+                "refresh_token": refresh_token,
+                "expires_time": expires_time
             }, fh)
             
         # Help prevent others from stealing the credentials. CAVEAT: chmod has little effect on windows.
