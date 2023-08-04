@@ -53,6 +53,7 @@ class TestCmdStat(SdUtilTestCase):
             sp = {
                 'storage_class': 'storage_class',
                 'storage_location': 'storage_location',
+                'gcs_bucket': 'gcs_bucket',
                 'access_policy': 'uniform',
                 'acls': {}
             }
@@ -70,6 +71,7 @@ class TestCmdStat(SdUtilTestCase):
             ds.dstype = 'zgy'
             ds.tenant = 'tnx01'
             ds.subproject = 'spx01'
+            ds.gcsurl ="location"
             ds.path = '/a/b/c/'
             ds.name = 'dsx01'
             ds.created_by = 'me@domain.com'

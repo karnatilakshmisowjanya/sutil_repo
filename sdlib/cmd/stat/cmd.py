@@ -89,6 +89,7 @@ class Stat(SDUtilCMD):
             Utils.getTenant(sdpath), Utils.getSubproject(sdpath))
         print('')
         print(' - Uri: ' + sdpath)
+        print(' - Location: ' +  res['gcs_bucket'])
         if 'ltag' in res:
             print(' - Legal Tag: ' + res['ltag'])
         if 'storage_class' in res:
@@ -107,6 +108,7 @@ class Stat(SDUtilCMD):
         print('')
         print(' - Name: ' + 'sd://' + ds.tenant +
               '/' + ds.subproject + ds.path + ds.name)
+        print(' - Location: ' + ds.gcsurl)
         if ds.dstype is not None:
             print(' - Type: ' + ds.dstype)
         print(' - Created By: ' + ds.created_by)
