@@ -130,6 +130,18 @@ class Cp(SDUtilCMD):
                             '. This type is not currently supported')
         storage_service = StorageFactory.build(
             sd.get_cloud_provider(sdpath), auth=self._auth)
+        force=False
+        if ((not keyword_args.force is None) and (keyword_args.force.lower()=='true')):
+            force=True
+        if (os.path.isfile(local_file) and (not force)):
+                raise Exception('Local file ' + local_file + ' already exists. If you want to overwrite set the --force flag to True.')
+        if (os.name == "nt" and (not "\\" in local_file)):
+            print("\nLocal file will be sabed as " + local_file + ". Continue? [y/n]", end='')
+            sys.stdout.flush()
+            confirm = sys.stdin.readline().rstrip().lower()
+            if (confirm != 'y'):
+                raise Exception('If directory was provided and not detected means backslash (\) was used. ' +
+                                'In Windows, to specify directories paths please use double backslash (\\\\)')
         storage_service.download(local_file, ds)
         if ds.sbit is not None:
             sd.dataset_patch(sdpath, None, ds.sbit)
@@ -202,19 +214,21 @@ class Cp(SDUtilCMD):
 
         if (Utils.isSDPath(args[-1]) and str(args[-1]).endswith("/")):
             cleanedFileName = Utils.getFileName(local_file)
-            print("\nPath ends with '/', based on " + local_file + ", sdpath will be " + str(args[-1]) + cleanedFileName + ". Continue? [y/n]", end='')
-            sys.stdout.flush()
-            confirm = sys.stdin.readline().rstrip().lower()
-            if (confirm == 'y'):
-                sdpath = str(args[-1]) + cleanedFileName
+            if (Utils.isDatasetPath(str(args[-1]) + cleanedFileName)):
+                print("\nPath ends with '/', based on " + local_file + ", sdpath will be " + str(args[-1]) + cleanedFileName + ". Continue? [y/n]", end='')
+                sys.stdout.flush()
+                confirm = sys.stdin.readline().rstrip().lower()
+                if (confirm == 'y'):
+                    sdpath = str(args[-1]) + cleanedFileName
         elif (Utils.isSDPath(args[-2]) and str(args[-2]).endswith("/")):
             cleanedFileName = Utils.getFileName(local_file)
-            print("\nPath ends with '/', based on " + local_file + ", sdpath will be " + str(args[-2]) + cleanedFileName + ". Continue? [y/n]", end='')
-            sys.stdout.flush()
-            confirm = sys.stdin.readline().rstrip().lower()
-            if (confirm == 'y'):
-                sdpath = str(args[-2]) + cleanedFileName
-            legal_tag = args[-1]
+            if (Utils.isDatasetPath(str(args[-1]) + cleanedFileName)):
+                print("\nPath ends with '/', based on " + local_file + ", sdpath will be " + str(args[-2]) + cleanedFileName + ". Continue? [y/n]", end='')
+                sys.stdout.flush()
+                confirm = sys.stdin.readline().rstrip().lower()
+                if (confirm == 'y'):
+                    sdpath = str(args[-2]) + cleanedFileName
+                legal_tag = args[-1]
         elif (Utils.isDatasetPath(args[-1])):
             sdpath = args[-1]
         elif (Utils.isDatasetPath(args[-2])):
