@@ -53,7 +53,8 @@ class Stat(SDUtilCMD):
             self.executeStat(sdpath, detailed_flag)
 
     def executeStat(self, sdpath, detailed_flag):
-
+        if (sdpath.endswith("/")):
+            sdpath = sdpath[:-1]
         if Utils.isTenant(sdpath):
             self.display_tenant(sdpath)
         elif Utils.isSubProject(sdpath):

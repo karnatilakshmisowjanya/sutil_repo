@@ -47,7 +47,8 @@ class Rm(SDUtilCMD):
     def executeRm(self, sdpath):
 
         print('')
-
+        if (sdpath.endswith("/")):
+            sdpath = sdpath[:-1]
         if Utils.isDatasetPath(sdpath):
             print('> Deleting the dataset ' + sdpath + ': ', end='')
             sys.stdout.flush()
