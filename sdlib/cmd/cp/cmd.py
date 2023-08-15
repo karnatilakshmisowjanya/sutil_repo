@@ -261,6 +261,8 @@ class Cp(SDUtilCMD):
                 '\n' + 'Wrong Command: ' + local_file +
                 ' is not a valid local file name or '
                 'the local file does not exist.\n' +
+                'If you are providing full path of file with backslash,' +
+                'please use double backslash.\n'
                 '               For more information type "python sdutil cp"'
                 ' to open the command help menu.')
         storage_service = StorageFactory.build(
