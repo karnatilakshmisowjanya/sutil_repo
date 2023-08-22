@@ -46,7 +46,8 @@ class GcStorageService(StorageService):
         self._chunkSize = 20 * 1048576
 
     def object_delete(self, objname, dataset):
-        bucket, object_path = dataset.gcsurl.split("$$")
+        split_gcs_url = dataset.gcsurl.split("/")
+        bucket, object_path = split_gcs_url[0], "/".join(split_gcs_url[1:])
         relative_url = f"{self.__STORAGE_EP}/b/{bucket}/o/{object_path}/%2F{quote(objname, safe='')}"
         url = urljoin(self.__GOOGLE_API_BASE_URL, relative_url)
 
@@ -65,7 +66,8 @@ class GcStorageService(StorageService):
 
     # to add an empty object / dummy object
     def object_add(self, objname, dataset):
-        bucket, object_path = dataset.gcsurl.split("$$")
+        split_gcs_url = dataset.gcsurl.split("/")
+        bucket, object_path = split_gcs_url[0], "/".join(split_gcs_url[1:])
         relative_url = (f"{self.__STORAGE_UPlOAD_EP}/b/{bucket}"
                         f"/o?uploadType=media&name={object_path}%2F{quote(objname, safe='')}")
         url = urljoin(self.__GOOGLE_API_BASE_URL, relative_url)
@@ -207,7 +209,8 @@ class GcStorageService(StorageService):
         nread = int(fsize / self._chunkSize)
         rest = fsize - self._chunkSize * nread
         print('OK')
-        bucket, object_path = dataset.gcsurl.split("$$")
+        split_gcs_url = dataset.gcsurl.split("/")
+        bucket, object_path = split_gcs_url[0], "/".join(split_gcs_url[1:])
         objname = object_path + "/0"
         print('- Initializing resumable-transfer location ... ', end='')
         sys.stdout.flush()
@@ -255,7 +258,8 @@ class GcStorageService(StorageService):
     # Abstracted from Downloader
     def download(self, localfilename, dataset):
 
-        bucket, object_path = dataset.gcsurl.split("$$")
+        split_gcs_url = dataset.gcsurl.split("/")
+        bucket, object_path = split_gcs_url[0], "/".join(split_gcs_url[1:])
 
         print('')
         start_time = time.time()
