@@ -48,7 +48,15 @@ class Rm(SDUtilCMD):
 
         print('')
         if (sdpath.endswith("/")):
-            sdpath = sdpath[:-1]
+            raise Exception(
+                '\n' +
+                'Wrong Command: ' + sdpath +
+                ' is not a valid seismic store dataset or subproject path.\n'
+                '               The seismic store path should not end '
+                'with slash, and it should match '
+                'sd://<tenant_nane>/<subproject_name>/<path>/<dataset_name>.\n'
+                '               For more information type "python sdutil rm"'
+                ' to open the command help menu.')
         if Utils.isDatasetPath(sdpath):
             print('> Deleting the dataset ' + sdpath + ': ', end='')
             sys.stdout.flush()

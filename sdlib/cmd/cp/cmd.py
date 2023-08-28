@@ -95,10 +95,23 @@ class Cp(SDUtilCMD):
     def cp_sd_to_local(self, args, keyword_args):
         """ Copy a seismic store file to local
         """
+        if (os.name == "nt"):
+            print('\nPlease consider wrapping sdutil path and local file between quotes, some examples:'
+                  ' cp "sd://tenant/subproject/folder/dataset" "c:\\\\Users\\\\MyUser\\\\Desktop\\\\file"'
+                  ' cp "sd://tenant/subproject/folder/dataset" "file"')
         sdpath = str(args[0])
         local_file = str(args[1])
-
-        if os.path.isdir(local_file):
+        if ("--idtoken" in local_file):
+            raise Exception(
+                '\n' + 'Wrong Command: Local directory ends with backslash (\\)'
+                ' Please wrap local directory between quotes and remove last backslash.')
+        cleanedFileName = Utils.getFileName(local_file)
+        if (not os.path.exists(local_file.replace(cleanedFileName,"")) and not os.path.exists(local_file)):
+            raise Exception(
+                '\n' + 'Wrong Command: ' + local_file +
+                ' Provided local directory does not exists.\n'
+                '               Please ensure the local directory exists.')
+        if (os.path.isdir(local_file) or local_file.endswith("\\") or local_file.endswith("/")):
             local_file_name = SDPath(sdpath).dataset
             temp_path = os.path.join(local_file,local_file_name)
             print("\nLocal path is a directory, based on " + sdpath + ", local path will be " + temp_path + ". Continue? [y/n]", end='')
@@ -106,6 +119,8 @@ class Cp(SDUtilCMD):
             confirm = sys.stdin.readline().rstrip().lower()
             if (confirm == 'y'):
                 local_file = temp_path
+            else:
+                raise Exception('Please provide correct local path. ')
 
         if Utils.isDatasetPath(sdpath) is False:
             raise Exception(
@@ -135,13 +150,16 @@ class Cp(SDUtilCMD):
             force=True
         if (os.path.isfile(local_file) and (not force)):
                 raise Exception('Local file ' + local_file + ' already exists. If you want to overwrite set the --force flag to True.')
-        if (os.name == "nt" and (not "\\" in local_file)):
+        if (os.name == "nt"):
+            if  ("c:" in local_file.lower() and not "\\" in local_file and not os.path.isdir(local_file)):
+                local_file = os.path.join(os.getcwd(),local_file.replace("c:","").replace("C:",""))
             print("\nLocal file will be sabed as " + local_file + ". Continue? [y/n]", end='')
             sys.stdout.flush()
             confirm = sys.stdin.readline().rstrip().lower()
             if (confirm != 'y'):
-                raise Exception('If directory was provided and not detected means backslash (\) was used. ' +
-                                'In Windows, to specify directories paths please use double backslash (\\\\)')
+                raise Exception('\nPlease consider wrapping sdutil path and local file between quotes, some examples:'
+                  ' cp "sd://tenant/subproject/folder/dataset" "c:\\\\Users\\\\MyUser\\\\Desktop\\\\file"'
+                  ' cp "sd://tenant/subproject/folder/dataset" "file"')
         storage_service.download(local_file, ds)
         if ds.sbit is not None:
             sd.dataset_patch(sdpath, None, ds.sbit)
