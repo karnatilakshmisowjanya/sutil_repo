@@ -153,7 +153,7 @@ class Cp(SDUtilCMD):
         if (os.name == "nt"):
             if  ("c:" in local_file.lower() and not "\\" in local_file and not os.path.isdir(local_file)):
                 local_file = os.path.join(os.getcwd(),local_file.replace("c:","").replace("C:",""))
-            print("\nLocal file will be sabed as " + local_file + ". Continue? [y/n]", end='')
+            print("\nLocal file will be saved as " + local_file + ". Continue? [y/n]", end='')
             sys.stdout.flush()
             confirm = sys.stdin.readline().rstrip().lower()
             if (confirm != 'y'):
