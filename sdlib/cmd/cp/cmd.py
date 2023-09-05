@@ -148,8 +148,10 @@ class Cp(SDUtilCMD):
         force=False
         if ((not keyword_args.force is None) and (keyword_args.force.lower()=='true')):
             force=True
+        elif ((not keyword_args.f is None) and (keyword_args.f.lower()=='true')):
+            force=True
         if (os.path.isfile(local_file) and (not force)):
-                raise Exception('Local file ' + local_file + ' already exists. If you want to overwrite set the --force flag to True.')
+                raise Exception('Local file ' + local_file + ' already exists. If you want to overwrite set the --force flag (or --f) to True.')
         if (os.name == "nt"):
             if  ("c:" in local_file.lower() and not "\\" in local_file and not os.path.isdir(local_file)):
                 local_file = os.path.join(os.getcwd(),local_file.replace("c:","").replace("C:",""))

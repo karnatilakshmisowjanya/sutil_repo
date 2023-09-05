@@ -18,7 +18,7 @@
         "                [sdpath]     : seistore path",
         "                [localFile]  : path of the local file to download\n",
         "                (options)    | --idtoken=<token> pass the credential token to use, rather than generating a new one\n",
-        "                             | --force=If true, overwrite localfile if exists. If false (default), will throw error if local file already exists.\n",
+        "                             | --force=If true, overwrite localfile if exists. If false (default), will throw error if local file already exists.\n This flag can be used as --f \n",
         "  *inplace    $ python sdutil cp [sdpathFrom] [sdpathTo] (options)",
         "                copy a dataset inplace seismic store\n",
         "                [sdpathFrom] : the origin seistore path",
