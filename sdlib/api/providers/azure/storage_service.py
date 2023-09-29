@@ -38,10 +38,19 @@ class AzureStorageService(StorageService):
         self._max_concurrency = 10
 
     def _get_sas_url(self, dataset, readonly):
-        container_id = dataset.gcsurl.split("/")[0]
-        dataset_id = dataset.gcsurl.split("/")[1]
-        access_token = self._seistore_svc.get_storage_access_token(dataset.tenant, dataset.subproject, readonly)
-        return access_token.replace(container_id, container_id + "/" + dataset_id)
+        if(dataset.access_policy != 'dataset'):
+            access_token = self._seistore_svc.get_storage_access_token(
+                tenant=dataset.tenant, subproject=dataset.subproject, readonly=readonly)
+            container_id = dataset.gcsurl.split("/")[0]
+            dataset_id = dataset.gcsurl.split("/")[1]
+            return access_token.replace(container_id, container_id + "/" + dataset_id)
+        else:
+            return self._seistore_svc.get_storage_access_token(
+                tenant=dataset.tenant,
+                subproject=dataset.subproject,
+                path=dataset.path,
+                name=dataset.name,
+                readonly=readonly)
 
     def upload(self, filename, dataset, **kwargs):
         '''

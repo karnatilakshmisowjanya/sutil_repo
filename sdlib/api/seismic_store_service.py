@@ -594,12 +594,15 @@ class SeismicStoreService(object):
         if resp.status_code != 200:
             raise Exception('[' + str(resp.status_code) + '] ' + resp.text)
 
-    def get_storage_access_token(self, tenant, subproject, readonly):
+    def get_storage_access_token(self, tenant, subproject, readonly, path=None, name=None):
         sub_project_path = 'sd:%2F%2F' + tenant + '%2F' + subproject
         row = 'true' if readonly else 'false'
         if self._storage_access_token is None or self._storage_exp_time < time.time():
             url = Config.get_svc_url() + "/utility/gcs-access-token?sdpath=" + \
-                sub_project_path + "&readonly=" + row
+                sub_project_path
+            if path != None and name != None:
+                url = url + str(path).replace("/", "%2F") + str(name)
+            url = url + "&readonly=" + row
             header = {
                 'content-type': 'application/json',
                 'Authorization': 'Bearer ' + self._auth.get_id_token(),

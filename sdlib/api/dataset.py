@@ -37,6 +37,7 @@ class Dataset(object):
     seismicmeta = None
     seismicmeta_guid = None
     transfer_status = None 
+    access_policy = None
 
     @classmethod
     def from_json(cls, data):
@@ -60,4 +61,5 @@ class Dataset(object):
         dataset.seismicmeta = data.get('seismicmeta', None)
         dataset.seismicmeta_guid = data.get('seismicmeta_guid', None)
         dataset.transfer_status = data.get('transfer_status', None )
+        dataset.access_policy = data['access_policy']
         return dataset

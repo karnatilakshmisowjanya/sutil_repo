@@ -64,6 +64,7 @@ class TestApiDataset(SdUtilTestCase):
             'filemetadata':{'key': 'value'},
             'readonly': False,
             'gcsurl':'gs://bucket/folder',
+            'access_policy': 'uniform'
         }
         ds = Dataset.from_json(data)
         self.assertEqual(ds.tenant, data['tenant'])

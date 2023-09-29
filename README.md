@@ -12,12 +12,11 @@ The **sdutil** is an intuitive command line utility tool to interact with seismi
   - [Configuration](#configuration)
   - [Usage](#usage)
   - [Seistore Resources](#seistore-resources)
-  - [Subprojects](#subprojects)
+  - [Subproject](#subproject)
   - [Users Management](#users-management)
   - [Usage Examples](#usage-examples)
   - [Utility Testing](#utility-testing)
   - [FAQ](#faq)
-  - [Setup and Usage for IBM env](#setup-and-usage-for-ibm-env)
 
 ## Prerequisites
 
@@ -269,7 +268,7 @@ A subproject resource can be patched by a `Subproject Admin Only` with the follo
                     | --viewer_acl=<value> the acl viewer groups
 ```
 
-*Note:* When deploying on AWS, the `-` character is reserved. 
+*Note:* When deploying on AWS, the `-` character is reserved.
 
 ## Users Management
 
