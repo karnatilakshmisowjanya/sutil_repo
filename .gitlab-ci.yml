@@ -10,6 +10,9 @@ include:
   # scan
   # scan for secrets
   - local: "/devops/osdu/scanners/scan-for-secrets-python.yml"
+
+  # integration
+  - local: "/devops/osdu/integrations/azure.yml"
   
   # fossa
   - project: "osdu/platform/ci-cd-pipelines"

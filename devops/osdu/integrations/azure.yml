@@ -1,0 +1,17 @@
+variables:
+  #seismic store service variables\
+  E2E_HOSTNAME: https://$AZURE_DNS_NAME
+  AZURE_SDMS_PREFIX: /seistore-svc/api/v3
+  E2E_SUBPROJECT: demosandbox08
+  E2E_TENANT: $TENANT_NAME
+
+sdutil-e2e:
+  stage: integration
+  image: ubuntu
+  dependencies:
+    - compile-and-unit-test
+  script:
+    - apt-get update
+    - pip3 install -r ./test/requirements.txt
+    - chmod +x ./devops/scripts/run_regression_tests.sh
+    - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${AZURE_DNS_NAME}${AZURE_SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --idtoken="$svctoken"
