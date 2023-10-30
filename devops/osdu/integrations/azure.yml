@@ -1,6 +1,6 @@
 variables:
   #seismic store service variables\
-  E2E_HOSTNAME: https://osdu-glab.msft-osdu-test.org
+  E2E_HOSTNAME: osdu-glab.msft-osdu-test.org
   SDMS_PREFIX: /seistore-svc/api/v3
   E2E_SUBPROJECT: demosandbox08
   E2E_TENANT: opendes
