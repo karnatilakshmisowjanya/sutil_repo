@@ -1,11 +1,11 @@
-azure_containerize:
+compile-and-unit-test:
   needs: []
   script:
       echo 'empty'
   only:
       - $DISABLED == 'true'
 
-container_scanning:
+scan-for-secrets:
   needs: []
   script:
       echo 'empty'
@@ -13,62 +13,17 @@ container_scanning:
     - if: $DISABLED == 'true'
       when: never
 
-azure_containerize_helm:
-  needs: []
-  variables:
-    AZURE_HELM_SUBDIR: osdu-ddms/standard-ddms
-  only:
-    variables:
-      - $AZURE == '1'
-  except:
-    variables:
-      - $AZURE_SKIP_DEPLOY == 'true'
-
-azure_deploy:
+sdutil-e2e:
   needs: []
   script:
       echo 'empty'
   only:
       - $DISABLED == 'true'
 
-azure_test:
+osdu-package:
   needs: []
   extends: []
   script:
       echo 'empty'
   only:
       - $DISABLED == 'true'
-
-azure_code_coverage:
-  needs: []
-  extends: []
-  script:
-      echo 'empty'
-  only:
-      - $DISABLED == 'true'
-
-azure_test_py:
-  needs: []
-  extends: []
-  script:
-      echo 'empty'
-  only:
-      - $DISABLED == 'true'
-
-azure_swagger_test:
-  needs: []
-  extends: []
-  script:
-      echo 'empty'
-  only:
-      - $DISABLED == 'true'
-
-azure-publish:
-  needs: []
-  before_script:
-      echo 'empty'
-  script:
-      echo 'empty'
-  rules:
-    - if: $DISABLED == 'true'
-      when: never
