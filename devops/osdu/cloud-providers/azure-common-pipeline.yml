@@ -1,0 +1,74 @@
+azure_containerize:
+  needs: []
+  script:
+      echo 'empty'
+  only:
+      - $DISABLED == 'true'
+
+container_scanning:
+  needs: []
+  script:
+      echo 'empty'
+  rules:
+    - if: $DISABLED == 'true'
+      when: never
+
+azure_containerize_helm:
+  needs: []
+  variables:
+    AZURE_HELM_SUBDIR: osdu-ddms/standard-ddms
+  only:
+    variables:
+      - $AZURE == '1'
+  except:
+    variables:
+      - $AZURE_SKIP_DEPLOY == 'true'
+
+azure_deploy:
+  needs: []
+  script:
+      echo 'empty'
+  only:
+      - $DISABLED == 'true'
+
+azure_test:
+  needs: []
+  extends: []
+  script:
+      echo 'empty'
+  only:
+      - $DISABLED == 'true'
+
+azure_code_coverage:
+  needs: []
+  extends: []
+  script:
+      echo 'empty'
+  only:
+      - $DISABLED == 'true'
+
+azure_test_py:
+  needs: []
+  extends: []
+  script:
+      echo 'empty'
+  only:
+      - $DISABLED == 'true'
+
+azure_swagger_test:
+  needs: []
+  extends: []
+  script:
+      echo 'empty'
+  only:
+      - $DISABLED == 'true'
+
+azure-publish:
+  needs: []
+  before_script:
+      echo 'empty'
+  script:
+      echo 'empty'
+  rules:
+    - if: $DISABLED == 'true'
+      when: never
