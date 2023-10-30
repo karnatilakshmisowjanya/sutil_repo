@@ -7,11 +7,9 @@ variables:
 
 sdutil-e2e:
   stage: integration
-  image: ubuntu
-  dependencies:
-    - compile-and-unit-test
+  image: $CI_REGISTRY_IMAGE/sdutil-osdu-ubuntu
   script:
     - apt-get update
-    - pip install -r ./test/requirements.txt
+    - pip3 install -r ./test/requirements.txt
     - chmod +x ./devops/scripts/run_regression_tests.sh
     - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${AZURE_DNS_NAME}${AZURE_SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --idtoken="$svctoken"
