@@ -1,9 +1,9 @@
 variables:
   #seismic store service variables\
-  E2E_HOSTNAME: https://$AZURE_DNS_NAME
-  AZURE_SDMS_PREFIX: /seistore-svc/api/v3
+  E2E_HOSTNAME: https://osdu-glab.msft-osdu-test.org
+  SDMS_PREFIX: /seistore-svc/api/v3
   E2E_SUBPROJECT: demosandbox08
-  E2E_TENANT: $TENANT_NAME
+  E2E_TENANT: opendes
 
 sdutil-e2e:
   stage: integration
@@ -12,4 +12,4 @@ sdutil-e2e:
     - apt-get update
     - pip3 install -r ./test/requirements.txt
     - chmod +x ./devops/scripts/run_regression_tests.sh
-    - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${AZURE_DNS_NAME}${AZURE_SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --idtoken="$svctoken"
+    - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --idtoken="$svctoken"
