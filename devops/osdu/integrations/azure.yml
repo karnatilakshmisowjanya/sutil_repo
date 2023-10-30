@@ -5,16 +5,10 @@ variables:
   E2E_SUBPROJECT: demosandbox08
   E2E_TENANT: opendes
 
-sdutil-e2e:
+sdutil-azure-integration-test:
   stage: integration
   image: $CI_REGISTRY_IMAGE/sdutil-osdu-ubuntu
-  before_script:
-    - apt-get update
-    - apt-get install -y python3
-    - apt-get install -y python3-pip
-    - export svctoken=$(python3 ${CI_PROJECT_DIR}/devops/scripts/azure_jwt_client.py)
-
   script:
     - pip3 install -r ./test/requirements.txt
     - chmod +x ./devops/scripts/run_regression_tests.sh
-    - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --idtoken="$svctoken"
+    - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --idtoken="token"
