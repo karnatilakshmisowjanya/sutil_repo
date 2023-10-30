@@ -17,7 +17,7 @@ The following software have components provided under the terms of this license:
 - python-dateutil (from https://github.com/dateutil/dateutil)
 - requests (from http://python-requests.org, https://requests.readthedocs.io)
 - s3transfer (from https://github.com/boto/s3transfer)
-- urllib3 (from https://pypi.org/project/urllib3/2.0.2/, https://pypi.org/project/urllib3/2.0.4/, https://pypi.org/project/urllib3/2.0.6/)
+- urllib3 (from https://pypi.org/project/urllib3/2.0.2/, https://pypi.org/project/urllib3/2.0.4/, https://pypi.org/project/urllib3/2.0.7/)
 
 ========================================================================
 BSD-2-Clause
@@ -37,9 +37,9 @@ The following software have components provided under the terms of this license:
 - Flask (from https://pypi.org/project/Flask/2.3.2/, https://pypi.org/project/Flask/2.3.3/, https://pypi.org/project/Flask/3.0.0/)
 - Jinja2 (from http://jinja.pocoo.org/, https://palletsprojects.com/p/jinja/)
 - MarkupSafe (from https://palletsprojects.com/p/markupsafe/)
-- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.6/, https://pypi.org/project/Werkzeug/2.3.7/, https://pypi.org/project/Werkzeug/3.0.0/)
+- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.6/, https://pypi.org/project/Werkzeug/2.3.7/, https://pypi.org/project/Werkzeug/3.0.1/)
 - alive-progress (from https://github.com/rsalmei/alive-progress)
-- blinker (from https://pypi.org/project/blinker/1.6.3/)
+- blinker (from https://blinker.readthedocs.io, https://pypi.org/project/blinker/1.6.3/)
 - click (from https://palletsprojects.com/p/click/)
 - crc32c (from https://github.com/ICRAR/crc32c)
 - cryptography (from https://github.com/pyca/cryptography)
@@ -100,7 +100,7 @@ The following software have components provided under the terms of this license:
 - attrs (from https://attrs.readthedocs.io/, https://pypi.org/project/attrs/23.1.0/, https://www.attrs.org/)
 - azure-core (from https://github.com/Azure/azure-sdk-for-python/tree/main/sdk/core/azure-core)
 - azure-storage-blob (from https://github.com/Azure/azure-sdk-for-python/tree/main/sdk/storage/azure-storage-blob)
-- blinker (from https://pypi.org/project/blinker/1.6.3/)
+- blinker (from https://blinker.readthedocs.io, https://pypi.org/project/blinker/1.6.3/)
 - botocore (from https://github.com/boto/botocore)
 - cffi
 - charset-normalizer (from https://github.com/Ousret/charset_normalizer)
@@ -117,7 +117,7 @@ The following software have components provided under the terms of this license:
 - six (from http://pypi.python.org/pypi/six/, https://github.com/benjaminp/six)
 - tomli (from https://pypi.org/project/tomli/1.2.2/, https://pypi.org/project/tomli/2.0.0/, https://pypi.org/project/tomli/2.0.1/)
 - tqdm (from https://pypi.org/project/tqdm/4.66.1/, https://tqdm.github.io)
-- urllib3 (from https://pypi.org/project/urllib3/2.0.2/, https://pypi.org/project/urllib3/2.0.4/, https://pypi.org/project/urllib3/2.0.6/)
+- urllib3 (from https://pypi.org/project/urllib3/2.0.2/, https://pypi.org/project/urllib3/2.0.4/, https://pypi.org/project/urllib3/2.0.7/)
 - zipp (from https://github.com/jaraco/zipp)
 
 ========================================================================
