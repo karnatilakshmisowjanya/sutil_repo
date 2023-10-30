@@ -1,8 +1,3 @@
-include:
-  # azure-global
-  - project: "osdu/platform/ci-cd-pipelines"
-    file: "cloud-providers/azure.yml"
-
 variables:
   #seismic store service variables\
   E2E_HOSTNAME: osdu-glab.msft-osdu-test.org
