@@ -30,8 +30,8 @@ for i in "$@"; do
             service_url="${i#*=}"
             shift
             ;;
-        --service-key=*) # required
-            service_key="${i#*=}"
+        --service-env=*) # required
+            service_env="${i#*=}"
             shift
             ;;
         --idtoken=*) # required
@@ -47,7 +47,7 @@ for i in "$@"; do
             shift
             ;;
         --disable-ssl-verify)
-            ssl_verify="false"
+            ssl_verify="true"
             shift
             ;;
         *)
@@ -58,14 +58,14 @@ for i in "$@"; do
 done
 
 # required parameters
-if [[ -z "${service_url}" || -z "${service_key}" || -z "${idtoken}" || -z "${tenant}" || -z "${subproject}" || -z "${provider}" ]]; then
-    echo "[usage] ./run_regression_tests.sh --service-url= --service-key= --cloud-provider= --idtoken= --tenant= --subproject="
+if [[ -z "${service_url}" || -z "${service_env}" || -z "${idtoken}" || -z "${tenant}" || -z "${subproject}" || -z "${provider}" ]]; then
+    echo "[usage] ./run_regression_tests.sh --cloud-provider= --service-url= --service-env= --tenant= --subproject= --idtoken="
     exit 1
 fi
 
 # set ssl verification option
 if [ -z "${ssl_verify}" ]; then
-    ssl_verify="true"
+    ssl_verify="false"
 fi
 
 # set the mount volume if not set as input argument
@@ -75,18 +75,31 @@ fi
 cd ${mnt_volume}
 
 # create temporary configuration for unit test
-cp sdlib/config.yaml config_original.yaml
+FILE1=sdlib/config.yaml
+if test -f "$FILE1"; then
+    cp sdlib/config.yaml config_original.yaml
+fi
+
 cat /dev/null > sdlib/config.yaml
 echo "seistore:" > sdlib/config.yaml
-echo "    service: '{\"${provider}\": {\"env\" : {\"url\": \"${service_url}\", \"appkey\": \"${service_key}\", \"ssl_verify\": ${ssl_verify}}}}'" >> sdlib/config.yaml
+echo "  service: '{
+    \"${provider}\":{
+      \"${service_env}\":{
+        \"url\": \"${service_url}\",
+        \"ssl_verify\": ${ssl_verify}}}}'" >> sdlib/config.yaml
 echo "auth_provider:" >> sdlib/config.yaml
-echo "    oauth2: '{\"provider\":\"any\",\"authorize_url\":\"any\",\"authorize_params\":\"any\",\"access_token_url\":\"any\",\"access_token_params\":\"any\",\"refresh_token_url\":\"any\",\"refresh_token_params\":\"any\",\"open_id_url\":\"any\",\"scope\":\"any\"}'" >> sdlib/config.yaml
+echo "  e2e: null" >> sdlib/config.yaml
 
 # pytest fetches a stoken when a service account secret key is passed.
-pytest test/e2e --idtoken=${idtoken} --sdpath=sd://${tenant}/${subproject} --timeout=300 -s
+pytest test/e2e --idtoken=${idtoken} --sdpath=sd://${tenant}/${subproject} --timeout=300 --capture=fd
 exit_status=$?
 
 # restore configuration and clear temporary files
-cp config_original.yaml sdlib/config.yaml
-rm config_original.yaml
+FILE2=config_original.yaml
+if test -f "$FILE2"; then
+    cp config_original.yaml sdlib/config.yaml
+    rm config_original.yaml
+else 
+    rm sdlib/config.yaml
+fi
 if [ $exit_status -ne 0 ]; then exit 1; fi
