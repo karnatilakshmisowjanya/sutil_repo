@@ -47,6 +47,7 @@ azure_test:
       - $DISABLED == 'true'
 
 azure_code_coverage:
+  stage: build
   needs: []
   extends: []
   script:
