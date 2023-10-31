@@ -11,6 +11,10 @@ include:
   # scan for secrets
   - local: "/devops/osdu/scanners/scan-for-secrets-python.yml"
 
+  # azure-global
+  - project: "osdu/platform/ci-cd-pipelines"
+    file: "cloud-providers/azure.yml" 
+
   # integration
   - local: "/devops/osdu/integrations/azure.yml"
   
