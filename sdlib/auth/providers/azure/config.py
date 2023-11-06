@@ -43,15 +43,15 @@ class Oauth2Configuration(object):
 
         self.azure_tenant_id = os.getenv("AZURE_TENANT_ID")
         if not self.azure_tenant_id:
-            raise Exception('\AZURE TENANT ID is required but have not been found in the environement.')
+            raise Exception('\nAZURE TENANT ID is required but have not been found in the environement.')
 
         self.oauth2_client_id = os.getenv("AZURE_CLIENT_ID")
         if not self.oauth2_client_id:
-            raise Exception('\AZURE CLIENT ID is required but have not been found in the environement.')
+            raise Exception('\nAZURE CLIENT ID is required but have not been found in the environement.')
 
         self.oauth2_client_secret = os.getenv("AZURE_CLIENT_SECRET")
         if not self.oauth2_client_secret:
-            raise Exception('\AZURE CLIENT SECRET is required but have not been found in the environement.')
+            raise Exception('\nAZURE CLIENT SECRET is required but have not been found in the environement.')
 
         
         self.oauth2_authorize_url = self.azure_authorize_url + self.azure_tenant_id + self.oauht2_token_host_end

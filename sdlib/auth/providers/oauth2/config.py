@@ -54,11 +54,11 @@ class Oauth2Configuration(object):
 
         self.oauth2_client_secret = os.getenv("OAUTH2_CLIENT_SECRET")
         if not self.oauth2_client_secret: 
-            raise Exception('\OAUTH2_CLIENT_SECRET is required but have not been found in the environement.')
+            raise Exception('\nOAUTH2_CLIENT_SECRET is required but have not been found in the environement.')
 
         self.oauth2_client_redirect_url = os.getenv("OAUTH2_CLIENT_REDIRECT_URL")
         if not self.oauth2_client_redirect_url:
-            raise Exception('\OAUTH2_CLIENT_REDIRECT_URL is required but have not been found in the environement.')
+            raise Exception('\nOAUTH2_CLIENT_REDIRECT_URL is required but have not been found in the environement.')
 
         if not self.oauth2_client_redirect_url.endswith('/auth/callback'):
             raise Exception('\nThe redirect url must be of this "https://<host>:<port>/auth/callback"')

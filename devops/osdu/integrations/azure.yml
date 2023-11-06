@@ -1,0 +1,107 @@
+variables:
+  #seismic store service variables\
+  E2E_HOSTNAME: ${AZURE_DNS_NAME}
+  SDMS_PREFIX: /seistore-svc/api/v3
+  E2E_SUBPROJECT: demosandbox08
+  E2E_TENANT: $MY_TENANT
+
+azure_containerize:
+  needs: []
+  script:
+      echo 'empty'
+  only:
+      - $DISABLED == 'true'
+
+container_scanning:
+  needs: []
+  script:
+      echo 'empty'
+  rules:
+    - if: $DISABLED == 'true'
+      when: never
+
+azure_containerize_helm:
+  needs: []
+  variables:
+    AZURE_HELM_SUBDIR: osdu-ddms/standard-ddms
+  only:
+    variables:
+      - $AZURE == '1'
+  except:
+    variables:
+      - $AZURE_SKIP_DEPLOY == 'true'
+
+azure_deploy:
+  needs: []
+  script:
+      echo 'empty'
+  only:
+      - $DISABLED == 'true'
+
+azure_test:
+  needs: []
+  extends: []
+  script:
+      echo 'empty'
+  only:
+      - $DISABLED == 'true'
+
+azure_code_coverage:
+  stage: build
+  needs: []
+  extends: []
+  script:
+      echo 'empty'
+  only:
+      - $DISABLED == 'true'
+
+azure_containerize_helm:
+  needs: []
+  extends: []
+  script:
+      echo 'empty'
+  only:
+      - $DISABLED == 'true'
+
+azure_test_py:
+  needs: []
+  extends: []
+  script:
+      echo 'empty'
+  only:
+      - $DISABLED == 'true'
+
+azure_swagger_test:
+  needs: []
+  extends: []
+  script:
+      echo 'empty'
+  only:
+      - $DISABLED == 'true'
+
+azure-publish:
+  needs: []
+  before_script:
+      echo 'empty'
+  script:
+      echo 'empty'
+  rules:
+    - if: $DISABLED == 'true'
+      when: never
+
+
+sdutil-azure-integration-test:
+  stage: integration
+  image: $CI_REGISTRY_IMAGE/sdutil-osdu-ubuntu
+  extends:
+    - .azure_variables
+  before_script:
+    - apt-get update
+    - apt-get install -y python3
+    - apt-get install -y python3-pip
+    - pip3 install msal
+    - export svctoken=$(python3 ${CI_PROJECT_DIR}/devops/scripts/azure_jwt_client.py)
+  script:
+    - pip3 install -r ./test/requirements.txt
+    - chmod +x ./devops/scripts/run_regression_tests.sh
+    - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --idtoken="$svctoken"
