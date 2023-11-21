@@ -110,7 +110,7 @@ class AwsStorageService(StorageService):
 
         return True
 
-    def downloadObject(self, localFile, bucket, obj, dataset, cursize):
+    def downloadObject(self, local_file, bucket, obj, dataset, cursize):
         """download an object from s3 ( one of many )
 
         Args:
@@ -143,7 +143,7 @@ class AwsStorageService(StorageService):
             # download next chunk of the object
             resp = self._s3_client.get_object(Bucket=bucket, Key=obj, Range='bytes={}-{}'.format(start_byte, stop_byte))
             for i in resp['Body']:
-                localFile.write(i)
+                local_file.write(i)
 
             cursize = cursize + self._chunkSize
 
@@ -153,7 +153,7 @@ class AwsStorageService(StorageService):
             # download any remainder of the object smaller than standard chunksize
             resp = self._s3_client.get_object(Bucket=bucket, Key=obj, Range='bytes={}-{}'.format(start_byte, stop_byte))
             for i in resp['Body']:
-                localFile.write(i)
+                local_file.write(i)
 
         return objsize
 

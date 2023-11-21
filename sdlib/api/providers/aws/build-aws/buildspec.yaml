@@ -16,9 +16,20 @@
 
 # https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-env-vars.html
 version: 0.2
-
+env:
+  secrets-manager:
+    SONAR_USERNAME: /osdu/devops/sonar_credentials:username
+    SONAR_PASSWORD: /osdu/devops/sonar_credentials:password
+  
+  parameter-store:
+    SONAR_URL: /osdu/devops/sonar_url
+  variables:
+    SONAR_PATH: "sdlib/api/providers/aws/storage_service.py"
+    SONAR_TEST_PATH: "test/utest/test_api_aws.py"
 phases:
   install:
+    runtime-versions:
+          java: corretto17
     commands:
       # - if [ $(echo $CODEBUILD_SOURCE_VERSION | grep -c  ^refs/heads.*) -eq 1 ]; then echo "Branch name found"; else echo "This build only supports branch builds" && exit 1; fi
       # - apt-get update -y
@@ -26,18 +37,26 @@ phases:
       #TODO temporarily adding hotfix, due to https://github.com/awslabs/git-secrets/issues/220
       - export SAY_LOCATION=`ln -s "$(which echo)" say`
       - export PATH="$PATH:$SAY_LOCATION"
-
       - git clone https://github.com/awslabs/git-secrets.git
       - cd git-secrets && make install && cd ..
       - git secrets --install && git secrets --register-aws
+      - wget -nv https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472.zip
+      - unzip -q ./sonar-scanner-cli-4.6.2.2472.zip
   build:
     commands:
       - export REPO_NAME=${PWD##*/}
       - export BRANCH_NAME=`echo ${CODEBUILD_SOURCE_VERSION} | awk '{gsub("refs/heads/","");gsub("\\.","-");gsub("[[:space:]]","-")}1' | sed 's/\//-/g' | awk '{print tolower($0)}'`
       - echo "Installing requirements.txt"
+      - pip install -r ./test/requirements.txt
       - pip install -r ./requirements.txt
+      - sh ./devops/scripts/run_unit_tests.sh
+
       - pip install pylint
       - pylint ./sdlib/api/providers/aws/*.py --disable=F0001  --errors-only
+      
+      - |
+        java -jar sonar-scanner-4.6.2.2472/lib/sonar-scanner-cli-4.6.2.2472.jar -Dsonar.projectKey=os-seismic-store-sdutil -Dsonar.host.url=${SONAR_URL} \
+          -Dsonar.login=${SONAR_USERNAME} -Dsonar.password=${SONAR_PASSWORD} -Dsonar.branch.name=${BRANCH_NAME} -Dsonar.sources=${SONAR_PATH} -Dsonar.tests=${SONAR_TEST_PATH} -Dsonar.python.coverage.reportPaths=coverage/coverage.xml
       - echo "Building integration testing assemblies and gathering artifacts..."
       - ./test/aws-test/build-aws/prepare-dist.sh
 
