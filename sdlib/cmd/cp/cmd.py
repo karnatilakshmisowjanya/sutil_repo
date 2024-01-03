@@ -169,7 +169,7 @@ class Cp(SDUtilCMD):
         storage_tier = None
 
         if keyword_args.tier is not None:
-            if str(keyword_args.tier).capitalize() not in ('Hot', 'Cool', 'Archive'):
+            if str(keyword_args.tier).capitalize() not in ('Hot', 'Cool', 'Archive', 'Cold'):
                 raise Exception(f'\'{keyword_args.tier}\' is not an acceptable Storage tier')
             storage_tier = str(keyword_args.tier).capitalize()
         tier = Tier(storage_tier)

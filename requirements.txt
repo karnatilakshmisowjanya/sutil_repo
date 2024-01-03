@@ -14,7 +14,7 @@
 # limitations under the License.
 
 Flask==2.3.2
-azure-storage-blob==12.9.0
+azure-storage-blob==12.15.0
 Authlib==0.15.5
 PyYAML==6.0
 requests==2.28.1
