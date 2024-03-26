@@ -617,6 +617,41 @@ class SeismicStoreService(object):
             self._storage_exp_time = time.time() + 3000
         return self._storage_access_token
 
+    def operation_bulkDelete(self, sdpath):
+
+        url = (Config.get_svc_url()
+               + '/operation/bulk-delete?path=' + quote(sdpath, safe=''))
+
+        header = {
+            'Authorization': 'Bearer ' + self._auth.get_id_token(),
+            Config.get_svc_appkey_name(): Config.get_svc_appkey()
+        }
+
+        resp = requests.put(url=url, headers=header,verify=Config.get_ssl_verify())
+
+        if resp.status_code != 202:
+            raise Exception('\n[' + str(resp.status_code) + '] ' + resp.text)
+
+        return resp.json()
+
+    def operation_bulkDeleteStatus(self, operationId, dataPartitionId):
+
+        url = (Config.get_svc_url()
+               + '/operation/bulk-delete/' + operationId)
+
+        header = {
+            'Authorization': 'Bearer ' + self._auth.get_id_token(),
+            Config.get_svc_appkey_name(): Config.get_svc_appkey(),
+            'data-partition-id': dataPartitionId
+        }
+
+        resp = requests.get(url=url, headers=header, verify=Config.get_ssl_verify())
+
+        if resp.status_code != 200:
+            raise Exception('\n[' + str(resp.status_code) + '] ' + resp.text)
+
+        return resp.json()
+
     @staticmethod
     def update_header_if_data_partition_id_provided(header):
         if Config.get_data_partition_id() is not None:
