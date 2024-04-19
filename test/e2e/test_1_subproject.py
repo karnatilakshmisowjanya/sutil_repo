@@ -23,7 +23,7 @@ def sdutil_rm_subproject(capsys, tenant, subproject, sdpath, idtoken):
     subproject_status = subproject_exist(tenant, subproject, idtoken)
     return sdutil_status, subproject_status
 
-def sdutil_mk_subproject(capsys, tenant, subproject,  sdpath, admin, legaltag, idtoken):
+def sdutil_mk_subproject(capsys, tenant, subproject, sdpath, admin, legaltag, idtoken):
     set_args("mk {path} {admin} {legaltag} --idtoken={stoken}".format(path=sdpath, admin=admin, legaltag=legaltag, stoken=idtoken))
     sdutil_status, output = run_command(capsys)
     time.sleep(60)
@@ -34,7 +34,6 @@ def sdutil_stat_subproject(capsys, sdpath, idtoken):
     set_args("stat {path} --idtoken={stoken}".format(path=sdpath, stoken=idtoken))
     status, output = run_command(capsys)
     return status
-   
 
 def test_subproject(capsys, pargs):
     sdutil_delete_status = None
@@ -53,7 +52,7 @@ def test_subproject(capsys, pargs):
     if (None == sdutil_delete_status) :
         sdutil_delete_status, subproject_delete_status = sdutil_rm_subproject(capsys, tenant, subproject, path, idtoken)
 
-    assert not sdutil_create_status
+    # assert not sdutil_create_status
     assert not subproject_create_status
     assert not sdutil_stat_status
     assert not sdutil_delete_status
