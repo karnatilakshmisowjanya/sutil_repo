@@ -30,6 +30,12 @@ def sdutil_mk_subproject(capsys, tenant, subproject,  sdpath, admin, legaltag, i
     subproject_created = subproject_exist(tenant, subproject, idtoken)
     return sdutil_status, subproject_created
 
+def sdutil_stat_subproject(capsys, sdpath, idtoken):
+    set_args("stat {path} --idtoken={stoken}".format(path=sdpath, stoken=idtoken))
+    status, output = run_command(capsys)
+    return status
+   
+
 def test_subproject(capsys, pargs):
     sdutil_delete_status = None
     path = pargs.sdpath
@@ -39,10 +45,16 @@ def test_subproject(capsys, pargs):
     status = subproject_exist(tenant, subproject, idtoken)
     if status : 
         sdutil_delete_status, subproject_delete_status = sdutil_rm_subproject(capsys, tenant, subproject, path, idtoken)
-    sdutil_create_status, subproject_create_status = sdutil_mk_subproject(capsys, tenant, subproject,  path, admin, legaltag, idtoken)
+    # sdutil mk sd://tenant/subproject (Test subproject creation)
+    sdutil_create_status, subproject_create_status = sdutil_mk_subproject(capsys, tenant, subproject, path, admin, legaltag, idtoken)
+    # sdutil stat sd://tenant/subproject (Test get subproject metadata)
+    sdutil_stat_status = sdutil_stat_subproject(capsys, path, idtoken)
+    # sdutil rm sd://tenant/subproject
     if (None == sdutil_delete_status) :
         sdutil_delete_status, subproject_delete_status = sdutil_rm_subproject(capsys, tenant, subproject, path, idtoken)
+
     assert not sdutil_create_status
     assert not subproject_create_status
+    assert not sdutil_stat_status
     assert not sdutil_delete_status
     assert subproject_delete_status
