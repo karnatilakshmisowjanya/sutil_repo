@@ -106,6 +106,8 @@ sdutil-azure-integration-test:
   script:
     - pip3 install -r ./test/requirements.txt
     - chmod +x ./devops/scripts/run_regression_tests.sh
+    - echo "${E2E_LEGALTAG}"
+    - echo "${E2E_ADMINEMAIL}"
     - |
       ./devops/scripts/run_regression_tests.sh \
         --cloud-provider=azure \
