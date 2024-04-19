@@ -14,7 +14,7 @@
 # limitations under the License.
 
 
-from test.e2e.utils import set_args, run_command, check_string, e2e_test_dataset_01, e2e_test_dataset_02
+from test.e2e.utils import set_args, run_command
 
 
 def test_ls(capsys, pargs):

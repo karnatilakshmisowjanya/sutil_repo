@@ -26,6 +26,8 @@ from test.e2e.utils import set_args, run, e2e_test_dataset_prefix, e2e_test_data
 def pytest_addoption(parser):
     parser.addoption("--idtoken", action="store", default="", help="credential token")
     parser.addoption("--sdpath", action="store", default="", help="seismic store path")
+    parser.addoption("--admin", action="store", default="", help="user id will be used as subproject admin")
+    parser.addoption("--legaltag01", action="store", default="", help="legal tag to use in subproject creation")
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -77,12 +79,16 @@ def cleanup(sdpath, pargs):
         os.remove(filename)
 
 class TestArgs:
-    def __init__(self, stoken, sdpath):
+    def __init__(self, stoken, sdpath, admin, legaltag01):
         self.idtoken = stoken
         self.sdpath = sdpath
+        self.admin = admin
+        self.legaltag01 = legaltag01
 
     @classmethod
     def from_inputs_args(cls, pytestconfig):
         return cls(
             pytestconfig.getoption("idtoken"), 
-            pytestconfig.getoption("sdpath"))
+            pytestconfig.getoption("sdpath"),
+            pytestconfig.getoption("admin"), 
+            pytestconfig.getoption("legaltag01"))

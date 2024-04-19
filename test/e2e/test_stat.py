@@ -14,8 +14,13 @@
 # limitations under the License.
 
 
-from test.e2e.utils import set_args, check_string, run_command, e2e_test_dataset_01, e2e_test_dataset_fsize
+from test.e2e.utils import set_args, run_command, e2e_test_dataset_01
 
+
+def test_sdutil_stat_subproject(capsys, pargs):
+   set_args("stat {path} --idtoken={stoken}".format(path=(pargs.sdpath), stoken=pargs.idtoken))
+   status, output = run_command(capsys)
+   assert not status
 
 def test_sdutil_stat(capsys, pargs):
    set_args("stat {path} --idtoken={stoken}".format(path=(pargs.sdpath + '/' + e2e_test_dataset_01), stoken=pargs.idtoken))

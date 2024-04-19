@@ -46,6 +46,14 @@ for i in "$@"; do
             subproject="${i#*=}"
             shift
             ;;
+        --legaltag=*) # required
+            legaltag="${i#*=}"
+            shift
+            ;;
+        --admin=*) # required
+            admin="${i#*=}"
+            shift
+            ;;
         --disable-ssl-verify)
             ssl_verify="true"
             shift
@@ -58,8 +66,8 @@ for i in "$@"; do
 done
 
 # required parameters
-if [[ -z "${service_url}" || -z "${service_env}" || -z "${idtoken}" || -z "${tenant}" || -z "${subproject}" || -z "${provider}" ]]; then
-    echo "[usage] ./run_regression_tests.sh --cloud-provider= --service-url= --service-env= --tenant= --subproject= --idtoken="
+if [[ -z "${service_url}" || -z "${service_env}" || -z "${idtoken}" || -z "${tenant}" || -z "${subproject}" || -z "${legaltag}" || -z "${admin}" || -z "${provider}" ]]; then
+    echo "[usage] ./run_regression_tests.sh --cloud-provider= --service-url= --service-env= --tenant= --subproject= --legaltag= --admin= --idtoken="
     exit 1
 fi
 
@@ -91,7 +99,7 @@ echo "auth_provider:" >> sdlib/config.yaml
 echo "  default: null" >> sdlib/config.yaml
 
 # pytest fetches a stoken when a service account secret key is passed.
-pytest test/e2e --idtoken=${idtoken} --sdpath=sd://${tenant}/${subproject} --timeout=300 --capture=fd
+pytest --log-format="%(asctime)s %(levelname)s %(message)s" --log-date-format="%Y-%m-%d %H:%M:%S" test/e2e --idtoken=${idtoken} --sdpath=sd://${tenant}/${subproject} --admin=${admin} --legaltag=${legaltag} --timeout=300 --capture=fd
 exit_status=$?
 
 # restore configuration and clear temporary files
