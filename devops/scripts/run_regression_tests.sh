@@ -74,7 +74,7 @@ if [[ -z "${service_url}" || -z "${service_env}" || -z "${idtoken}" || -z "${ten
     echo "subproject: ${subproject} \n"
     echo "legaltag: ${legaltag} \n"
     echo "admin: ${admin} \n"
-    if [[-z "${idtoken}"]]; then echo "idtoken is not provided"
+    if [[-z "${idtoken}"]]; then echo "idtoken is not provided"; fi
     exit 1
 fi
 
