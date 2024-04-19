@@ -14,10 +14,15 @@
 # limitations under the License.
 
 
-from test.e2e.utils import set_args, run_command
+from test.e2e.utils import set_args, run_command, subproject_exist, subproject_register
 
 
 def test_ls(capsys, pargs):
+    path, idtoken, legaltag = pargs.sdpath, pargs.idtoken, pargs.legaltag
+    tenant,subproject = path.split("/")[2],path.split("/")[3]
+    status = subproject_exist(tenant, subproject, idtoken)
+    if status :
+        subproject_register(tenant, subproject, legaltag, idtoken)
     set_args("ls {path} --idtoken={stoken}".format(path=pargs.sdpath, stoken=pargs.idtoken))
     status, output = run_command(capsys)
     print(status)

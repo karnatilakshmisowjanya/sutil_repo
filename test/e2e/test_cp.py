@@ -20,7 +20,7 @@ import tempfile
 import json
 from glob import glob
 
-from test.e2e.utils import check_string, run, run_command, set_args
+from test.e2e.utils import check_string, run, run_command, set_args, subproject_exist, subproject_register
 from sdlib.shared.sdpath import SDPath
 
 fname_prefix = 'cp_cmd_test'
@@ -40,6 +40,11 @@ def teardown_module(module):
         os.remove(filename)
 
 def test_sdutil_clean(capsys, pargs):
+    path, idtoken, legaltag = pargs.sdpath, pargs.idtoken, pargs.legaltag
+    tenant,subproject = path.split("/")[2],path.split("/")[3]
+    status = subproject_exist(tenant, subproject, idtoken)
+    if status :
+        subproject_register(tenant, subproject, legaltag, idtoken)
     set_args("rm {path} --idtoken={stoken}".format(path=(pargs.sdpath + '/' + dataset_01), stoken=pargs.idtoken))
     run_command(capsys)
     set_args("rm {path} --idtoken={stoken}".format(path=(pargs.sdpath + '/' + dataset_02), stoken=pargs.idtoken))
