@@ -79,11 +79,11 @@ def cleanup(sdpath, pargs):
         os.remove(filename)
 
 class TestArgs:
-    def __init__(self, stoken, sdpath, admin, legaltag01):
+    def __init__(self, stoken, sdpath, admin, legaltag):
         self.idtoken = stoken
         self.sdpath = sdpath
         self.admin = admin
-        self.legaltag01 = legaltag01
+        self.legaltag = legaltag
 
     @classmethod
     def from_inputs_args(cls, pytestconfig):
