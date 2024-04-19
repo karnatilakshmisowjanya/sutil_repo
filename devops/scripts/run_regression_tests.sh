@@ -68,13 +68,13 @@ done
 # required parameters
 if [[ -z "${service_url}" || -z "${service_env}" || -z "${idtoken}" || -z "${tenant}" || -z "${subproject}" || -z "${legaltag}" || -z "${admin}" || -z "${provider}" ]]; then
     echo "[usage] ./run_regression_tests.sh --cloud-provider= --service-url= --service-env= --tenant= --subproject= --legaltag= --admin= --idtoken="
-    echo "service-url: ${service_env} \n" 
+    echo "service-url: ${service_url} \n" 
     echo "service-env: ${service_env} \n"
     echo "tenant: ${tenant} \n"
     echo "subproject: ${subproject} \n"
     echo "legaltag: ${legaltag} \n"
     echo "admin: ${admin} \n"
-    if [[-z "${idtoken}"]]; then echo "idtoken is not provided"; fi
+    if [[ -z "${idtoken}" ]]; then echo "idtoken is not provided"; fi
     exit 1
 fi
 
