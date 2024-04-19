@@ -50,3 +50,19 @@ def subproject_exist(tenant, subproject, stoken):
     response = requests.get(url=URL, headers=headers)
     if (response.status_code != 200): return 1
     return 0
+
+def subproject_register(tenant, subproject, legaltag, stoken):
+    import requests
+    import time
+    from sdlib.shared.config import Config
+    ENDPOINT_URL = Config.get_svc_url()
+    URL = ENDPOINT_URL + '/subproject/tenant/' + tenant + '/subproject/' + subproject
+    headers = {'Authorization':"Bearer " + stoken,
+                'data-partition-id':tenant,
+                'Content-Type':'application/json',
+                'ltag': legaltag
+    }
+    response = requests.post(url=URL, headers=headers)
+    if (response.status_code != 200): return 1
+    time.sleep(30)
+    return 0
