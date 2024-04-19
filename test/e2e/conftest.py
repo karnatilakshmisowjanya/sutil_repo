@@ -27,7 +27,7 @@ def pytest_addoption(parser):
     parser.addoption("--idtoken", action="store", default="", help="credential token")
     parser.addoption("--sdpath", action="store", default="", help="seismic store path")
     parser.addoption("--admin", action="store", default="", help="user id will be used as subproject admin")
-    parser.addoption("--legaltag01", action="store", default="", help="legal tag to use in subproject creation")
+    parser.addoption("--legaltag", action="store", default="", help="legal tag to use in subproject creation")
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -91,4 +91,4 @@ class TestArgs:
             pytestconfig.getoption("idtoken"), 
             pytestconfig.getoption("sdpath"),
             pytestconfig.getoption("admin"), 
-            pytestconfig.getoption("legaltag01"))
+            pytestconfig.getoption("legaltag"))

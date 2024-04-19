@@ -34,7 +34,7 @@ def test_subproject(capsys, pargs):
     sdutil_delete_status = None
     path = pargs.sdpath
     tenant,subproject = path.split("/")[2],path.split("/")[3]
-    admin, legaltag, idtoken = pargs.admin, pargs.legaltag01, pargs.idtoken
+    admin, legaltag, idtoken = pargs.admin, pargs.legaltag, pargs.idtoken
 
     status = subproject_exist(tenant, subproject, idtoken)
     if status : 
