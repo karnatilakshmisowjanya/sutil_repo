@@ -17,8 +17,6 @@
 from test.e2e.utils import set_args, run_command, subproject_exist
 import time
 
-sdutil_delete_status = None
-
 def sdutil_rm_subproject(capsys, tenant, subproject, sdpath, idtoken):
     set_args("rm {path} --idtoken={stoken}".format(path=sdpath, stoken=idtoken))
     sdutil_status, output = run_command(capsys)
@@ -33,6 +31,7 @@ def sdutil_mk_subproject(capsys, tenant, subproject,  sdpath, admin, legaltag, i
     return sdutil_status, subproject_created
 
 def test_subproject(capsys, pargs):
+    sdutil_delete_status = None
     path = pargs.sdpath
     tenant,subproject = path.split("/")[2],path.split("/")[3]
     admin, legaltag, idtoken = pargs.admin, pargs.legaltag01, pargs.idtoken
