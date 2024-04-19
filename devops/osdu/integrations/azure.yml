@@ -108,13 +108,4 @@ sdutil-azure-integration-test:
     - chmod +x ./devops/scripts/run_regression_tests.sh
     - echo "${E2E_LEGALTAG}"
     - echo "${E2E_ADMINEMAIL}"
-    - |
-      ./devops/scripts/run_regression_tests.sh \
-        --cloud-provider=azure \
-        --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" \
-        --service-env=gitlab \
-        --tenant="${E2E_TENANT}" \
-        --subproject="${E2E_SUBPROJECT}" \
-        --legaltag="${E2E_LEGALTAG}" \
-        --admin="${E2E_ADMINEMAIL}" \
-        --idtoken="$svctoken"
+    - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --legaltag="${E2E_LEGALTAG}" --admin="${E2E_ADMINEMAIL}" --idtoken="$svctoken"
