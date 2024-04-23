@@ -74,7 +74,7 @@ def cleanup(sdpath, pargs):
     set_args("rm {path} --idtoken={stoken}".format(path=file_sdpath, stoken=pargs.idtoken))
     run()
 
-    # delete locat test files
+    # delete local test files
     for filename in glob(e2e_test_dataset_prefix + "*"):
         os.remove(filename)
 
