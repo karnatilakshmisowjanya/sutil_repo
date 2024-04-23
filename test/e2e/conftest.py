@@ -48,15 +48,15 @@ def upload_seed_files(sdpath, pargs):
 
     # upload test seistore dataset 01
     file_sdpath = "/".join([sdpath, e2e_test_dataset_01])
-    generate_local_file(e2e_test_dataset_01)
-    set_args("cp {local_file} {path} --idtoken={stoken}".format(local_file=e2e_test_dataset_01, path=file_sdpath, stoken=pargs.idtoken))
-    run()
+    # generate_local_file(e2e_test_dataset_01)
+    # set_args("cp {local_file} {path} --idtoken={stoken}".format(local_file=e2e_test_dataset_01, path=file_sdpath, stoken=pargs.idtoken))
+    # run()
 
     # upload test seistore dataset 02
     file_sdpath = "/".join([sdpath, e2e_test_dataset_02])
-    generate_local_file(e2e_test_dataset_02)
-    set_args("cp {local_file} {path} --idtoken={stoken}".format(local_file=e2e_test_dataset_02, path=file_sdpath, stoken=pargs.idtoken))
-    run()
+    # generate_local_file(e2e_test_dataset_02)
+    # set_args("cp {local_file} {path} --idtoken={stoken}".format(local_file=e2e_test_dataset_02, path=file_sdpath, stoken=pargs.idtoken))
+    # run()
 
 def generate_local_file(name):
     with open(name, 'wb') as fout:
@@ -64,15 +64,15 @@ def generate_local_file(name):
 
 def cleanup(sdpath, pargs):
 
-    # delete test seistore dataset 01
-    file_sdpath = "/".join([sdpath, e2e_test_dataset_01])
-    set_args("rm {path} --idtoken={stoken}".format(path=file_sdpath, stoken=pargs.idtoken))
-    run()
+    # # delete test seistore dataset 01
+    # file_sdpath = "/".join([sdpath, e2e_test_dataset_01])
+    # set_args("rm {path} --idtoken={stoken}".format(path=file_sdpath, stoken=pargs.idtoken))
+    # run()
 
-    # delete test seistore dataset 02
-    file_sdpath = "/".join([sdpath, e2e_test_dataset_02])
-    set_args("rm {path} --idtoken={stoken}".format(path=file_sdpath, stoken=pargs.idtoken))
-    run()
+    # # delete test seistore dataset 02
+    # file_sdpath = "/".join([sdpath, e2e_test_dataset_02])
+    # set_args("rm {path} --idtoken={stoken}".format(path=file_sdpath, stoken=pargs.idtoken))
+    # run()
 
     # delete local test files
     for filename in glob(e2e_test_dataset_prefix + "*"):
