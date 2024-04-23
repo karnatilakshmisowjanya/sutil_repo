@@ -66,3 +66,10 @@ def subproject_register(tenant, subproject, legaltag, stoken):
     if (response.status_code != 200): return 1
     time.sleep(30)
     return 0
+
+def verify_conditions(**kwargs):
+    errors = []
+    for test, result in kwargs.items():
+        if result == 1:
+            errors.append(test.replace('_', ' ') + " test fails")
+    return errors

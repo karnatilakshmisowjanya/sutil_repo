@@ -14,13 +14,14 @@
 # limitations under the License.
 
 
-from test.e2e.utils import set_args, run_command, subproject_exist
+from test.e2e.utils import set_args, run_command, subproject_exist, verify_conditions
 import time
 
 def sdutil_rm_subproject(capsys, tenant, subproject, sdpath, idtoken):
     set_args("rm {path} --idtoken={stoken}".format(path=sdpath, stoken=idtoken))
     sdutil_status, output = run_command(capsys)
     subproject_status = subproject_exist(tenant, subproject, idtoken)
+    # if subproject_status : subproject_status = 0 # operation succeed because we expect 404 response after deletion
     return sdutil_status, subproject_status
 
 def sdutil_mk_subproject(capsys, tenant, subproject, sdpath, admin, legaltag, idtoken):
@@ -53,7 +54,9 @@ def test_subproject(capsys, pargs):
         sdutil_delete_status, subproject_delete_status = sdutil_rm_subproject(capsys, tenant, subproject, path, idtoken)
 
     # assert not sdutil_create_status
-    assert not subproject_create_status
-    assert not sdutil_stat_status
-    assert not sdutil_delete_status
-    assert subproject_delete_status
+    errors = verify_conditions(sdutil_mk_subproject = sdutil_create_status,
+                             subroject_get_after_sdutil_mk_subproject = subproject_create_status,
+                             sdutil_stat_subproject = sdutil_stat_status,
+                             sdutil_rm_subproject = sdutil_delete_status,
+                             subroject_get_after_sdutil_rm_subproject = subproject_delete_status)
+    assert not errors, "errors occured:\n{}".format("\n".join(errors))
