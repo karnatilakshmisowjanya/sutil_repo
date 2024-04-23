@@ -34,9 +34,16 @@ def set_args(args):
     sys.argv = args.split(' ')
     sys.argv.insert(0, "sdutil")
 
-
 def check_string(text, string):
     return text.find(string) != -1
+
+def verify_conditions(**kwargs):
+    errors = []
+    for test, result in kwargs.items():
+        result, output = str(result).split(';')[0], str(result).split(';')[1]
+        if int(result):
+            errors.append(test.replace('_', ' ') + " test fails. \n The reason: " + output)
+    return errors
 
 def subproject_exist(tenant, subproject, stoken):
     import requests
@@ -66,10 +73,3 @@ def subproject_register(tenant, subproject, legaltag, stoken):
     if (response.status_code != 200): return 1
     time.sleep(30)
     return 0
-
-def verify_conditions(**kwargs):
-    errors = []
-    for test, result in kwargs.items():
-        if result == 1:
-            errors.append(test.replace('_', ' ') + " test fails")
-    return errors

@@ -22,7 +22,7 @@ def sdutil_rm_subproject(capsys, tenant, subproject, sdpath, idtoken):
     sdutil_status, output = run_command(capsys)
     subproject_status = subproject_exist(tenant, subproject, idtoken)
     if subproject_status : subproject_status = 0 # operation succeed because we expect 404 response after deletion
-    return sdutil_status, subproject_status
+    return sdutil_status, subproject_status, output
 
 def sdutil_mk_subproject(capsys, tenant, subproject, sdpath, admin, legaltag, idtoken):
     set_args("mk {path} {admin} {legaltag} --idtoken={stoken}".format(path=sdpath, admin=admin, legaltag=legaltag, stoken=idtoken))
@@ -34,34 +34,24 @@ def sdutil_mk_subproject(capsys, tenant, subproject, sdpath, admin, legaltag, id
 def sdutil_stat_subproject(capsys, sdpath, idtoken):
     set_args("stat {path} --idtoken={stoken}".format(path=sdpath, stoken=idtoken))
     status, output = run_command(capsys)
-    return status
+    return status, output
 
 def test_subproject(capsys, pargs):
-    sdutil_delete_status = None
     path = pargs.sdpath
     tenant,subproject = path.split("/")[2],path.split("/")[3]
     admin, legaltag, idtoken = pargs.admin, pargs.legaltag, pargs.idtoken
-
-    # status = subproject_exist(tenant, subproject, idtoken)
-    # if status : 
-    #     sdutil_delete_status, subproject_delete_status = sdutil_rm_subproject(capsys, tenant, subproject, path, idtoken)
+    sdutil_rm_subproject(capsys, tenant, subproject, path, idtoken)
     # sdutil mk sd://tenant/subproject (Test subproject creation)
-    sdutil_create_status, subproject_create_status, output = sdutil_mk_subproject(capsys, tenant, subproject, path, admin, legaltag, idtoken)
+    sdutil_create_status, subproject_create_status, sdutil_mk_output = sdutil_mk_subproject(capsys, tenant, subproject, path, admin, legaltag, idtoken)
     # sdutil stat sd://tenant/subproject (Test get subproject metadata)
-    # sdutil_stat_status = sdutil_stat_subproject(capsys, path, idtoken)
+    sdutil_stat_status, stat_output = sdutil_stat_subproject(capsys, path, idtoken)
     # sdutil rm sd://tenant/subproject
-    # if (None == sdutil_delete_status) :
-    #     sdutil_delete_status, subproject_delete_status = sdutil_rm_subproject(capsys, tenant, subproject, path, idtoken)
+    sdutil_delete_status, subproject_delete_status, rm_output = sdutil_rm_subproject(capsys, tenant, subproject, path, idtoken)
 
     # assert not sdutil_create_status
-    # errors = verify_conditions(sdutil_mk_subproject = sdutil_create_status,
-    #                          subroject_get_after_sdutil_mk_subproject = subproject_create_status,
-    #                          sdutil_stat_subproject = sdutil_stat_status,
-    #                          sdutil_rm_subproject = sdutil_delete_status,
-    #                          subroject_get_after_sdutil_rm_subproject = subproject_delete_status)
-    # assert not errors, "errors occured:\n{}".format("\n".join(errors))
-    assert not sdutil_create_status, output
-    assert not subproject_create_status
-    # assert not sdutil_stat_status
-    # assert not sdutil_delete_status
-    # assert subproject_delete_status
+    errors = verify_conditions(sdutil_mk_subproject = str(sdutil_create_status) + ';' + sdutil_mk_output,
+                             subroject_get_after_sdutil_mk_subproject = str(subproject_create_status) + ';' + '-----',
+                             sdutil_stat_subproject = str(sdutil_stat_status) + ';' + stat_output,
+                             sdutil_rm_subproject = str(sdutil_delete_status) + ';' + rm_output,
+                             subroject_get_after_sdutil_rm_subproject = str(subproject_delete_status) + ';' + '-----')
+    assert not errors, "errors occured:\n{}".format("\n".join(errors))
