@@ -21,7 +21,7 @@ def sdutil_rm_subproject(capsys, tenant, subproject, sdpath, idtoken):
     set_args("rm {path} --idtoken={stoken}".format(path=sdpath, stoken=idtoken))
     sdutil_status, output = run_command(capsys)
     subproject_status = subproject_exist(tenant, subproject, idtoken)
-    # if subproject_status : subproject_status = 0 # operation succeed because we expect 404 response after deletion
+    if subproject_status : subproject_status = 0 # operation succeed because we expect 404 response after deletion
     return sdutil_status, subproject_status
 
 def sdutil_mk_subproject(capsys, tenant, subproject, sdpath, admin, legaltag, idtoken):
