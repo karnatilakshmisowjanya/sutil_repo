@@ -74,7 +74,7 @@ for i in "$@"; do
 done
 
 # required parameters
-if [[ -z "${service_url}" || -z "${service_env}" || -z "${idtoken}" || -z "${tenant}" || -z "${subproject}" || -z "${legaltag}" || -z "${admin}" || -z "${acl_admin}" || -z "${acl_viewer}" -z "${provider}" ]]; then
+if [[ -z "${service_url}" || -z "${service_env}" || -z "${idtoken}" || -z "${tenant}" || -z "${subproject}" || -z "${legaltag}" || -z "${admin}" || -z "${acl_admin}" || -z "${acl_viewer}" || -z "${provider}" ]]; then
     echo "[usage] ./run_regression_tests.sh --cloud-provider= --service-url= --service-env= --tenant= --subproject= --legaltag= --admin= --idtoken="
     echo "service-url: ${service_url} \n" 
     echo "service-env: ${service_env} \n"
