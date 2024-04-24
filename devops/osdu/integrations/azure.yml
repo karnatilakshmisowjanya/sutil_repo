@@ -4,7 +4,11 @@ variables:
   SDMS_PREFIX: /seistore-svc/api/v3
   E2E_SUBPROJECT: demosandbox08
   E2E_TENANT: $MY_TENANT
+  DOMAIN: ${DOMAIN}
   E2E_LEGALTAG: ${LEGAL_TAG}
+  AZURE_AD_VALID_OID_USER1: ${AZURE_AD_VALID_OID_USER1}
+  ACL_OWNERS: ${ACL_OWNERS}  
+  ACL_VIEWERS: ${ACL_VIEWERS}
 
 azure_containerize:
   needs: []
@@ -105,4 +109,4 @@ sdutil-azure-integration-test:
   script:
     - pip3 install -r ./test/requirements.txt
     - chmod +x ./devops/scripts/run_regression_tests.sh
-    - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --legaltag="${E2E_LEGALTAG}" --admin="76d88025-a0fd-4887-90cf-fac2b27293a0" --acl-admin="${ACL_OWNERS}@${E2E_TENANT}.${DOMAIN}" --acl-viewer="${ACL_VIEWERS}@${E2E_TENANT}.${DOMAIN}" --idtoken="$svctoken"
+    - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --legaltag="${E2E_LEGALTAG}" --admin="${AZURE_AD_VALID_OID_USER1}" --acl-admin="${ACL_OWNERS}@${E2E_TENANT}.${DOMAIN}" --acl-viewer="${ACL_VIEWERS}@${E2E_TENANT}.${DOMAIN}" --idtoken="$svctoken"
