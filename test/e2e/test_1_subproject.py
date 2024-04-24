@@ -24,8 +24,8 @@ def sdutil_rm_subproject(capsys, tenant, subproject, sdpath, idtoken):
     if subproject_status : subproject_status = 0 # operation succeed because we expect 404 response after deletion
     return sdutil_status, subproject_status, output
 
-def sdutil_mk_subproject(capsys, tenant, subproject, sdpath, admin, legaltag, idtoken):
-    set_args("mk {path} {admin} {legaltag} --idtoken={stoken}".format(path=sdpath, admin=admin, legaltag=legaltag, stoken=idtoken))
+def sdutil_mk_subproject(capsys, tenant, subproject, sdpath, admin, legaltag, idtoken, acl_admin, acl_viewer):
+    set_args("mk {path} {admin} {legaltag} --admin_acl={acl_admin} --viewer_acl={acl_viewer} --idtoken={stoken}".format(path=sdpath, admin=admin, legaltag=legaltag, stoken=idtoken, acl_admin=acl_admin, acl_viewer=acl_viewer))
     sdutil_status, output = run_command(capsys)
     time.sleep(60)
     subproject_created = subproject_exist(tenant, subproject, idtoken)
@@ -39,10 +39,11 @@ def sdutil_stat_subproject(capsys, sdpath, idtoken):
 def test_subproject(capsys, pargs):
     path = pargs.sdpath
     tenant,subproject = path.split("/")[2],path.split("/")[3]
-    admin, legaltag, idtoken = pargs.admin.split('@')[0], pargs.legaltag, pargs.idtoken
+    admin, legaltag, idtoken = pargs.admin, pargs.legaltag, pargs.idtoken
+    acl_admin, acl_viewer = pargs.acl_admin, pargs.acl_viewer
     sdutil_rm_subproject(capsys, tenant, subproject, path, idtoken)
     # sdutil mk sd://tenant/subproject (Test subproject creation)
-    sdutil_create_status, subproject_create_status, sdutil_mk_output = sdutil_mk_subproject(capsys, tenant, subproject, path, admin, legaltag, idtoken)
+    sdutil_create_status, subproject_create_status, sdutil_mk_output = sdutil_mk_subproject(capsys, tenant, subproject, path, admin, legaltag, idtoken, acl_admin, acl_viewer)
     # sdutil stat sd://tenant/subproject (Test get subproject metadata)
     sdutil_stat_status, stat_output = sdutil_stat_subproject(capsys, path, idtoken)
     # sdutil rm sd://tenant/subproject

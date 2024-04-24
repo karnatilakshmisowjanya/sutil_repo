@@ -4,7 +4,7 @@ variables:
   SDMS_PREFIX: /seistore-svc/api/v3
   E2E_SUBPROJECT: demosandbox08
   E2E_TENANT: $MY_TENANT
-  E2E_ADMINEMAIL: ${AZURE_AD_USER_EMAIL}
+  E2E_ADMINEMAIL: ${AZURE_AD_USER_OID}
   E2E_LEGALTAG: ${LEGAL_TAG}
 
 azure_containerize:
@@ -110,4 +110,4 @@ sdutil-azure-integration-test:
     - echo "${E2E_ADMINEMAIL}"
     - echo "${E2E_HOSTNAME}${SDMS_PREFIX}"
     - echo "$svctoken"
-    - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --legaltag="${E2E_LEGALTAG}" --admin="${E2E_ADMINEMAIL}" --idtoken="$svctoken"
+    - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --legaltag="${E2E_LEGALTAG}" --admin="${E2E_ADMINEMAIL}" --acl-admin="${ACL_OWNERS}" --acl-viewer="${ACL_VIEWERS}" --idtoken="$svctoken"

@@ -54,6 +54,14 @@ for i in "$@"; do
             admin="${i#*=}"
             shift
             ;;
+        --acl-admin=*) # required
+            acl_admin="${i#*=}"
+            shift
+            ;;
+        --acl-viewer=*) # required
+            acl_viewer="${i#*=}"
+            shift
+            ;;
         --disable-ssl-verify)
             ssl_verify="true"
             shift
@@ -66,7 +74,7 @@ for i in "$@"; do
 done
 
 # required parameters
-if [[ -z "${service_url}" || -z "${service_env}" || -z "${idtoken}" || -z "${tenant}" || -z "${subproject}" || -z "${legaltag}" || -z "${admin}" || -z "${provider}" ]]; then
+if [[ -z "${service_url}" || -z "${service_env}" || -z "${idtoken}" || -z "${tenant}" || -z "${subproject}" || -z "${legaltag}" || -z "${admin}" || -z "${acl_admin}" || -z "${acl_viewer}" -z "${provider}" ]]; then
     echo "[usage] ./run_regression_tests.sh --cloud-provider= --service-url= --service-env= --tenant= --subproject= --legaltag= --admin= --idtoken="
     echo "service-url: ${service_url} \n" 
     echo "service-env: ${service_env} \n"
@@ -74,6 +82,8 @@ if [[ -z "${service_url}" || -z "${service_env}" || -z "${idtoken}" || -z "${ten
     echo "subproject: ${subproject} \n"
     echo "legaltag: ${legaltag} \n"
     echo "admin: ${admin} \n"
+    echo "acl-admin: ${acl_admin} \n"
+    echo "acl-viewer: ${acl_viewer} \n"
     if [[ -z "${idtoken}" ]]; then echo "idtoken is not provided"; fi
     exit 1
 fi
@@ -107,7 +117,7 @@ echo "  default: null" >> sdlib/config.yaml
 
 # pytest fetches a stoken when a service account secret key is passed.
 pytest --log-format="%(asctime)s %(levelname)s %(message)s" --log-date-format="%Y-%m-%d %H:%M:%S" --timeout=300 --capture=fd \
-    test/e2e --idtoken=${idtoken} --sdpath=sd://${tenant}/${subproject} --admin=${admin} --legaltag=${legaltag} 
+    test/e2e --idtoken=${idtoken} --sdpath=sd://${tenant}/${subproject} --admin=${admin} --legaltag=${legaltag} --acl_admin=${acl_admin} --acl_viewer=${acl_viewer}
 exit_status=$?
 
 # restore configuration and clear temporary files
