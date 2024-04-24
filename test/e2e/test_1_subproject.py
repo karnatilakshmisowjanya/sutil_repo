@@ -39,7 +39,7 @@ def sdutil_stat_subproject(capsys, sdpath, idtoken):
 def test_subproject(capsys, pargs):
     path = pargs.sdpath
     tenant,subproject = path.split("/")[2],path.split("/")[3]
-    admin, legaltag, idtoken = pargs.admin, pargs.legaltag, pargs.idtoken
+    admin, legaltag, idtoken = pargs.admin.split('@')[0], pargs.legaltag, pargs.idtoken
     sdutil_rm_subproject(capsys, tenant, subproject, path, idtoken)
     # sdutil mk sd://tenant/subproject (Test subproject creation)
     sdutil_create_status, subproject_create_status, sdutil_mk_output = sdutil_mk_subproject(capsys, tenant, subproject, path, admin, legaltag, idtoken)
@@ -47,8 +47,7 @@ def test_subproject(capsys, pargs):
     sdutil_stat_status, stat_output = sdutil_stat_subproject(capsys, path, idtoken)
     # sdutil rm sd://tenant/subproject
     sdutil_delete_status, subproject_delete_status, rm_output = sdutil_rm_subproject(capsys, tenant, subproject, path, idtoken)
-
-    # assert not sdutil_create_status
+    # assert the results
     errors = verify_conditions(sdutil_mk_subproject = str(sdutil_create_status) + ';' + sdutil_mk_output,
                              subroject_get_after_sdutil_mk_subproject = str(subproject_create_status) + ';' + '-----',
                              sdutil_stat_subproject = str(sdutil_stat_status) + ';' + stat_output,
