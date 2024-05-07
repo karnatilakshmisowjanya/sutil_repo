@@ -43,7 +43,7 @@ def test_subproject(capsys, pargs):
     admin, legaltag, idtoken = pargs.admin, pargs.legaltag, pargs.idtoken
     acl_admin, acl_viewer = pargs.acl_admin, pargs.acl_viewer
     status = subproject_exist(tenant, subproject, idtoken)
-    if not status :
+    if 0 != status :
         subproject_delete(tenant, subproject, idtoken)
     # sdutil mk sd://tenant/subproject (Test subproject creation)
     sdutil_create_status, subproject_create_status, sdutil_mk_output = sdutil_mk_subproject(capsys, tenant, subproject, path, admin, legaltag, idtoken, acl_admin, acl_viewer)

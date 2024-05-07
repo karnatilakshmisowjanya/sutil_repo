@@ -46,8 +46,8 @@ def test_subproject_for_cp(capsys, pargs) :
     tenant,subproject = path.split("/")[2],path.split("/")[3]
     legaltag, idtoken = pargs.legaltag, pargs.idtoken
     acl_admin, acl_viewer = pargs.acl_admin, pargs.acl_viewer
-    status = subproject_exist(tenant, subproject, idtoken, acl_admin, acl_viewer)
-    if status :
+    status = subproject_exist(tenant, subproject, idtoken)
+    if 0 != status :
         status = subproject_register(tenant, subproject, legaltag, idtoken, acl_admin, acl_viewer)
     assert not status, "Subroject {subproject} does not exist and fails to be created".format(subproject=subproject)
 
@@ -55,7 +55,7 @@ def test_sdutil_upload(capsys, pargs):
     # upload simple dataset01
     subproject = pargs.sdpath.split("/")[3]
     status = dataset_exist(subproject, dataset_01, pargs.idtoken)
-    if not status :
+    if 0 == status :
         dataset_delete(subproject, dataset_01, pargs.idtoken)
     set_args("cp {localfile} {path} --idtoken={stoken}".format(localfile=local_file_name_01, path=(pargs.sdpath + '/' + dataset_01), stoken=pargs.idtoken))
     sdutil_cp_status, sdutil_cp_output = run_command(capsys)
