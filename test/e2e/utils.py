@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017-2019, Schlumberger
+# Copyright 2017-2024, Schlumberger
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -44,32 +44,3 @@ def verify_conditions(**kwargs):
         if int(result):
             errors.append(test.replace('_', ' ') + " test fails. \n The reason: " + output)
     return errors
-
-def subproject_exist(tenant, subproject, stoken):
-    import requests
-    from sdlib.shared.config import Config
-    ENDPOINT_URL = Config.get_svc_url()
-    URL = ENDPOINT_URL + '/subproject/tenant/' + tenant + '/subproject/' + subproject
-    headers = {'Authorization':"Bearer " + stoken,
-                'data-partition-id':tenant,
-                'Content-Type':'application/json'
-    }
-    response = requests.get(url=URL, headers=headers)
-    if (response.status_code != 200): return 1
-    return 0
-
-def subproject_register(tenant, subproject, legaltag, stoken):
-    import requests
-    import time
-    from sdlib.shared.config import Config
-    ENDPOINT_URL = Config.get_svc_url()
-    URL = ENDPOINT_URL + '/subproject/tenant/' + tenant + '/subproject/' + subproject
-    headers = {'Authorization':"Bearer " + stoken,
-                'data-partition-id':tenant,
-                'Content-Type':'application/json',
-                'ltag': legaltag
-    }
-    response = requests.post(url=URL, headers=headers)
-    if (response.status_code != 200): return 1
-    time.sleep(30)
-    return 0

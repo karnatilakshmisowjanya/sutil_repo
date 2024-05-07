@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017-2019, Schlumberger
+# Copyright 2017-2024, Schlumberger
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@ import os
 import sys
 import io
 from glob import glob
+from sdlib.shared.config import Config
 
 import pytest
 
@@ -38,6 +39,8 @@ def pargs(pytestconfig):
 
 @pytest.fixture(scope="session", autouse=True)
 def setup(request, pytestconfig, pargs):
+    Config.load()
+    Config.load_user_config()
     sdpath = pytestconfig.getoption("sdpath")
     upload_seed_files(sdpath, pargs)
 
@@ -50,13 +53,13 @@ def upload_seed_files(sdpath, pargs):
 
     # upload test seistore dataset 01
     file_sdpath = "/".join([sdpath, e2e_test_dataset_01])
-    # generate_local_file(e2e_test_dataset_01)
+    generate_local_file(e2e_test_dataset_01)
     # set_args("cp {local_file} {path} --idtoken={stoken}".format(local_file=e2e_test_dataset_01, path=file_sdpath, stoken=pargs.idtoken))
     # run()
 
     # upload test seistore dataset 02
     file_sdpath = "/".join([sdpath, e2e_test_dataset_02])
-    # generate_local_file(e2e_test_dataset_02)
+    generate_local_file(e2e_test_dataset_02)
     # set_args("cp {local_file} {path} --idtoken={stoken}".format(local_file=e2e_test_dataset_02, path=file_sdpath, stoken=pargs.idtoken))
     # run()
 

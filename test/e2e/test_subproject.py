@@ -14,7 +14,8 @@
 # limitations under the License.
 
 
-from test.e2e.utils import set_args, run_command, subproject_exist, verify_conditions
+from test.e2e.utils import set_args, run_command, verify_conditions
+from test.e2e.apis import subproject_exist, subproject_delete
 import time
 
 def sdutil_rm_subproject(capsys, tenant, subproject, sdpath, idtoken):
@@ -41,17 +42,21 @@ def test_subproject(capsys, pargs):
     tenant,subproject = path.split("/")[2],path.split("/")[3]
     admin, legaltag, idtoken = pargs.admin, pargs.legaltag, pargs.idtoken
     acl_admin, acl_viewer = pargs.acl_admin, pargs.acl_viewer
-    sdutil_rm_subproject(capsys, tenant, subproject, path, idtoken)
+    status = subproject_exist(tenant, subproject, idtoken)
+    if not status :
+        subproject_delete(tenant, subproject, idtoken)
     # sdutil mk sd://tenant/subproject (Test subproject creation)
     sdutil_create_status, subproject_create_status, sdutil_mk_output = sdutil_mk_subproject(capsys, tenant, subproject, path, admin, legaltag, idtoken, acl_admin, acl_viewer)
     # sdutil stat sd://tenant/subproject (Test get subproject metadata)
-    sdutil_stat_status, stat_output = sdutil_stat_subproject(capsys, path, idtoken)
+    sdutil_stat_status, sdutil_stat_output = sdutil_stat_subproject(capsys, path, idtoken)
     # sdutil rm sd://tenant/subproject
-    sdutil_delete_status, subproject_delete_status, rm_output = sdutil_rm_subproject(capsys, tenant, subproject, path, idtoken)
+    sdutil_delete_status, subproject_delete_status, sdutil_rm_output = sdutil_rm_subproject(capsys, tenant, subproject, path, idtoken)
     # assert the results
     errors = verify_conditions(sdutil_mk_subproject = str(sdutil_create_status) + ';' + sdutil_mk_output,
                              subroject_get_after_sdutil_mk_subproject = str(subproject_create_status) + ';' + '-----',
-                             sdutil_stat_subproject = str(sdutil_stat_status) + ';' + stat_output,
-                             sdutil_rm_subproject = str(sdutil_delete_status) + ';' + rm_output,
+                             sdutil_stat_subproject = str(sdutil_stat_status) + ';' + sdutil_stat_output,
+                             sdutil_rm_subproject = str(sdutil_delete_status) + ';' + sdutil_rm_output,
                              subroject_get_after_sdutil_rm_subproject = str(subproject_delete_status) + ';' + '-----')
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
+
+    # TO DO: sdutil ls subprojects
