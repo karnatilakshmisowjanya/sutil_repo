@@ -44,6 +44,10 @@ class Op(SDUtilCMD):
             self.bulkDelete(args, keyword_args)
         elif args[0] == 'bulk-delete-status':
             self.bulkDeleteStatus(args, keyword_args)
+        elif args[0] == 'tier-change':
+            self.changeTier(args, keyword_args)
+        elif args[0] == 'tier-change-status':
+            self.changeTierStatus(args, keyword_args)
         else:
             raise Exception(
                 '\n' +
