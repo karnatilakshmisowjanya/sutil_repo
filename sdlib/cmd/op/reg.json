@@ -16,7 +16,7 @@
 		"                        change the storage tier of all datasets in a specific path (for Azure only)\n",
 		"                        [--path]     : seismic store path. sd://<tenant>/<subproject>/<path>*/",
 		"                        [--dataset]  : seismic store dataset path. sd://<tenant>/<subproject>/<path>*/<dataset-name>",
-		"                        [tier]       : storage tier to set the datasets to. [ Hot | Cool | Cold | Archive ]\n",
+		"                        [tier]       : storage tier to set the datasets to. [ supported tier in Azure = Hot | Cool | Cold | Archive ]\n",
 		"                        (options)    | --idtoken=<token> pass the credential token to use, rather than generating a new one",
 		"  *tier-change-status   $ python sdutil op tier-change-status [dataPartitionId] [operationId] (options)",
 		"                        get the operation status of a tier-change request\n",
