@@ -23,6 +23,7 @@ from sdlib.api.seismic_store_service import SeismicStoreService
 from sdlib.cmd.cmd import SDUtilCMD
 from sdlib.cmd.helper import CMDHelper
 from sdlib.shared.utils import Utils
+from sdlib.shared.config import Config
 
 
 class Patch(SDUtilCMD):
@@ -54,6 +55,25 @@ class Patch(SDUtilCMD):
         dataset_patch_body = {}
         subproject_ltag = None
         sdpath = args[0]
+
+        # storage tier
+        storage_tier = keyword_args.tier
+        if storage_tier is not None:
+            if str(Config.get_cloud_provider()) != "azure":
+                raise Exception(f'The tier patch is not supported for the \'{Config.get_cloud_provider()}\' cloud provider.')
+            
+            # not storage tier patch on subproject
+            if Utils.isSubProject(sdpath):
+                raise Exception(
+                    '\n' +
+                    'Wrong Command: the tier patch cannot be applied to subproject.\n' +
+                    '               For more information type "python sdutil patch"'
+                    ' to open the command help menu.')
+            
+            if str(storage_tier).capitalize() not in ('Hot', 'Cool', 'Cold'):
+                raise Exception(f'\'{keyword_args.tier}\' is not an acceptable Storage tier. Your options are [Hot, Cool, Cold]')
+            storage_tier = str(storage_tier).capitalize()
+            dataset_patch_body["change_tier"] = storage_tier
 
         # seismic meta
         seismicmeta_file = keyword_args.seismicmeta
