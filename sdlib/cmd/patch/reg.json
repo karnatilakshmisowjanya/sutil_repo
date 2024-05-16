@@ -1,22 +1,23 @@
 {
-    "description": "patch a seismic store subproject or dataset",
-    "help": [
-        "> python sdutil patch *subproject (options)\n",
-        "  patch a seismic store subproject\n",
-        "  *subproject   : the seismic store subproject path. sd://<tenant>/<subproject>\n",
-        "  (options)     | --ltag=<value> the legal tag",
-        "                | --recursive apply the patch recursively (subproject only)",
-        "                | --idtoken=<value>  pass id token to use, rather than generating a new one",
-        "                | --access-policy=<dataset> access policy of the subproject to be patched. allowed value is dataset\n",
-        "                | --admin_acl=<value> the acl admin groups",
-        "                | --viewer_acl=<value> the acl viewer groups",
-        "> python sdutil patch *dataset (options)\n",
-        "  patch a seismic store dataset\n",
-        "  *dataset      : the seismic store dataset path. sd://<tenant>/<subproject>/<path>/<dataset>\n",
-        "  (options)     | --seismicmeta=<value> the seismic storage metadata file (json format for dataset only)",
-        "                | --ltag=<value> the legal tag",
-        "                | --readonly=<true|false> set the dataset as readonly ",
-        "                | --idtoken=<value>  pass id token to use, rather than generating a new one"
-    ],
-    "name": "patch"
+	"description": "patch a seismic store subproject or dataset",
+	"help": [
+		"> python sdutil patch *subproject (options)\n",
+		"  patch a seismic store subproject\n",
+		"  *subproject   : the seismic store subproject path. sd://<tenant>/<subproject>\n",
+		"  (options)     | --ltag=<value> the legal tag",
+		"                | --recursive apply the patch recursively (subproject only)",
+		"                | --idtoken=<value>  pass id token to use, rather than generating a new one",
+		"                | --access-policy=<dataset> access policy of the subproject to be patched. allowed value is dataset\n",
+		"                | --admin_acl=<value> the acl admin groups",
+		"                | --viewer_acl=<value> the acl viewer groups\n",
+		"> python sdutil patch *dataset (options)\n",
+		"  patch a seismic store dataset\n",
+		"  *dataset      : the seismic store dataset path. sd://<tenant>/<subproject>/<path>/<dataset>\n",
+		"  (options)     | --tier=<tier> (Azure only) request to update a dataset's storage tier to either Hot/Cool or Cold storage",
+		"                | --seismicmeta=<value> the seismic storage metadata file (json format for dataset only)",
+		"                | --ltag=<value> the legal tag",
+		"                | --readonly=<true|false> set the dataset as readonly ",
+		"                | --idtoken=<value>  pass id token to use, rather than generating a new one"
+	],
+	"name": "patch"
 }
