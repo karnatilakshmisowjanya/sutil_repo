@@ -44,6 +44,10 @@ class Op(SDUtilCMD):
             self.bulkDelete(args, keyword_args)
         elif args[0] == 'bulk-delete-status':
             self.bulkDeleteStatus(args, keyword_args)
+        elif args[0] == 'tier-change':
+            self.changeTier(args, keyword_args)
+        elif args[0] == 'tier-change-status':
+            self.changeTierStatus(args, keyword_args)
         else:
             raise Exception(
                 '\n' +
@@ -91,6 +95,63 @@ class Op(SDUtilCMD):
         print(' - Dataset Count: ' + str(response['dataset_cnt']))
         print(' - Completed Count: ' + str(response['completed_cnt']))
         print(' - Failed Count: ' + str(response['failed_cnt']))
+        
+    def changeTier(self, args, keyword_args):
+
+        sdpath = self.pathCheck(keyword_args)
+
+        if not Utils.isDatasetPath(sdpath) and not Utils.isSubProject(sdpath):
+            raise Exception(
+                '\n' +
+                'Incorrect SDPath format: sd://<tenant>/<subproject>/<path>*/\n' +
+                'or\n' +
+                'sd://<tenant>/<subproject>/<path>*/<dataset-name>')
+
+        if len(args) < 2:
+            raise Exception(
+                '\n' +
+                'Usage:\n'
+                'python sdutil op tier-change [ --path | --dataset ] [tier] (options)')
+
+        tier = args[1]
+
+        # storage tier
+        storage_tier = tier
+        if storage_tier is not None:
+            if str(Config.get_cloud_provider()) != "azure":
+                raise Exception(f'The bulk tier-change is not supported for the \'{Config.get_cloud_provider()}\' cloud provider.')
+            
+            
+            if str(storage_tier).capitalize() not in ('Hot', 'Cool', 'Cold', 'Archive'):
+                raise Exception(f'\'{tier}\' is not an acceptable Storage tier. Your options are [Hot, Cool, Cold, Archive]')
+            storage_tier = str(storage_tier).capitalize()
+
+        print('\n Requesting tier change of ' + sdpath + ' to tier ( ' + storage_tier + ' )')
+        response = SeismicStoreService(self._auth).operation_changeTier(sdpath, storage_tier)
+        print('')
+        print(' - Operation Id: ' + response['operation_id'])
+    
+    def changeTierStatus(self, args, keyword_args):
+
+        if len(args) < 3:
+            raise Exception(
+                '\n' +
+                'Usage:\n'
+                'python sdutil op tier-change-status [dataPartitionId] [operationId] (options)')
+
+        dataPartitionId = args[1]
+        operationId = args[2]
+
+        if str(Config.get_cloud_provider()) != "azure":
+            raise Exception(f'The bulk tier-change is not supported for the \'{Config.get_cloud_provider()}\' cloud provider.')
+
+        response = SeismicStoreService(self._auth).operation_changeTierStatus(operationId, dataPartitionId)
+        print('')
+        print(' - Operation Id: ' + response['operation_id'])
+        print(' - Status: ' + response['status'])
+        print(' - Dataset Count: ' + str(response['dataset_cnt']))
+        print(' - Completed Count: ' + str(response['completed_cnt']))
+        print(' - Failed Count: ' + str(response['failed_cnt'])) 
     
     def pathCheck(self, keyword_args):
         if keyword_args.path is None and keyword_args.dataset is None:

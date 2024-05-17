@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017-2019, Schlumberger
+# Copyright 2017-2024, Schlumberger
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -638,6 +638,42 @@ class SeismicStoreService(object):
 
         url = (Config.get_svc_url()
                + '/operation/bulk-delete/' + operationId)
+
+        header = {
+            'Authorization': 'Bearer ' + self._auth.get_id_token(),
+            Config.get_svc_appkey_name(): Config.get_svc_appkey(),
+            'data-partition-id': dataPartitionId
+        }
+
+        resp = requests.get(url=url, headers=header, verify=Config.get_ssl_verify())
+
+        if resp.status_code != 200:
+            raise Exception('\n[' + str(resp.status_code) + '] ' + resp.text)
+
+        return resp.json()
+    
+    def operation_changeTier(self, sdpath, tier):
+
+        url = (Config.get_svc_url()
+               + '/operation/change-tier?path=' + quote(sdpath, safe='')
+               + '&tier=' + tier)
+
+        header = {
+            'Authorization': 'Bearer ' + self._auth.get_id_token(),
+            Config.get_svc_appkey_name(): Config.get_svc_appkey()
+        }
+
+        resp = requests.put(url=url, headers=header,verify=Config.get_ssl_verify())
+
+        if resp.status_code != 202:
+            raise Exception('\n[' + str(resp.status_code) + '] ' + resp.text)
+
+        return resp.json()
+
+    def operation_changeTierStatus(self, operationId, dataPartitionId):
+
+        url = (Config.get_svc_url()
+               + '/operation/change-tier/' + operationId)
 
         header = {
             'Authorization': 'Bearer ' + self._auth.get_id_token(),
