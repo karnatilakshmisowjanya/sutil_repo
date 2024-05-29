@@ -243,7 +243,7 @@ class AzureStorageService(StorageService):
                                 retries = 0
                                 while retries < self._max_download_retries:
                                     try:
-                                        print('-------------------------------')
+                                        print('--------------------------------')
                                         print(f'Downloading Chunk # {counter + 1}, Attempt # {retries + 1}')
                                         print(f'Total downloaded size {current_size}, total written size: {local_file.tell()} (size-check: {current_size==local_file.tell()})')
                                         bytes_expected = blob_client.get_blob_properties().size
