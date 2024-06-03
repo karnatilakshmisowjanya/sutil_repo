@@ -297,9 +297,4 @@ class AzureStorageService(StorageService):
         except Exception as e:
             print("Exception: " + str(e))
 
-        if dataset.seismicmeta is not None:
-            with open(local_filename + '_seismicmeta.json', 'w') as outfile:
-                json.dump(dataset.seismicmeta, outfile)
-            outfile.close()
-
         return True
