@@ -8,7 +8,7 @@ This software includes the following software and licenses:
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- typing-extensions (from https://pypi.org/project/typing-extensions/4.11.0/, https://pypi.org/project/typing-extensions/4.4.0/)
+- typing-extensions (from https://pypi.org/project/typing-extensions/4.12.1/, https://pypi.org/project/typing-extensions/4.4.0/)
 
 ========================================================================
 Apache-2.0
@@ -20,7 +20,7 @@ The following software have components provided under the terms of this license:
 - coverage (from https://github.com/nedbat/coveragepy)
 - cryptography (from https://github.com/pyca/cryptography)
 - importlib-metadata
-- packaging (from https://pypi.org/project/packaging/22.0/, https://pypi.org/project/packaging/24.0/)
+- packaging (from https://pypi.org/project/packaging/22.0/, https://pypi.org/project/packaging/24.1/)
 - python-dateutil (from https://github.com/dateutil/dateutil)
 - requests (from http://python-requests.org, https://requests.readthedocs.io)
 - s3transfer (from https://github.com/boto/s3transfer)
@@ -32,7 +32,7 @@ BSD-2-Clause
 The following software have components provided under the terms of this license:
 
 - mock (from http://mock.readthedocs.org/en/latest/)
-- packaging (from https://pypi.org/project/packaging/22.0/, https://pypi.org/project/packaging/24.0/)
+- packaging (from https://pypi.org/project/packaging/22.0/, https://pypi.org/project/packaging/24.1/)
 - unittest-xml-reporting (from http://github.com/xmlrunner/unittest-xml-reporting/tree/master/)
 
 ========================================================================
@@ -54,7 +54,7 @@ The following software have components provided under the terms of this license:
 - itsdangerous (from https://palletsprojects.com/p/itsdangerous/)
 - lxml (from https://lxml.de/)
 - oauthlib (from https://github.com/oauthlib/oauthlib)
-- packaging (from https://pypi.org/project/packaging/22.0/, https://pypi.org/project/packaging/24.0/)
+- packaging (from https://pypi.org/project/packaging/22.0/, https://pypi.org/project/packaging/24.1/)
 - pycparser (from https://github.com/eliben/pycparser)
 - pyparsing (from http://pyparsing.wikispaces.com/)
 - python-dateutil (from https://github.com/dateutil/dateutil)
@@ -138,13 +138,13 @@ The following software have components provided under the terms of this license:
 - pluggy
 - py (from https://py.readthedocs.io/)
 - pyparsing (from http://pyparsing.wikispaces.com/)
-- pytest (from http://pytest.org, https://docs.pytest.org/en/latest/, https://pypi.org/project/pytest/8.2.0/)
+- pytest (from http://pytest.org, https://docs.pytest.org/en/latest/, https://pypi.org/project/pytest/8.2.2/)
 - pytest-timeout (from https://github.com/pytest-dev/pytest-timeout)
 - six (from http://pypi.python.org/pypi/six/, https://github.com/benjaminp/six)
 - tomli (from https://pypi.org/project/tomli/1.2.2/, https://pypi.org/project/tomli/2.0.0/, https://pypi.org/project/tomli/2.0.1/)
-- tqdm (from https://pypi.org/project/tqdm/4.66.1/, https://pypi.org/project/tqdm/4.66.2/, https://tqdm.github.io)
+- tqdm (from https://pypi.org/project/tqdm/4.66.1/, https://pypi.org/project/tqdm/4.66.4/, https://tqdm.github.io)
 - urllib3 (from https://pypi.org/project/urllib3/2.0.2/, https://pypi.org/project/urllib3/2.0.4/, https://pypi.org/project/urllib3/2.2.1/)
-- zipp (from https://github.com/jaraco/zipp)
+- zipp (from https://pypi.org/project/zipp/3.19.2/)
 
 ========================================================================
 MIT-CMU
@@ -160,7 +160,7 @@ The following software have components provided under the terms of this license:
 
 - botocore (from https://github.com/boto/botocore)
 - certifi (from https://github.com/certifi/python-certifi)
-- tqdm (from https://pypi.org/project/tqdm/4.66.1/, https://pypi.org/project/tqdm/4.66.2/, https://tqdm.github.io)
+- tqdm (from https://pypi.org/project/tqdm/4.66.1/, https://pypi.org/project/tqdm/4.66.4/, https://tqdm.github.io)
 
 ========================================================================
 OFL-1.1
@@ -183,7 +183,7 @@ The following software have components provided under the terms of this license:
 
 - boto3 (from https://github.com/boto/boto3)
 - cryptography (from https://github.com/pyca/cryptography)
-- typing-extensions (from https://pypi.org/project/typing-extensions/4.11.0/, https://pypi.org/project/typing-extensions/4.4.0/)
+- typing-extensions (from https://pypi.org/project/typing-extensions/4.12.1/, https://pypi.org/project/typing-extensions/4.4.0/)
 
 ========================================================================
 Zlib

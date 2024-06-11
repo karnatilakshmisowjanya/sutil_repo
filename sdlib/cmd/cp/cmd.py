@@ -159,6 +159,13 @@ class Cp(SDUtilCMD):
         if ds.sbit is not None:
             sd.dataset_patch(sdpath, None, ds.sbit)
 
+        if ds.seismicmeta is None:
+            ds = Dataset.from_json(sd.dataset_get(sdpath, 'true'))
+        
+        if ds.seismicmeta is not None:
+            with open(local_file + '.json', 'w') as outfile:
+                json.dump(ds.seismicmeta, outfile)
+
     def cp_local_to_sd(self, args, keyword_args):
         """ Copy a local file to seismic store
         """

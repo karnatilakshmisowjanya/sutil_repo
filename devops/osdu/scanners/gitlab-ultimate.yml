@@ -1,0 +1,3 @@
+gemnasium-python-dependency_scanning:
+  image:
+    name: registry.gitlab.com/security-products/gemnasium-python:4
