@@ -41,10 +41,10 @@ BSD-3-Clause
 The following software have components provided under the terms of this license:
 
 - Authlib (from https://authlib.org/, https://pypi.org/project/Authlib/1.3.0/)
-- Flask (from https://pypi.org/project/Flask/2.3.2/, https://pypi.org/project/Flask/2.3.3/, https://pypi.org/project/Flask/3.0.3/)
+- Flask (from https://pypi.org/project/Flask/2.3.2/, https://pypi.org/project/Flask/2.3.3/, https://www.palletsprojects.com/p/flask/)
 - Jinja2 (from http://jinja.pocoo.org/, https://palletsprojects.com/p/jinja/, https://pypi.org/project/Jinja2/3.1.4/)
 - MarkupSafe (from https://palletsprojects.com/p/markupsafe/)
-- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.6/, https://pypi.org/project/Werkzeug/2.3.7/, https://pypi.org/project/Werkzeug/3.0.3/)
+- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.4/, https://pypi.org/project/Werkzeug/2.3.6/, https://pypi.org/project/Werkzeug/2.3.7/)
 - alive-progress (from https://github.com/rsalmei/alive-progress)
 - click (from https://palletsprojects.com/p/click/)
 - crc32c (from https://github.com/ICRAR/crc32c)
@@ -64,14 +64,14 @@ CC-BY-2.5
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.6/, https://pypi.org/project/Werkzeug/2.3.7/, https://pypi.org/project/Werkzeug/3.0.3/)
+- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.4/, https://pypi.org/project/Werkzeug/2.3.6/, https://pypi.org/project/Werkzeug/2.3.7/)
 
 ========================================================================
 CC-BY-3.0
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.6/, https://pypi.org/project/Werkzeug/2.3.7/, https://pypi.org/project/Werkzeug/3.0.3/)
+- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.4/, https://pypi.org/project/Werkzeug/2.3.6/, https://pypi.org/project/Werkzeug/2.3.7/)
 
 ========================================================================
 GPL-2.0-only
