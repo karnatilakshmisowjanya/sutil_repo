@@ -28,7 +28,7 @@ def subproject_exist(tenant, subproject, stoken):
     if (response.status_code != 200): return 1
     return 0
 
-def subproject_register(tenant, subproject, legaltag, stoken, *args):
+def subproject_register(tenant, subproject, legaltag, stoken, **kwargs):
     ENDPOINT_URL = Config.get_svc_url()
     URL = ENDPOINT_URL + '/subproject/tenant/' + tenant + '/subproject/' + subproject
     headers = {'Authorization':"Bearer " + stoken,
@@ -37,14 +37,14 @@ def subproject_register(tenant, subproject, legaltag, stoken, *args):
                 'ltag': legaltag
     }
     body = {}
-    if args :
-        body = {"acls": {"admins": args.acl_admin,
-                           "viewers": args.acl_viewer}
+    if kwargs :
+        body = {"acls": {"admins": kwargs['admins'],
+                           "viewers": kwargs['viewers']}
         }
-    response = requests.post(url=URL, headers=headers, body=body)
+    response = requests.post(url=URL, headers=headers, json=body)
     if (response.status_code != 200): return 1
     time.sleep(30)
-    return 0
+    return 0, response.content
 
 def subproject_delete(tenant, subproject, stoken):
     ENDPOINT_URL = Config.get_svc_url()
