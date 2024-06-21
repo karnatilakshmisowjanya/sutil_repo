@@ -42,6 +42,9 @@ def setup(request, pytestconfig, pargs):
     Config.load()
     Config.load_user_config()
     sdpath = pytestconfig.getoption("sdpath")
+    tenant,subproject = sdpath.split("/")[2],sdpath.split("/")[3]
+    Config.set_data_partition_id(tenant)
+    Config.set_subproject_name(subproject)
     upload_seed_files(sdpath, pargs)
 
     def teardown():

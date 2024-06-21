@@ -16,6 +16,8 @@
 import requests
 from sdlib.shared.config import Config
 import time
+import json
+from urllib.parse import quote_plus
 
 def subproject_exist(tenant, subproject, stoken):
     ENDPOINT_URL = Config.get_svc_url()
@@ -38,11 +40,12 @@ def subproject_register(tenant, subproject, legaltag, stoken, **kwargs):
     }
     body = {}
     if kwargs :
-        body = {"acls": {"admins": kwargs['admins'],
-                           "viewers": kwargs['viewers']}
+        body = {"acls": {"admins": [kwargs['admins']],
+                           "viewers": [kwargs['viewers']]}
         }
-    response = requests.post(url=URL, headers=headers, json=body)
-    if (response.status_code != 200): return 1
+    bodyString = json.dumps(body)
+    response = requests.post(url=URL, headers=headers, json=json.loads(bodyString))
+    if (response.status_code != 200): return 1, response.content
     time.sleep(30)
     return 0, response.content
 
@@ -57,40 +60,35 @@ def subproject_delete(tenant, subproject, stoken):
     if (response.status_code != 200): return 1
     return 0
 
-def dataset_exist(subproject, dataset, stoken):
-    from urllib.parse import quote_plus
+def dataset_exist(tenant, subproject, dataset, stoken, path='/'):
     ENDPOINT_URL = Config.get_svc_url()
-    TENANT = Config.get_data_partition_id()
-    URL = ENDPOINT_URL + '/seistore-svc/api/v3/dataset/tenant/' + TENANT + '/subproject/' + subproject + '/dataset/' + dataset
+    URL = ENDPOINT_URL + '/dataset/tenant/' + tenant + '/subproject/' + subproject + '/dataset/' + dataset
     headers = {'Authorization':"Bearer " + stoken,
-                'data-partition-id':TENANT,
+                'data-partition-id':tenant,
                 'Content-Type':'application/json'
     }
-    path = quote_plus(path)
-    params = {'path':path}
+    params = {'path':quote_plus(path)}
     response = requests.get(url=URL, headers=headers, params=params)
-    if (response.status_code != 200): return 1
-    return 0
+    if (response.status_code != 200): return 1, response.content
+    return 0, response.content
 
-def dataset_delete(subproject, dataset, stoken):
+def dataset_delete(tenant, subproject, dataset, stoken, path='/'):
     ENDPOINT_URL = Config.get_svc_url()
-    TENANT = Config.get_data_partition_id()
-    URL = ENDPOINT_URL + '/seistore-svc/api/v3/dataset/tenant/' + TENANT + '/subproject/' + subproject + '/dataset/' + dataset
+    URL = ENDPOINT_URL + '/dataset/tenant/' + tenant + '/subproject/' + subproject + '/dataset/' + dataset
     headers = {'Authorization':"Bearer " + stoken,
-                'data-partition-id':TENANT,
+                'data-partition-id':tenant,
                 'Content-Type':'application/json'
     }
-    response = requests.delete(url=URL, headers=headers)
-    if (response.status_code != 200): return 1
-    return 0
+    params = {'path':quote_plus(path)}
+    response = requests.delete(url=URL, headers=headers, params=params)
+    if (response.status_code != 200): return 1, response.content
+    return 0, response.content
 
-def dataset_get(subproject, dataset, stoken):
-    from urllib.parse import quote_plus
+def dataset_get(tenant, subproject, dataset, stoken, path='/'):
     ENDPOINT_URL = Config.get_svc_url()
-    TENANT = Config.get_data_partition_id()
-    URL = ENDPOINT_URL + '/seistore-svc/api/v3/dataset/tenant/' + TENANT + '/subproject/' + subproject + '/dataset/' + dataset
+    URL = ENDPOINT_URL + '/dataset/tenant/' + tenant + '/subproject/' + subproject + '/dataset/' + dataset
     headers = {'Authorization':"Bearer " + stoken,
-                'data-partition-id':TENANT,
+                'data-partition-id':tenant,
                 'Content-Type':'application/json'
     }
     path = quote_plus(path)
