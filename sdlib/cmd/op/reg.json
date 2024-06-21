@@ -1,17 +1,28 @@
 {
-    "description": "Trigger a SDMS Bulk Operation",
-    "help": [
-        "> python sdutil op [ *bulk-delete | *bulk-delete-status ]\n",
-        "  *bulk-delete          $ python sdutil op bulk-delete [ --path | --dataset ] (options)",
-        "                        trigger the bulk deletion of all datasets in a specific path (for Azure only)\n",
-        "                        [--path]     : seismic store path. sd://<tenant>/<subproject>/<path>*/",
-        "                        [--dataset]  : seismic store dataset path. sd://<tenant>/<subproject>/<path>*/<dataset-name>",
-        "                        (options)    | --idtoken=<token> pass the credential token to use, rather than generating a new one",
-        "  *bulk-delete-status   $ python sdutil op bulk-delete-status [dataPartitionId] [operationId] (options)",
-        "                        get the operation status of a bulk-delete request\n",
-        "                        [operationId]      : bulk-delete request operation-id",
-        "                        [dataPartitionId]  : dataPartitionId/tenant that operation is done on\n",
-        "                        (options)          | --idtoken=<token> pass the credential token to use, rather than generating a new one"
-    ],
-    "name": "op"
+	"description": "Trigger a SDMS Bulk Operation",
+	"help": [
+		"> python sdutil op [ *bulk-delete | *bulk-delete-status | *tier-change | *tier-change-status ]\n",
+		"  *bulk-delete          $ python sdutil op bulk-delete [ --path | --dataset ] (options)",
+		"                        trigger the bulk deletion of all datasets in a specific path (for Azure only)\n",
+		"                        [--path]     : seismic store path. sd://<tenant>/<subproject>/<path>*/",
+		"                        [--dataset]  : seismic store dataset path. sd://<tenant>/<subproject>/<path>*/<dataset-name>",
+		"                        (options)    | --idtoken=<token> pass the credential token to use, rather than generating a new one",
+		"  *bulk-delete-status   $ python sdutil op bulk-delete-status [dataPartitionId] [operationId] (options)",
+		"                        get the operation status of a bulk-delete request\n",
+		"                        [operationId]      : bulk-delete request operation-id",
+		"                        [dataPartitionId]  : dataPartitionId/tenant that operation is done on\n",
+		"                        (options)          | --idtoken=<token> pass the credential token to use, rather than generating a new one",
+		"  *tier-change          $ python sdutil op tier-change [ --path | --dataset ] [tier] (options)",
+		"                        change the storage tier of all datasets in a specific path (for Azure only)\n",
+		"                        [--path]     : seismic store path. sd://<tenant>/<subproject>/<path>*/",
+		"                        [--dataset]  : seismic store dataset path. sd://<tenant>/<subproject>/<path>*/<dataset-name>",
+		"                        [tier]       : storage tier to set the datasets to. [ supported tier in Azure = Hot | Cool | Cold | Archive ]\n",
+		"                        (options)    | --idtoken=<token> pass the credential token to use, rather than generating a new one",
+		"  *tier-change-status   $ python sdutil op tier-change-status [dataPartitionId] [operationId] (options)",
+		"                        get the operation status of a tier-change request\n",
+		"                        [operationId]      : tier-change request operation-id",
+		"                        [dataPartitionId]  : dataPartitionId/tenant that operation is done on\n",
+		"                        (options)          | --idtoken=<token> pass the credential token to use, rather than generating a new one"
+	],
+	"name": "op"
 }

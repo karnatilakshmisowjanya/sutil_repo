@@ -14,6 +14,8 @@ include:
   # vulnerability Scan
   - project: "osdu/platform/ci-cd-pipelines"
     file: "scanners/gitlab-ultimate.yml"
+  
+  - local: "/devops/osdu/scanners/gitlab-ultimate.yml"
 
   # azure-global
   - project: "osdu/platform/ci-cd-pipelines"
