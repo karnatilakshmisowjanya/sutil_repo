@@ -25,21 +25,6 @@ from test.e2e.utils import check_string, run, run_command, set_args, verify_cond
 from test.e2e.apis import subproject_exist, subproject_register, dataset_exist, dataset_delete, dataset_get
 from sdlib.shared.sdpath import SDPath
 
-# fname_prefix = 'cp_cmd_test'
-# local_file_name_01 = fname_prefix + '_local_01.txt'
-# local_file_name_02 = fname_prefix + '_local_02.txt'
-# dataset_01 = fname_prefix + '_01.txt'
-# dataset_02 = fname_prefix + '_02.txt'
-
-# test_size = (1024 * 1024, '1.0 MB') # for dev test => test_size = (1024, '1.0 KB')
-
-# def setup_module(module):
-#     with open(local_file_name_01, 'wb') as fout:
-#         fout.write(os.urandom(test_size[0]))
-    
-# def teardown_module(module):
-#     for filename in glob(fname_prefix + "*"):
-#         os.remove(filename)
 
 def test_subproject_for_cp(capsys, pargs) :
     # check subproject exists or create it
@@ -70,7 +55,7 @@ def test_subproject_for_cp(capsys, pargs) :
 #                              dataset_get_after_sdutil_cp_dataset_01 = str(dataset_created_status) + ';' +  str(dataset_exist_output) )
 #     assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
-def test_sdutil_cp_upload_with_seismicmeta(capsys, pargs):
+def test_sdutil_cp_upload_with_seismicmeta(capsys, pargs): # Has conflict with dataset_01 creation
     # check dataset02 exists and remove it
     path = pargs.sdpath
     tenant,subproject = path.split("/")[2],path.split("/")[3]
@@ -123,11 +108,14 @@ def test_sdutil_stat_dataset(capsys, pargs):
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
 def test_sdutil_cp_download(capsys, pargs):
+    from pathlib import Path
     downloaded_files_exist = 1
-    local_file_name_01 = os.getcwd() + '\local-' + e2e_test_dataset_01
-    set_args("cp {path} {localfile} --idtoken={stoken}".format(path=(pargs.sdpath + '/' + e2e_test_dataset_01), localfile=local_file_name_01, stoken=pargs.idtoken))
+    local_file_name_01 = os.getcwd() + '\\local-' + e2e_test_dataset_01
+    original_file = os.getcwd() + '\\' + e2e_test_dataset_01
+    set_args("cp {path} {localfile} --idtoken={stoken} --force".format(path=(pargs.sdpath + '/' + e2e_test_dataset_01), localfile=local_file_name_01, stoken=pargs.idtoken))
     sdutil_cp_download_status, sdutil_cp_download_output = run_command(capsys)
-    # if ( filecmp.cmp(local_file_name_01, e2e_test_dataset_01) ) : downloaded_files_exist = 0
+    # if ( filecmp.cmp(local_file_name_01, original_file) ) : downloaded_files_exist = 0
+    if os.path.isfile(local_file_name_01) : downloaded_files_exist = 0
     errors = verify_conditions(sdutil_cp_download = str(sdutil_cp_download_status) + ';' + sdutil_cp_download_output,
                              downloaded_files_found = str(downloaded_files_exist) + ';' + 'Files are not found after sdutil cp download')
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
