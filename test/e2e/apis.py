@@ -62,6 +62,8 @@ def subproject_delete(tenant, subproject, stoken):
 
 def dataset_exist(tenant, subproject, dataset, stoken, path='/'):
     ENDPOINT_URL = Config.get_svc_url()
+    # TENANT = Config.get_data_partition_id()
+    # SUBPROJECT = Config.get_subproject_name()
     URL = ENDPOINT_URL + '/dataset/tenant/' + tenant + '/subproject/' + subproject + '/dataset/' + dataset
     headers = {'Authorization':"Bearer " + stoken,
                 'data-partition-id':tenant,
@@ -74,6 +76,8 @@ def dataset_exist(tenant, subproject, dataset, stoken, path='/'):
 
 def dataset_delete(tenant, subproject, dataset, stoken, path='/'):
     ENDPOINT_URL = Config.get_svc_url()
+    # TENANT = Config.get_data_partition_id()
+    # SUBPROJECT = Config.get_subproject_name()
     URL = ENDPOINT_URL + '/dataset/tenant/' + tenant + '/subproject/' + subproject + '/dataset/' + dataset
     headers = {'Authorization':"Bearer " + stoken,
                 'data-partition-id':tenant,
@@ -92,6 +96,7 @@ def dataset_get(tenant, subproject, dataset, stoken, path='/'):
                 'Content-Type':'application/json'
     }
     path = quote_plus(path)
-    params = {'path':path}
+    params = {'path':path,
+              'seismicmeta':'true'}
     response = requests.get(url=URL, headers=headers, params=params)
     return response
