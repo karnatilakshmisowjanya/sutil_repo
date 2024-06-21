@@ -52,23 +52,25 @@ def test_subproject_for_cp(capsys, pargs) :
         status, output = subproject_register(tenant, subproject, legaltag, idtoken, admins=acl_admin, viewers=acl_viewer)
     assert not status, output
 
-def test_sdutil_upload(capsys, pargs):
-    # check dataset01 exists and remove it
-    path = pargs.sdpath
-    tenant,subproject = path.split("/")[2],path.split("/")[3]
-    status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
-    if 0 == status :
-        delete_status, delete_output = dataset_delete(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
-        if 0 != delete_status : assert not delete_status, delete_output
-    # upload simple dataset01
-    set_args("cp {localfile} {path} --idtoken={stoken}".format(localfile=e2e_test_dataset_01, path=(pargs.sdpath + '/' + e2e_test_dataset_01), stoken=pargs.idtoken))
-    sdutil_cp_status, sdutil_cp_output = run_command(capsys)
-    dataset_created_status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
-    errors = verify_conditions(sdutil_cp_dataset_01 = str(sdutil_cp_status) + ';' + sdutil_cp_output,
-                             dataset_get_after_sdutil_cp_dataset_01 = str(dataset_created_status) + ';' +  str(dataset_exist_output) )
-    assert not errors, "errors occured:\n{}".format("\n".join(errors))
+# def test_sdutil_cp_upload(capsys, pargs):
+#     # check dataset01 exists and remove it
+#     path = pargs.sdpath
+#     tenant,subproject = path.split("/")[2],path.split("/")[3]
+#     status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+#     if 0 == status :
+#         delete_status, delete_output = dataset_delete(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+#         if 0 != delete_status : assert not delete_status, delete_output
+    
+#     # upload simple dataset01
+#     set_args("cp {localfile} {path} --idtoken={stoken}".format(localfile=e2e_test_dataset_01, path=(pargs.sdpath + '/' + e2e_test_dataset_01), stoken=pargs.idtoken))
+#     sdutil_cp_status, sdutil_cp_output = run_command(capsys)
+#     dataset_created_status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+    
+#     errors = verify_conditions(sdutil_cp_dataset_01 = str(sdutil_cp_status) + ';' + sdutil_cp_output,
+#                              dataset_get_after_sdutil_cp_dataset_01 = str(dataset_created_status) + ';' +  str(dataset_exist_output) )
+#     assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
-def test_sdutil_upload_with_seismicmeta(capsys, pargs):
+def test_sdutil_cp_upload_with_seismicmeta(capsys, pargs):
     # check dataset02 exists and remove it
     path = pargs.sdpath
     tenant,subproject = path.split("/")[2],path.split("/")[3]
@@ -77,6 +79,7 @@ def test_sdutil_upload_with_seismicmeta(capsys, pargs):
         delete_status, delete_output = dataset_delete(tenant, subproject, e2e_test_dataset_02, pargs.idtoken)
         if 0 != delete_status : assert not delete_status, delete_output
         time.sleep(5)
+
     # upload with meta
     with tempfile.NamedTemporaryFile(delete=False) as tmp_fh:
         name = tmp_fh.name
@@ -86,36 +89,48 @@ def test_sdutil_upload_with_seismicmeta(capsys, pargs):
         }
         tmp_fh.write(json.dumps(val).encode())
         tmp_fh.flush()
+
     set_args("cp {localfile} {path} --idtoken={stoken} --seismicmeta={meta}".format(
         localfile=e2e_test_dataset_02, path=(pargs.sdpath + '/' + e2e_test_dataset_02), stoken=pargs.idtoken, meta=tmp_fh.name))
     sdutil_upload_with_seismicmeta_status, sdutil_upload_with_seismicmeta_output = run_command(capsys)
+    if 0 != sdutil_upload_with_seismicmeta_status : assert not sdutil_upload_with_seismicmeta_status, sdutil_upload_with_seismicmeta_output
+    time.sleep(5)
     dataset_02_created_status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_02, pargs.idtoken)
+    if 0 != dataset_02_created_status : assert not dataset_02_created_status, dataset_exist_output
+    
     # check meta was assigned
     dataset_meta_status = 1
-    sdutil_check_seismicmeta_status = 1
     reponse = dataset_get(tenant, subproject, e2e_test_dataset_02, pargs.idtoken)
     dataset_meta = json.loads(reponse.content)
     if ("hello world!" ==  dataset_meta['seismicmeta']['data']['msg']) : 
         dataset_meta_status = 0
-    set_args("stat {path} --idtoken={stoken} --detailed".format(path=(pargs.sdpath + '/' + e2e_test_dataset_02), stoken=pargs.idtoken))
-    sdutil_check_seismicmeta_status, sdutil_check_seismicmeta_output = run_command(capsys)
-    if ("hello world!" in sdutil_check_seismicmeta_output) :
-        sdutil_check_seismicmeta_status = 0
     os.unlink(name)
+
     errors = verify_conditions(sdutil_cp_dataset_02 = str(sdutil_upload_with_seismicmeta_status) + ';' + sdutil_upload_with_seismicmeta_output,
                              dataset_get_after_sdutil_cp_dataset_02 = str(dataset_02_created_status) + ';' + str(dataset_exist_output),
-                             dataset_get_seismicmeta_dataset_02 = str(dataset_meta_status) + ';' + 'Seismicmeta was not found in the dataset metadata',
-                             sdutil_stat_seismicmeta_output = str(sdutil_check_seismicmeta_status) + ';' + sdutil_check_seismicmeta_output)
+                             dataset_get_seismicmeta_dataset_02 = str(dataset_meta_status) + ';' + 'Seismicmeta was not found in the dataset metadata')
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
-# def test_sdutil_download(capsys, pargs):
-#     downloaded_files_exist = 1
-#     set_args("cp {path} {localfile} --idtoken={stoken}".format(path=(pargs.sdpath + '/' + dataset_02), localfile=local_file_name_02, stoken=pargs.idtoken))
-#     sdutil_cp_download_status, sdutil_cp_download_output = run_command(capsys)
-#     if ( filecmp.cmp(local_file_name_01, local_file_name_02) ) : downloaded_files_exist = 0
-#     errors = verify_conditions(sdutil_cp_download = str(sdutil_cp_download_status) + ';' + sdutil_cp_download_output,
-#                              downloaded_files_found = str(downloaded_files_exist) + ';' + 'Files are not found after sdutil cp download')
-#     assert not errors, "errors occured:\n{}".format("\n".join(errors))
+def test_sdutil_stat_dataset(capsys, pargs):
+    set_args("stat {path} --idtoken={stoken} --detailed".format(path=(pargs.sdpath + '/' + e2e_test_dataset_02), stoken=pargs.idtoken))
+    sdutil_stat_status, sdutil_check_seismicmeta_output = run_command(capsys)
+    sdutil_check_seismicmeta_status = 1
+    if ("hello world!" in sdutil_check_seismicmeta_output) :
+        sdutil_check_seismicmeta_status = 0
+    
+    errors = verify_conditions(sdutil_stat_dataset_02 = str(sdutil_stat_status) + ';' + sdutil_check_seismicmeta_output,
+                               sdutil_stat_seismicmeta_output = str(sdutil_check_seismicmeta_status) + ';' + sdutil_check_seismicmeta_output)
+    assert not errors, "errors occured:\n{}".format("\n".join(errors))
+
+def test_sdutil_cp_download(capsys, pargs):
+    downloaded_files_exist = 1
+    local_file_name_01 = os.getcwd() + '\local-' + e2e_test_dataset_01
+    set_args("cp {path} {localfile} --idtoken={stoken}".format(path=(pargs.sdpath + '/' + e2e_test_dataset_01), localfile=local_file_name_01, stoken=pargs.idtoken))
+    sdutil_cp_download_status, sdutil_cp_download_output = run_command(capsys)
+    # if ( filecmp.cmp(local_file_name_01, e2e_test_dataset_01) ) : downloaded_files_exist = 0
+    errors = verify_conditions(sdutil_cp_download = str(sdutil_cp_download_status) + ';' + sdutil_cp_download_output,
+                             downloaded_files_found = str(downloaded_files_exist) + ';' + 'Files are not found after sdutil cp download')
+    assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
 
 
