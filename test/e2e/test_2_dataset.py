@@ -21,8 +21,8 @@ import json
 import time
 from glob import glob
 
-from test.e2e.utils import check_string, run, run_command, set_args, verify_conditions, e2e_test_dataset_prefix, e2e_test_dataset_01, e2e_test_dataset_02
-from test.e2e.apis import subproject_exist, subproject_register, dataset_exist, dataset_delete, dataset_get
+from test.e2e.utils import run_command, set_args, verify_conditions, e2e_test_dataset_prefix, e2e_test_dataset_01, e2e_test_dataset_02
+from test.e2e.apis import *
 from sdlib.shared.sdpath import SDPath
 
 
@@ -37,23 +37,23 @@ def test_subproject_for_cp(capsys, pargs) :
         status, output = subproject_register(tenant, subproject, legaltag, idtoken, admins=acl_admin, viewers=acl_viewer)
     assert not status, output
 
-# def test_sdutil_cp_upload(capsys, pargs):
-#     # check dataset01 exists and remove it
-#     path = pargs.sdpath
-#     tenant,subproject = path.split("/")[2],path.split("/")[3]
-#     status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
-#     if 0 == status :
-#         delete_status, delete_output = dataset_delete(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
-#         if 0 != delete_status : assert not delete_status, delete_output
+def test_sdutil_cp_upload(capsys, pargs):
+    # check dataset01 exists and remove it
+    path = pargs.sdpath
+    tenant,subproject = path.split("/")[2],path.split("/")[3]
+    status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+    if 0 == status :
+        delete_status, delete_output = dataset_delete(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+        if 0 != delete_status : assert not delete_status, delete_output
     
-#     # upload simple dataset01
-#     set_args("cp {localfile} {path} --idtoken={stoken}".format(localfile=e2e_test_dataset_01, path=(pargs.sdpath + '/' + e2e_test_dataset_01), stoken=pargs.idtoken))
-#     sdutil_cp_status, sdutil_cp_output = run_command(capsys)
-#     dataset_created_status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+    # upload simple dataset01
+    set_args("cp {localfile} {path} --idtoken={stoken}".format(localfile=e2e_test_dataset_01, path=(pargs.sdpath + '/' + e2e_test_dataset_01), stoken=pargs.idtoken))
+    sdutil_cp_status, sdutil_cp_output = run_command(capsys)
+    dataset_created_status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
     
-#     errors = verify_conditions(sdutil_cp_dataset_01 = str(sdutil_cp_status) + ';' + sdutil_cp_output,
-#                              dataset_get_after_sdutil_cp_dataset_01 = str(dataset_created_status) + ';' +  str(dataset_exist_output) )
-#     assert not errors, "errors occured:\n{}".format("\n".join(errors))
+    errors = verify_conditions(sdutil_cp_dataset_01 = str(sdutil_cp_status) + ';' + sdutil_cp_output,
+                             dataset_get_after_sdutil_cp_dataset_01 = str(dataset_created_status) + ';' +  str(dataset_exist_output) )
+    assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
 def test_sdutil_cp_upload_with_seismicmeta(capsys, pargs): # Has conflict with dataset_01 creation
     # check dataset02 exists and remove it
@@ -120,31 +120,31 @@ def test_sdutil_cp_download(capsys, pargs):
                              downloaded_files_found = str(downloaded_files_exist) + ';' + 'Files are not found after sdutil cp download')
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
+def test_sdutil_ls_dataset(capsys, pargs):
+    path = pargs.sdpath
+    tenant,subproject = path.split("/")[2],path.split("/")[3]
+    # get list of datasets through SDMS endpoints
+    response = dataset_list(tenant, subproject, stoken=pargs.idtoken)
+    if (response.status_code != 200) : assert False, '[' + str(response.status_code) + ']: ' + str(response.content)
+    response_meta = json.loads(response.content)
+    dataset_api_list = [d['name'] for d in response_meta]
+    #get list of datasets through SDUTIL command
+    set_args("ls {path} --idtoken={stoken}".format(path=path, stoken=pargs.idtoken))
+    sdutil_ls_status, sdutil_ls_output = run_command(capsys)
+    dataset_sdutil_list = sdutil_ls_output.split('\n')[1:-2] # remove empty lines
+    # compare lists
+    list_match = 1 if (sorted(dataset_sdutil_list) != sorted(dataset_api_list)) else 0
+
+    errors = verify_conditions(sdutil_ls_dataset = str(sdutil_ls_status) + ';' + sdutil_ls_output,
+                             compare_list = str(list_match) + ';' + 'Dataset lists are not the same for SDUTIL and SDMS API requests')
+    assert not errors, "errors occured:\n{}".format("\n".join(errors))
+    
+
 
 
 # # TO DO: 
-# # 1. sdutil ls
+# # (DONE) 1. sdutil ls
 # # 2. sdutil patch (all available properties?)
 # # 3. sdutil unlock
 # # 4. sdutil mv (inside folder, inside subproject, inside tenant)
-# # 5. update sdutil rm (below)
-
-
-
-# def test_sdutil_stat(capsys, pargs):
-#     set_args("stat {path} --idtoken={stoken}".format(path=(pargs.sdpath + '/' + dataset_01), stoken=pargs.idtoken))
-#     status, output = run_command(capsys)
-#     print(output)
-#     assert not status
-#     assert check_string(output, "Name: {path}".format(path=pargs.sdpath))
-#     assert check_string(output, "Size: " + test_size[1])
-
-# def test_sdutil_rm(capsys, pargs):
-#     set_args("rm {path} --idtoken={stoken}".format(path=(pargs.sdpath + '/' + dataset_01), stoken=pargs.idtoken))
-#     status, output = run_command(capsys)
-#     print(output)
-#     assert not status
-#     set_args("rm {path} --idtoken={stoken}".format(path=(pargs.sdpath + '/' + dataset_02), stoken=pargs.idtoken))
-#     status, output = run_command(capsys)
-#     print(output)
-#     assert not status
+# # 5. update sdutil rm

@@ -100,3 +100,13 @@ def dataset_get(tenant, subproject, dataset, stoken, path='/'):
               'seismicmeta':'true'}
     response = requests.get(url=URL, headers=headers, params=params)
     return response
+
+def dataset_list(tenant, subproject, stoken):
+    ENDPOINT_URL = Config.get_svc_url()
+    URL = ENDPOINT_URL + '/dataset/tenant/' + tenant + '/subproject/' + subproject
+    headers = {'Authorization':"Bearer " + stoken,
+                'data-partition-id':tenant,
+                'Content-Type':'application/json'
+    }
+    response = requests.get(url=URL, headers=headers)
+    return response
