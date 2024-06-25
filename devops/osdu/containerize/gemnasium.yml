@@ -1,0 +1,17 @@
+gemnasium_containerize:
+  tags: ["osdu-medium"]
+  image: docker:19.03.12
+  services:
+    - docker:19.03.12-dind
+  stage: containerize
+  needs: []
+  variables:
+    GEMNASIUM_PYTHON_IMAGE: "registry.gitlab.com/security-products/gemnasium-python"
+    SHA_IMAGE: gemnasium-python:${CI_COMMIT_SHA}
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - cd devops/docker/scanner/gemnasium_python
+    - docker pull ${GEMNASIUM_PYTHON_IMAGE}
+    - docker build -t ${CI_REGISTRY_IMAGE}/$SHA_IMAGE .
+    - docker push ${CI_REGISTRY_IMAGE}/$SHA_IMAGE
