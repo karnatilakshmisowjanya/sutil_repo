@@ -1,0 +1,6 @@
+gemnasium-python-dependency_scanning:
+  needs:
+    - compile-and-unit-test
+    - gemnasium_containerize
+  image:
+    name: ${CI_REGISTRY_IMAGE}/gemnasium-python:${CI_COMMIT_SHA}

@@ -7,6 +7,9 @@ include:
   # build
   - local: "/devops/osdu/compile/seismic-store-sdutil.yml"
 
+  # containerize
+  - local: "/devops/osdu/containerize/gemnasium.yml"
+
   # scan
   # scan for secrets
   - local: "/devops/osdu/scanners/scan-for-secrets-python.yml"
@@ -14,6 +17,8 @@ include:
   # vulnerability Scan
   - project: "osdu/platform/ci-cd-pipelines"
     file: "scanners/gitlab-ultimate.yml"
+  
+  - local: "/devops/osdu/scanners/gitlab-ultimate.yml"
 
   # azure-global
   - project: "osdu/platform/ci-cd-pipelines"
