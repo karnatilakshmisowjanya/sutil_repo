@@ -1,3 +1,4 @@
 gemnasium-python-dependency_scanning:
+  needs: [gemnasium_containerize]
   image:
     name: ${CI_REGISTRY_IMAGE}/gemnasium-python:${CI_COMMIT_SHA}
