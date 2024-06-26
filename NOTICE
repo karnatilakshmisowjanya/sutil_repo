@@ -8,7 +8,7 @@ This software includes the following software and licenses:
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- typing-extensions (from https://pypi.org/project/typing-extensions/4.12.1/, https://pypi.org/project/typing-extensions/4.4.0/)
+- typing-extensions (from https://pypi.org/project/typing-extensions/4.12.2/, https://pypi.org/project/typing-extensions/4.4.0/)
 
 ========================================================================
 Apache-2.0
@@ -24,7 +24,7 @@ The following software have components provided under the terms of this license:
 - python-dateutil (from https://github.com/dateutil/dateutil)
 - requests (from http://python-requests.org, https://requests.readthedocs.io)
 - s3transfer (from https://github.com/boto/s3transfer)
-- urllib3 (from https://pypi.org/project/urllib3/2.0.2/, https://pypi.org/project/urllib3/2.0.4/, https://pypi.org/project/urllib3/2.2.1/)
+- urllib3 (from https://pypi.org/project/urllib3/2.0.2/, https://pypi.org/project/urllib3/2.0.4/, https://pypi.org/project/urllib3/2.2.2/)
 
 ========================================================================
 BSD-2-Clause
@@ -143,7 +143,7 @@ The following software have components provided under the terms of this license:
 - six (from http://pypi.python.org/pypi/six/, https://github.com/benjaminp/six)
 - tomli (from https://pypi.org/project/tomli/1.2.2/, https://pypi.org/project/tomli/2.0.0/, https://pypi.org/project/tomli/2.0.1/)
 - tqdm (from https://pypi.org/project/tqdm/4.66.1/, https://pypi.org/project/tqdm/4.66.4/, https://tqdm.github.io)
-- urllib3 (from https://pypi.org/project/urllib3/2.0.2/, https://pypi.org/project/urllib3/2.0.4/, https://pypi.org/project/urllib3/2.2.1/)
+- urllib3 (from https://pypi.org/project/urllib3/2.0.2/, https://pypi.org/project/urllib3/2.0.4/, https://pypi.org/project/urllib3/2.2.2/)
 - zipp (from https://pypi.org/project/zipp/3.19.2/)
 
 ========================================================================
@@ -183,7 +183,7 @@ The following software have components provided under the terms of this license:
 
 - boto3 (from https://github.com/boto/boto3)
 - cryptography (from https://github.com/pyca/cryptography)
-- typing-extensions (from https://pypi.org/project/typing-extensions/4.12.1/, https://pypi.org/project/typing-extensions/4.4.0/)
+- typing-extensions (from https://pypi.org/project/typing-extensions/4.12.2/, https://pypi.org/project/typing-extensions/4.4.0/)
 
 ========================================================================
 Zlib

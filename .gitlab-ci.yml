@@ -6,7 +6,10 @@ include:
 
   # build
   - local: "/devops/osdu/compile/seismic-store-sdutil.yml"
-  
+
+  # containerize
+  - local: "/devops/osdu/containerize/gemnasium.yml"
+
   # scan
   # scan for secrets
   - local: "/devops/osdu/scanners/scan-for-secrets-python.yml"
