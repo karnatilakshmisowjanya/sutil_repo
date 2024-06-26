@@ -45,12 +45,10 @@ def test_sdutil_cp_upload(capsys, pargs):
     if 0 == status :
         delete_status, delete_output = dataset_delete(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
         if 0 != delete_status : assert not delete_status, delete_output
-    
     # upload simple dataset01
     set_args("cp {localfile} {path} --idtoken={stoken}".format(localfile=e2e_test_dataset_01, path=(pargs.sdpath + '/' + e2e_test_dataset_01), stoken=pargs.idtoken))
     sdutil_cp_status, sdutil_cp_output = run_command(capsys)
     dataset_created_status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
-    
     errors = verify_conditions(sdutil_cp_dataset_01 = str(sdutil_cp_status) + ';' + sdutil_cp_output,
                              dataset_get_after_sdutil_cp_dataset_01 = str(dataset_created_status) + ';' +  str(dataset_exist_output) )
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
@@ -76,7 +74,7 @@ def test_sdutil_cp_upload_with_seismicmeta(capsys, pargs): # Has conflict with d
         tmp_fh.flush()
 
     set_args("cp {localfile} {path} --idtoken={stoken} --seismicmeta={meta}".format(
-        localfile=e2e_test_dataset_02, path=(pargs.sdpath + '/' + e2e_test_dataset_02), stoken=pargs.idtoken, meta=tmp_fh.name))
+        localfile=e2e_test_dataset_02, path=(pargs.sdpath + '/' + e2e_test_dataset_02), stoken=pargs.idtoken, meta=name))
     sdutil_upload_with_seismicmeta_status, sdutil_upload_with_seismicmeta_output = run_command(capsys)
     if 0 != sdutil_upload_with_seismicmeta_status : assert not sdutil_upload_with_seismicmeta_status, sdutil_upload_with_seismicmeta_output
     time.sleep(5)
@@ -102,7 +100,6 @@ def test_sdutil_stat_dataset(capsys, pargs):
     sdutil_check_seismicmeta_status = 1
     if ("hello world!" in sdutil_check_seismicmeta_output) :
         sdutil_check_seismicmeta_status = 0
-    
     errors = verify_conditions(sdutil_stat_dataset_02 = str(sdutil_stat_status) + ';' + sdutil_check_seismicmeta_output,
                                sdutil_stat_seismicmeta_output = str(sdutil_check_seismicmeta_status) + ';' + sdutil_check_seismicmeta_output)
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
@@ -134,12 +131,26 @@ def test_sdutil_ls_dataset(capsys, pargs):
     dataset_sdutil_list = sdutil_ls_output.split('\n')[1:-2] # remove empty lines
     # compare lists
     list_match = 1 if (sorted(dataset_sdutil_list) != sorted(dataset_api_list)) else 0
-
     errors = verify_conditions(sdutil_ls_dataset = str(sdutil_ls_status) + ';' + sdutil_ls_output,
                              compare_list = str(list_match) + ';' + 'Dataset lists are not the same for SDUTIL and SDMS API requests')
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
     
-
+def test_sdutil_rm_dataset(capsys, pargs):
+    path = pargs.sdpath + '/' + e2e_test_dataset_02
+    tenant,subproject = path.split("/")[2],path.split("/")[3]
+    # verify the dataset exist
+    status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_02, pargs.idtoken)
+    if 0 != status : assert not status, dataset_exist_output
+    # remove the dataset and verify it is removed
+    set_args("rm {path} --idtoken={stoken}".format(path=path, stoken=pargs.idtoken))
+    sdutil_status, sdutil_rm_output = run_command(capsys)
+    time.sleep(5)
+    dataset_exist_status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_02, pargs.idtoken)
+    verify_deletion = 1 if (dataset_exist_status == 0) else 0
+    errors = verify_conditions(sdutil_rm_dataset = str(sdutil_status) + ';' + sdutil_rm_output,
+                                verify_dataset_deleted = str(verify_deletion) + ';' + 'Dataset still exist after sdutil rm operation')
+    assert not errors, "errors occured:\n{}".format("\n".join(errors))
+    
 
 
 # # TO DO: 
@@ -147,4 +158,4 @@ def test_sdutil_ls_dataset(capsys, pargs):
 # # 2. sdutil patch (all available properties?)
 # # 3. sdutil unlock
 # # 4. sdutil mv (inside folder, inside subproject, inside tenant)
-# # 5. update sdutil rm
+# # (DONE) 5. update sdutil rm
