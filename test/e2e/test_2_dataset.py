@@ -125,7 +125,7 @@ def test_sdutil_ls_dataset(capsys, pargs):
     if (response.status_code != 200) : assert False, '[' + str(response.status_code) + ']: ' + str(response.content)
     response_meta = json.loads(response.content)
     dataset_api_list = [d['name'] for d in response_meta]
-    #get list of datasets through SDUTIL command
+    # get list of datasets through SDUTIL command
     set_args("ls {path} --idtoken={stoken}".format(path=path, stoken=pargs.idtoken))
     sdutil_ls_status, sdutil_ls_output = run_command(capsys)
     dataset_sdutil_list = sdutil_ls_output.split('\n')[1:-2] # remove empty lines
@@ -134,7 +134,41 @@ def test_sdutil_ls_dataset(capsys, pargs):
     errors = verify_conditions(sdutil_ls_dataset = str(sdutil_ls_status) + ';' + sdutil_ls_output,
                              compare_list = str(list_match) + ';' + 'Dataset lists are not the same for SDUTIL and SDMS API requests')
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
-    
+
+def test_sdutil_patch(capsys, pargs):
+    path = pargs.sdpath + '/' + e2e_test_dataset_01
+    tenant,subproject = path.split("/")[2],path.split("/")[3]
+    dataset_exist_status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+    if 0 != dataset_exist_status : assert not dataset_exist_status, dataset_exist_output
+    # change legaltag
+    set_args("patch {path} --idtoken={stoken} --ltag={legaltag}".format(path=path, stoken=pargs.idtoken, legaltag=pargs.legaltag02))
+    sdutil_patch_legaltag_status, sdutil_patch_legaltag_output = run_command(capsys)
+    # change readonly status
+    set_args("patch {path} --idtoken={stoken} --readonly={readonly}".format(path=path, stoken=pargs.idtoken, readonly=True))
+    sdutil_patch_readonly_status, sdutil_patch_readonly_output = run_command(capsys)
+    # verify the changes
+    dataset_get_response = dataset_get(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+    content = json.loads(dataset_get_response.content)
+    verify_legaltag_patch = 1 if content['ltag'] != pargs.legaltag02 else 0
+    verify_readonly_patch = 1 if content['readonly'] != True else 0
+    # revert changes
+    set_args("patch {path} --idtoken={stoken} --ltag={legaltag} --readonly={readonly}".format(path=path, stoken=pargs.idtoken, legaltag=pargs.legaltag, readonly=False))
+    sdutil_patch_revert_status, sdutil_patch_revert_output = run_command(capsys)
+     # verify rollback
+    dataset_get_revert_response = dataset_get(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+    revert_content = json.loads(dataset_get_revert_response.content)
+    verify_rollback_legaltag = 1 if revert_content['ltag'] != pargs.legaltag else 0
+    verify_rollback_readonly = 1 if revert_content['readonly'] != False else 0
+    errors = verify_conditions(sdutil_patch_dataset_legaltag = str(sdutil_patch_legaltag_status) + ';' + sdutil_patch_legaltag_output,
+                                verify_legaltag_change = str(verify_legaltag_patch) + ';' + 'The dataset legaltag was not patched',
+                                sdutil_patch_dataset_readonly = str(sdutil_patch_readonly_status) + ';' + sdutil_patch_readonly_output,
+                                verify_readonly_patch = str(verify_readonly_patch) + ';' + 'The dataset was not patched for readonly mode',
+                                sdutil_patch_dataset_metadata_revertion = str(sdutil_patch_revert_status) + ';' + sdutil_patch_revert_output,
+                                verify_legaltag_revertion = str(verify_rollback_legaltag) + ';' + 'The dataset legaltag was not reverted',
+                                verify_readonly_revertion = str(verify_rollback_readonly) + ';' + 'The dataset readonly mode was not reverted'
+                                )
+    assert not errors, "errors occured:\n{}".format("\n".join(errors))
+
 def test_sdutil_rm_dataset(capsys, pargs):
     path = pargs.sdpath + '/' + e2e_test_dataset_02
     tenant,subproject = path.split("/")[2],path.split("/")[3]
@@ -155,7 +189,29 @@ def test_sdutil_rm_dataset(capsys, pargs):
 
 # # TO DO: 
 # # (DONE) 1. sdutil ls
-# # 2. sdutil patch (all available properties?)
+# # (DONE) 2. sdutil patch (all available properties?)
 # # 3. sdutil unlock
 # # 4. sdutil mv (inside folder, inside subproject, inside tenant)
 # # (DONE) 5. update sdutil rm
+
+# def test_sdutil_unlock(capsys, pargs):
+#     path = pargs.sdpath + '/' + e2e_test_dataset_01
+#     tenant,subproject = path.split("/")[2],path.split("/")[3]
+#     # verify the dataset exist and put write lock on it
+#     status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+#     if 0 != status : assert not status, dataset_exist_output
+#     # dataset_lock_status, dataset_lock_output = dataset_lock(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+#     dataset_lock_response = dataset_lock(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, 'write')
+#     if 200 != dataset_lock_response.status_code : assert False, dataset_lock_response.content
+#     # if 0 != dataset_lock_status : assert not dataset_lock_status, dataset_lock_output
+#     # response = dataset_get(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+#     dataset_lock2_response = dataset_lock(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, 'read')
+#     if 423 != dataset_lock2_response.status_code : assert False, 'The dataset was not locked'
+#     # test sdutil unlock
+#     set_args("unlock {path} --idtoken={stoken}".format(path=path, stoken=pargs.idtoken))
+#     sdutil_unlock_status, sdutil_unlock_output = run_command(capsys)
+#     # dataset_get_response = dataset_get(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+#     dataset_get_after_unlock_status = 1 if 200 != dataset_get_response.status_code else 0
+#     errors = verify_conditions(sdutil_unlock_dataset = str(sdutil_unlock_status) + ';' + sdutil_unlock_output,
+#                                 dataset_get_after_unlock = str(dataset_get_after_unlock_status) + ';' + dataset_get_response.content)
+#     assert not errors, "errors occured:\n{}".format("\n".join(errors))

@@ -29,6 +29,7 @@ def pytest_addoption(parser):
     parser.addoption("--sdpath", action="store", default="", help="seismic store path")
     parser.addoption("--admin", action="store", default="", help="user id will be used as subproject admin")
     parser.addoption("--legaltag", action="store", default="", help="legal tag to use in subproject creation")
+    parser.addoption("--legaltag02", action="store", default="", help="legal tag to use in subproject and dataset patching")
     parser.addoption("--acl_admin", action="store", default="", help="user admin group will be used as subproject admin acl")
     parser.addoption("--acl_viewer", action="store", default="", help="user viewer group will be used as subproject viewer acl")
 
@@ -87,11 +88,12 @@ def cleanup(sdpath, pargs):
         os.remove(filename)
 
 class TestArgs:
-    def __init__(self, stoken, sdpath, admin, legaltag, acl_admin, acl_viewer):
+    def __init__(self, stoken, sdpath, admin, legaltag, legaltag02, acl_admin, acl_viewer):
         self.idtoken = stoken
         self.sdpath = sdpath
         self.admin = admin
         self.legaltag = legaltag
+        self.legaltag02 = legaltag02
         self.acl_admin = acl_admin
         self.acl_viewer = acl_viewer
 
@@ -102,5 +104,6 @@ class TestArgs:
             pytestconfig.getoption("sdpath"),
             pytestconfig.getoption("admin"), 
             pytestconfig.getoption("legaltag"),
+            pytestconfig.getoption("legaltag02"),
             pytestconfig.getoption("acl_admin"), 
             pytestconfig.getoption("acl_viewer"))
