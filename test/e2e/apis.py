@@ -111,6 +111,17 @@ def dataset_list(tenant, subproject, stoken):
     response = requests.get(url=URL, headers=headers, timeout=10)
     return response
 
+def dataset_lock(tenant, subproject, dataset, stoken, path='/', openmode='write'):
+    ENDPOINT_URL = Config.get_svc_url()
+    URL = ENDPOINT_URL + '/dataset/tenant/' + tenant + '/subproject/' + subproject + '/dataset/' + dataset + '/lock'
+    headers = {'Authorization':"Bearer " + stoken,
+                'data-partition-id':tenant,
+                'Content-Type':'application/json'
+    }
+    params = {'openmode':openmode}
+    response = requests.put(url=URL, headers=headers, params=params)
+    return response
+
 def utility_ls(sdpath, stoken, wmode='all'):
     ENDPOINT_URL = 'https://evt.api.enterprisedata.cloud.slb-ds.com/seistore-svc/api/v3'
     URL = ENDPOINT_URL + '/utility/ls'
@@ -123,31 +134,3 @@ def utility_ls(sdpath, stoken, wmode='all'):
     }
     response = requests.get(url=URL, headers=headers, params=params)
     return response
-
-# def dataset_lock(tenant, subproject, dataset, stoken, path='/', openmode='write'):
-#     ENDPOINT_URL = Config.get_svc_url()
-#     URL = ENDPOINT_URL + '/dataset/tenant/' + tenant + '/subproject/' + subproject + '/dataset/' + dataset + '/lock'
-#     headers = {'Authorization':"Bearer " + stoken,
-#                 'data-partition-id':tenant,
-#                 'Content-Type':'application/json'
-#     }
-#     # path = quote_plus(path)
-#     # params = {'path':path,
-#     params = {'openmode':openmode}
-#     response = requests.put(url=URL, headers=headers, params=params)
-#     if (response.status_code != 200): return 1, response.content
-#     return 0, response.content
-
-# def dataset_patch(tenant, subproject, dataset, stoken):
-#     dataset_meta = dataset_get(tenant, subproject, dataset, stoken)
-#     sbit = dataset_meta.content['sbit']
-#     ENDPOINT_URL = Config.get_svc_url()
-#     URL = ENDPOINT_URL + '/dataset/tenant/' + tenant + '/subproject/' + subproject + '/dataset/' + dataset
-#     headers = {'Authorization':"Bearer " + stoken,
-#                 'data-partition-id':tenant,
-#                 'Content-Type':'application/json'
-#     }
-#     params = {'close':sbit}
-#     body = {"metadata": { "k1": "v1", "k2": "v2", "k3": { "k4": "v4" } } }
-#     response = requests.patch(url=URL, headers=headers, params=params, json=body, timeout=10)
-#     return response

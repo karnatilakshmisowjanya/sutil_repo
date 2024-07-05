@@ -14,11 +14,26 @@
 # limitations under the License.
 
 
+############# LIST OF TESTS ######################
+# 1. sdutil cp (upload)                          #
+# 2. sdutil cp (upload with seismicmeta)         #
+# 3. sdutil cp (download)                        #
+# 4. sdutil stat (detailed)                      #
+# 5. sdutil ls (no options, -rl)                 #
+# 6. sdutil patch (ltag, readonly)               #
+# 7. sdutil unlock (read, write)                 #
+# 8. sdutil mv (inside subproject)               #
+# 9. update sdutil rm                            #
+#                                                #
+# TO DO:                                         #
+# 1. sdutil patch (tier and seismicmeta options) #
+# 2. sdutil mv (inside tenant)                   #
+##################################################
+
 import os
 import tempfile
 import json
 import time
-
 from test.e2e.utils import run_command, set_args, verify_conditions, e2e_test_dataset_01, e2e_test_dataset_02
 from test.e2e.apis import *
 
@@ -92,16 +107,14 @@ def test_sdutil_cp_upload_with_seismicmeta(capsys, pargs): # Has conflict with d
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
 def test_sdutil_cp_download(capsys, pargs):
-    from pathlib import Path
-    downloaded_files_exist = 1
-    local_file_name_01 = os.getcwd() + '\\local-' + e2e_test_dataset_01
-    original_file = os.getcwd() + '\\' + e2e_test_dataset_01
+    local_file_name_01 = os.getcwd() + '/local-' + e2e_test_dataset_01
     set_args("cp {path} {localfile} --idtoken={stoken} --force".format(path=(pargs.sdpath + '/' + e2e_test_dataset_01), localfile=local_file_name_01, stoken=pargs.idtoken))
     sdutil_cp_download_status, sdutil_cp_download_output = run_command(capsys)
-    # if ( filecmp.cmp(local_file_name_01, original_file) ) : downloaded_files_exist = 0
-    if os.path.isfile(local_file_name_01) : downloaded_files_exist = 0
+    downloaded_files_exist = 0 if os.path.isfile(local_file_name_01) else 1
+    os.unlink(local_file_name_01)
     errors = verify_conditions(sdutil_cp_download = str(sdutil_cp_download_status) + ';' + sdutil_cp_download_output,
-                             downloaded_files_found = str(downloaded_files_exist) + ';' + 'Files are not found after sdutil cp download')
+                             downloaded_file_found = str(downloaded_files_exist) + ';' + 'File was not found after sdutil cp download'
+                            )
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
 def test_sdutil_stat_dataset(capsys, pargs):
@@ -184,6 +197,38 @@ def test_sdutil_patch(capsys, pargs):
                                 )
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
+def test_sdutil_unlock(capsys, pargs):
+    path = pargs.sdpath + '/' + e2e_test_dataset_01
+    tenant,subproject = path.split("/")[2],path.split("/")[3]
+    # verify write lock release
+    status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+    if 0 != status : assert not status, dataset_exist_output
+    dataset_lock_response = dataset_lock(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, 'write')
+    if 200 != dataset_lock_response.status_code : assert False, dataset_lock_response.content
+    dataset_lock2_response = dataset_lock(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, 'read')
+    if 423 != dataset_lock2_response.status_code : assert False, 'The dataset was not locked with write lock'
+    set_args("unlock {path} --idtoken={stoken}".format(path=path, stoken=pargs.idtoken))
+    sdutil_unlock_write_status, sdutil_unlock_write_output = run_command(capsys)
+    # verify read lock release
+    put_read_lock_response = dataset_lock(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, 'read')
+    verify_write_lock_release = 1 if 200 != put_read_lock_response.status_code else 0
+    put_write_lock_response = dataset_lock(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, 'write')
+    if 423 != put_write_lock_response.status_code : assert False, 'The dataset was not locked with read lock'
+    set_args("unlock {path} --idtoken={stoken}".format(path=path, stoken=pargs.idtoken))
+    sdutil_unlock_read_status, sdutil_unlock_read_output = run_command(capsys)
+    put_write_lock2_response = dataset_lock(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, 'write')
+    verify_read_lock_release = 1 if 200 != put_write_lock2_response.status_code else 0
+    # release lock
+    set_args("unlock {path} --idtoken={stoken}".format(path=path, stoken=pargs.idtoken))
+    run_command(capsys)
+    # checks
+    errors = verify_conditions(sdutil_unlock_write_lock = str(sdutil_unlock_write_status) + ';' + sdutil_unlock_write_output,
+                                write_lock_release_verification = str(verify_write_lock_release) + ';' + 'The write lock was not released by SDUTIL',
+                                sdutil_unlock_read_lock = str(sdutil_unlock_read_status) + ';' + sdutil_unlock_read_output,
+                                read_lock_release_verification = str(verify_read_lock_release) + ';' + 'The read lock was not released by SDUTIL'
+                            )
+    assert not errors, "errors occured:\n{}".format("\n".join(errors))
+
 def test_sdutil_mv(capsys, pargs):
     path = pargs.sdpath + '/' + e2e_test_dataset_01
     destination_path = '/test-folder/'
@@ -217,43 +262,20 @@ def test_sdutil_rm_dataset(capsys, pargs):
     if 0 != status : assert not status, dataset_exist_output
     # remove the dataset and verify it is removed
     set_args("rm {path} --idtoken={stoken}".format(path=path, stoken=pargs.idtoken))
-    sdutil_status, sdutil_rm_output = run_command(capsys)
+    sdutil_rm_dataset2_status, sdutil_rm_dataset2_output = run_command(capsys)
     set_args("rm {path} --idtoken={stoken}".format(path=pargs.sdpath + '/test-folder/' + e2e_test_dataset_01, stoken=pargs.idtoken))
-    sdutil_status, sdutil_rm_output = run_command(capsys)
+    sdutil_rm_dataset1_status, sdutil_rm_dataset1_output = run_command(capsys)
     time.sleep(5)
-    dataset_exist_status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_02, pargs.idtoken)
-    verify_deletion = 1 if (dataset_exist_status == 0) else 0
-    errors = verify_conditions(sdutil_rm_dataset = str(sdutil_status) + ';' + sdutil_rm_output,
-                                verify_dataset_deleted = str(verify_deletion) + ';' + 'Dataset still exist after sdutil rm operation')
+    dataset1_exist_status, dataset1_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, path='/test-folder/')
+    verify_deletion1 = 1 if (dataset1_exist_status == 0) else 0
+    dataset2_exist_status, dataset2_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_02, pargs.idtoken)
+    verify_deletion2 = 1 if (dataset2_exist_status == 0) else 0
+    # remove the second dataset
+
+    # checks
+    errors = verify_conditions(sdutil_rm_dataset1 = str(sdutil_rm_dataset1_status) + ';' + sdutil_rm_dataset1_output,
+                                verify_dataset_deleted = str(verify_deletion1) + ';' + 'Dataset ds-0 still exist after sdutil rm operation',
+                                sdutil_rm_dataset2 = str(sdutil_rm_dataset2_status) + ';' + sdutil_rm_dataset2_output,
+                                verify_dataset2_deleted = str(verify_deletion2) + ';' + 'Dataset ds-1 still exist after sdutil rm operation'
+                            )
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
-    
-
-
-# TO DO: 
-# (DONE) 1. sdutil ls
-# (DONE) 2. sdutil patch (all available properties?)
-# 3. sdutil unlock
-# (DONE) 4. sdutil mv (inside subproject) (not inside tenant)
-# (DONE) 5. update sdutil rm
-
-# def test_sdutil_unlock(capsys, pargs):
-#     path = pargs.sdpath + '/' + e2e_test_dataset_01
-#     tenant,subproject = path.split("/")[2],path.split("/")[3]
-#     # verify the dataset exist and put write lock on it
-#     status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
-#     if 0 != status : assert not status, dataset_exist_output
-#     # dataset_lock_status, dataset_lock_output = dataset_lock(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
-#     dataset_lock_response = dataset_lock(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, 'write')
-#     if 200 != dataset_lock_response.status_code : assert False, dataset_lock_response.content
-#     # if 0 != dataset_lock_status : assert not dataset_lock_status, dataset_lock_output
-#     # response = dataset_get(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
-#     dataset_lock2_response = dataset_lock(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, 'read')
-#     if 423 != dataset_lock2_response.status_code : assert False, 'The dataset was not locked'
-#     # test sdutil unlock
-#     set_args("unlock {path} --idtoken={stoken}".format(path=path, stoken=pargs.idtoken))
-#     sdutil_unlock_status, sdutil_unlock_output = run_command(capsys)
-#     # dataset_get_response = dataset_get(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
-#     dataset_get_after_unlock_status = 1 if 200 != dataset_get_response.status_code else 0
-#     errors = verify_conditions(sdutil_unlock_dataset = str(sdutil_unlock_status) + ';' + sdutil_unlock_output,
-#                                 dataset_get_after_unlock = str(dataset_get_after_unlock_status) + ';' + dataset_get_response.content)
-#     assert not errors, "errors occured:\n{}".format("\n".join(errors))
