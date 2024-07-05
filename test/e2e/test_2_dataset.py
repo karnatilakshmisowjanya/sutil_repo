@@ -184,30 +184,30 @@ def test_sdutil_patch(capsys, pargs):
                                 )
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
-# def test_sdutil_mv(capsys, pargs):
-#     path = pargs.sdpath + '/' + e2e_test_dataset_01
-#     destination_path = '/test-folder/'
-#     tenant,subproject = path.split("/")[2],path.split("/")[3]
-#     status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
-#     if 0 != status : assert not status, dataset_exist_output
-#     status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, destination_path)
-#     if 0 == status : 
-#         remove_status, remove_output = dataset_delete(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, destination_path)
-#         if 0 != remove_status: assert not remove_status, remove_output
-#     # move the dataset into a folder and verify it is moved
-#     set_args("mv {sdpath_from} {sdpath_to} --idtoken={stoken}".format(sdpath_from=path, sdpath_to=pargs.sdpath + destination_path + e2e_test_dataset_01, stoken=pargs.idtoken))
-#     sdutil_mv_status, sdutil_mv_output = run_command(capsys)
-#     dataset_get_negative_response = dataset_get(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
-#     negative_response = json.loads(dataset_get_negative_response.content)
-#     verify_dataset_removed = 1 if negative_response.status_code != 404 else 0
-#     dataset_get_positive_response = dataset_get(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, destination_path)
-#     positive_response = json.loads(dataset_get_positive_response.content)
-#     verify_dataset_moved_into_folder = 1 if positive_response.status_code != 404 else 0
-#     errors = verify_conditions(sdutil_mv_dataset_into_folder = str(sdutil_mv_status) + ';' + sdutil_mv_output,
-#                                 verify_dataset_removed_from_old_place = str(verify_dataset_removed) + ';' + 'The dataset was not removed from old sdpath',
-#                                 verify_dataset_moved_into_new_destination = str(verify_dataset_moved_into_folder) + ';' + 'The dataset was not moved to a new sdpath'
-#                                 )
-#     assert not errors, "errors occured:\n{}".format("\n".join(errors))
+def test_sdutil_mv(capsys, pargs):
+    path = pargs.sdpath + '/' + e2e_test_dataset_01
+    destination_path = '/test-folder/'
+    tenant,subproject = path.split("/")[2],path.split("/")[3]
+    # check if dataset exist in original and destination paths
+    status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+    if 0 != status : assert not status, dataset_exist_output
+    status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, destination_path)
+    if 0 == status : 
+        remove_status, remove_output = dataset_delete(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, destination_path)
+        if 0 != remove_status: assert not remove_status, remove_output
+    # move the dataset into a folder and verify it is moved
+    set_args("mv {sdpath_from} {sdpath_to} --idtoken={stoken}".format(sdpath_from=path, sdpath_to=pargs.sdpath + destination_path + e2e_test_dataset_01, stoken=pargs.idtoken))
+    sdutil_mv_status, sdutil_mv_output = run_command(capsys)
+    dataset_get_negative_response = dataset_get(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+    verify_dataset_removed = 1 if dataset_get_negative_response.status_code != 404 else 0
+    dataset_get_positive_response = dataset_get(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, destination_path)
+    positive_response_meta = json.loads(dataset_get_positive_response.content)
+    verify_dataset_moved_into_folder = 1 if positive_response_meta['path'] != destination_path else 0
+    errors = verify_conditions(sdutil_mv_dataset_into_folder = str(sdutil_mv_status) + ';' + sdutil_mv_output,
+                                verify_dataset_removed_from_old_place = str(verify_dataset_removed) + ';' + 'The dataset was not removed from old sdpath',
+                                verify_dataset_moved_into_new_destination = str(verify_dataset_moved_into_folder) + ';' + 'The dataset was not moved to a new sdpath'
+                                )
+    assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
 def test_sdutil_rm_dataset(capsys, pargs):
     path = pargs.sdpath + '/' + e2e_test_dataset_02
@@ -229,12 +229,12 @@ def test_sdutil_rm_dataset(capsys, pargs):
     
 
 
-# # TO DO: 
-# # (DONE) 1. sdutil ls
-# # (DONE) 2. sdutil patch (all available properties?)
-# # 3. sdutil unlock
-# # 4. sdutil mv (inside subproject, inside tenant?)
-# # (DONE) 5. update sdutil rm
+# TO DO: 
+# (DONE) 1. sdutil ls
+# (DONE) 2. sdutil patch (all available properties?)
+# 3. sdutil unlock
+# (DONE) 4. sdutil mv (inside subproject) (not inside tenant)
+# (DONE) 5. update sdutil rm
 
 # def test_sdutil_unlock(capsys, pargs):
 #     path = pargs.sdpath + '/' + e2e_test_dataset_01
