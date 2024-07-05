@@ -26,7 +26,7 @@ def subproject_exist(tenant, subproject, stoken):
                 'data-partition-id':tenant,
                 'Content-Type':'application/json'
     }
-    response = requests.get(url=URL, headers=headers)
+    response = requests.get(url=URL, headers=headers, timeout=10)
     if (response.status_code != 200): return 1
     return 0
 
@@ -44,7 +44,7 @@ def subproject_register(tenant, subproject, legaltag, stoken, **kwargs):
                            "viewers": [kwargs['viewers']]}
         }
     bodyString = json.dumps(body)
-    response = requests.post(url=URL, headers=headers, json=json.loads(bodyString))
+    response = requests.post(url=URL, headers=headers, json=json.loads(bodyString), timeout=10)
     if (response.status_code != 200): return 1, response.content
     time.sleep(30)
     return 0, response.content
@@ -56,7 +56,7 @@ def subproject_delete(tenant, subproject, stoken):
                 'data-partition-id':tenant,
                 'Content-Type':'application/json'
     }
-    response = requests.delete(url=URL, headers=headers)
+    response = requests.delete(url=URL, headers=headers, timeout=10)
     if (response.status_code != 200): return 1
     return 0
 
@@ -70,7 +70,7 @@ def dataset_exist(tenant, subproject, dataset, stoken, path='/'):
                 'Content-Type':'application/json'
     }
     params = {'path':quote_plus(path)}
-    response = requests.get(url=URL, headers=headers, params=params)
+    response = requests.get(url=URL, headers=headers, params=params, timeout=10)
     if (response.status_code != 200): return 1, response.content
     return 0, response.content
 
@@ -84,7 +84,7 @@ def dataset_delete(tenant, subproject, dataset, stoken, path='/'):
                 'Content-Type':'application/json'
     }
     params = {'path':quote_plus(path)}
-    response = requests.delete(url=URL, headers=headers, params=params)
+    response = requests.delete(url=URL, headers=headers, params=params, timeout=10)
     if (response.status_code != 200): return 1, response.content
     return 0, response.content
 
@@ -98,7 +98,7 @@ def dataset_get(tenant, subproject, dataset, stoken, path='/'):
     path = quote_plus(path)
     params = {'path':path,
               'seismicmeta':'true'}
-    response = requests.get(url=URL, headers=headers, params=params)
+    response = requests.get(url=URL, headers=headers, params=params, timeout=10)
     return response
 
 def dataset_list(tenant, subproject, stoken):
@@ -108,5 +108,46 @@ def dataset_list(tenant, subproject, stoken):
                 'data-partition-id':tenant,
                 'Content-Type':'application/json'
     }
-    response = requests.get(url=URL, headers=headers)
+    response = requests.get(url=URL, headers=headers, timeout=10)
     return response
+
+def utility_ls(sdpath, stoken, wmode='all'):
+    ENDPOINT_URL = 'https://evt.api.enterprisedata.cloud.slb-ds.com/seistore-svc/api/v3'
+    URL = ENDPOINT_URL + '/utility/ls'
+    headers = {'Authorization':"Bearer " + stoken,
+                'Content-Type':'application/json'
+    }
+    params = {
+        'sdpath': sdpath,
+        'wmode': wmode
+    }
+    response = requests.get(url=URL, headers=headers, params=params)
+    return response
+
+# def dataset_lock(tenant, subproject, dataset, stoken, path='/', openmode='write'):
+#     ENDPOINT_URL = Config.get_svc_url()
+#     URL = ENDPOINT_URL + '/dataset/tenant/' + tenant + '/subproject/' + subproject + '/dataset/' + dataset + '/lock'
+#     headers = {'Authorization':"Bearer " + stoken,
+#                 'data-partition-id':tenant,
+#                 'Content-Type':'application/json'
+#     }
+#     # path = quote_plus(path)
+#     # params = {'path':path,
+#     params = {'openmode':openmode}
+#     response = requests.put(url=URL, headers=headers, params=params)
+#     if (response.status_code != 200): return 1, response.content
+#     return 0, response.content
+
+# def dataset_patch(tenant, subproject, dataset, stoken):
+#     dataset_meta = dataset_get(tenant, subproject, dataset, stoken)
+#     sbit = dataset_meta.content['sbit']
+#     ENDPOINT_URL = Config.get_svc_url()
+#     URL = ENDPOINT_URL + '/dataset/tenant/' + tenant + '/subproject/' + subproject + '/dataset/' + dataset
+#     headers = {'Authorization':"Bearer " + stoken,
+#                 'data-partition-id':tenant,
+#                 'Content-Type':'application/json'
+#     }
+#     params = {'close':sbit}
+#     body = {"metadata": { "k1": "v1", "k2": "v2", "k3": { "k4": "v4" } } }
+#     response = requests.patch(url=URL, headers=headers, params=params, json=body, timeout=10)
+#     return response

@@ -14,16 +14,13 @@
 # limitations under the License.
 
 
-import filecmp
 import os
 import tempfile
 import json
 import time
-from glob import glob
 
-from test.e2e.utils import run_command, set_args, verify_conditions, e2e_test_dataset_prefix, e2e_test_dataset_01, e2e_test_dataset_02
+from test.e2e.utils import run_command, set_args, verify_conditions, e2e_test_dataset_01, e2e_test_dataset_02
 from test.e2e.apis import *
-from sdlib.shared.sdpath import SDPath
 
 
 def test_subproject_for_cp(capsys, pargs) :
@@ -94,16 +91,6 @@ def test_sdutil_cp_upload_with_seismicmeta(capsys, pargs): # Has conflict with d
                              dataset_get_seismicmeta_dataset_02 = str(dataset_meta_status) + ';' + 'Seismicmeta was not found in the dataset metadata')
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
-def test_sdutil_stat_dataset(capsys, pargs):
-    set_args("stat {path} --idtoken={stoken} --detailed".format(path=(pargs.sdpath + '/' + e2e_test_dataset_02), stoken=pargs.idtoken))
-    sdutil_stat_status, sdutil_check_seismicmeta_output = run_command(capsys)
-    sdutil_check_seismicmeta_status = 1
-    if ("hello world!" in sdutil_check_seismicmeta_output) :
-        sdutil_check_seismicmeta_status = 0
-    errors = verify_conditions(sdutil_stat_dataset_02 = str(sdutil_stat_status) + ';' + sdutil_check_seismicmeta_output,
-                               sdutil_stat_seismicmeta_output = str(sdutil_check_seismicmeta_status) + ';' + sdutil_check_seismicmeta_output)
-    assert not errors, "errors occured:\n{}".format("\n".join(errors))
-
 def test_sdutil_cp_download(capsys, pargs):
     from pathlib import Path
     downloaded_files_exist = 1
@@ -117,22 +104,50 @@ def test_sdutil_cp_download(capsys, pargs):
                              downloaded_files_found = str(downloaded_files_exist) + ';' + 'Files are not found after sdutil cp download')
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
+def test_sdutil_stat_dataset(capsys, pargs):
+    set_args("stat {path} --idtoken={stoken} --detailed".format(path=(pargs.sdpath + '/' + e2e_test_dataset_02), stoken=pargs.idtoken))
+    sdutil_stat_status, sdutil_check_seismicmeta_output = run_command(capsys)
+    sdutil_check_seismicmeta_status = 1
+    if ("hello world!" in sdutil_check_seismicmeta_output) :
+        sdutil_check_seismicmeta_status = 0
+    errors = verify_conditions(sdutil_stat_dataset_02 = str(sdutil_stat_status) + ';' + sdutil_check_seismicmeta_output,
+                               sdutil_stat_seismicmeta_output = str(sdutil_check_seismicmeta_status) + ';' + sdutil_check_seismicmeta_output)
+    assert not errors, "errors occured:\n{}".format("\n".join(errors))
+
 def test_sdutil_ls_dataset(capsys, pargs):
+    # verify sdutil ls without options
     path = pargs.sdpath
     tenant,subproject = path.split("/")[2],path.split("/")[3]
-    # get list of datasets through SDMS endpoints
-    response = dataset_list(tenant, subproject, stoken=pargs.idtoken)
+    ## get list of datasets through SDMS endpoints in root path
+    response = utility_ls(path, stoken=pargs.idtoken)
     if (response.status_code != 200) : assert False, '[' + str(response.status_code) + ']: ' + str(response.content)
-    response_meta = json.loads(response.content)
-    dataset_api_list = [d['name'] for d in response_meta]
-    # get list of datasets through SDUTIL command
+    utility_api_list = json.loads(response.content)
+    ## get list of datasets through SDUTIL command in root path
     set_args("ls {path} --idtoken={stoken}".format(path=path, stoken=pargs.idtoken))
     sdutil_ls_status, sdutil_ls_output = run_command(capsys)
     dataset_sdutil_list = sdutil_ls_output.split('\n')[1:-2] # remove empty lines
-    # compare lists
-    list_match = 1 if (sorted(dataset_sdutil_list) != sorted(dataset_api_list)) else 0
+    ## compare lists
+    list_match = 1 if (sorted(dataset_sdutil_list) != sorted(utility_api_list)) else 0
+    
+    # verify -rl options work
+    ## get list of datasets through SDUTIL command in the whole subproject
+    set_args("ls {path} -rl --idtoken={stoken}".format(path=path, stoken=pargs.idtoken))
+    sdutil_full_list_status, sdutil_full_list_output = run_command(capsys)
+    sdutil_full_list = sdutil_full_list_output.split('\n')[1:-2]
+    sdutil_dataset_full_list = []
+    for item in sdutil_full_list: sdutil_dataset_full_list.append(item.split('/')[-1])
+    ## get list of datasets through SDMS endpoints in the whole subproject
+    dataset_list_response = dataset_list(tenant, subproject, stoken=pargs.idtoken)
+    api_full_list = json.loads(dataset_list_response.content)
+    dataset_api_full_list = [d['name'] for d in api_full_list]
+    full_list_match = 1 if (sorted(sdutil_dataset_full_list) != sorted(dataset_api_full_list)) else 0
+    
+    # checks
     errors = verify_conditions(sdutil_ls_dataset = str(sdutil_ls_status) + ';' + sdutil_ls_output,
-                             compare_list = str(list_match) + ';' + 'Dataset lists are not the same for SDUTIL and SDMS API requests')
+                               compare_list = str(list_match) + ';' + 'Dataset lists are not the same for SDUTIL and SDMS API requests.\n' + 'SDUTIL list:\n' + "{}".format('\n'.join(dataset_sdutil_list)) + '\nSDMS API list:\n' + "{}".format('\n'.join(utility_api_list)),
+                               sdutil_ls_dataset_with_options = str(sdutil_full_list_status) + ';' + sdutil_full_list_output,
+                               compare_full_list = str(full_list_match) + ';' + 'Dataset list with options are not the same for SDUTIL and SDMS API requests.\n' + 'SDUTIL list:\n' + "{}".format('\n'.join(sdutil_dataset_full_list)) + '\nSDMS API list:\n' + "{}".format('\n'.join(dataset_api_full_list))
+                            )
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
 def test_sdutil_patch(capsys, pargs):
@@ -169,6 +184,31 @@ def test_sdutil_patch(capsys, pargs):
                                 )
     assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
+# def test_sdutil_mv(capsys, pargs):
+#     path = pargs.sdpath + '/' + e2e_test_dataset_01
+#     destination_path = '/test-folder/'
+#     tenant,subproject = path.split("/")[2],path.split("/")[3]
+#     status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+#     if 0 != status : assert not status, dataset_exist_output
+#     status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, destination_path)
+#     if 0 == status : 
+#         remove_status, remove_output = dataset_delete(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, destination_path)
+#         if 0 != remove_status: assert not remove_status, remove_output
+#     # move the dataset into a folder and verify it is moved
+#     set_args("mv {sdpath_from} {sdpath_to} --idtoken={stoken}".format(sdpath_from=path, sdpath_to=pargs.sdpath + destination_path + e2e_test_dataset_01, stoken=pargs.idtoken))
+#     sdutil_mv_status, sdutil_mv_output = run_command(capsys)
+#     dataset_get_negative_response = dataset_get(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
+#     negative_response = json.loads(dataset_get_negative_response.content)
+#     verify_dataset_removed = 1 if negative_response.status_code != 404 else 0
+#     dataset_get_positive_response = dataset_get(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, destination_path)
+#     positive_response = json.loads(dataset_get_positive_response.content)
+#     verify_dataset_moved_into_folder = 1 if positive_response.status_code != 404 else 0
+#     errors = verify_conditions(sdutil_mv_dataset_into_folder = str(sdutil_mv_status) + ';' + sdutil_mv_output,
+#                                 verify_dataset_removed_from_old_place = str(verify_dataset_removed) + ';' + 'The dataset was not removed from old sdpath',
+#                                 verify_dataset_moved_into_new_destination = str(verify_dataset_moved_into_folder) + ';' + 'The dataset was not moved to a new sdpath'
+#                                 )
+#     assert not errors, "errors occured:\n{}".format("\n".join(errors))
+
 def test_sdutil_rm_dataset(capsys, pargs):
     path = pargs.sdpath + '/' + e2e_test_dataset_02
     tenant,subproject = path.split("/")[2],path.split("/")[3]
@@ -177,6 +217,8 @@ def test_sdutil_rm_dataset(capsys, pargs):
     if 0 != status : assert not status, dataset_exist_output
     # remove the dataset and verify it is removed
     set_args("rm {path} --idtoken={stoken}".format(path=path, stoken=pargs.idtoken))
+    sdutil_status, sdutil_rm_output = run_command(capsys)
+    set_args("rm {path} --idtoken={stoken}".format(path=pargs.sdpath + '/test-folder/' + e2e_test_dataset_01, stoken=pargs.idtoken))
     sdutil_status, sdutil_rm_output = run_command(capsys)
     time.sleep(5)
     dataset_exist_status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_02, pargs.idtoken)
@@ -191,7 +233,7 @@ def test_sdutil_rm_dataset(capsys, pargs):
 # # (DONE) 1. sdutil ls
 # # (DONE) 2. sdutil patch (all available properties?)
 # # 3. sdutil unlock
-# # 4. sdutil mv (inside folder, inside subproject, inside tenant)
+# # 4. sdutil mv (inside subproject, inside tenant?)
 # # (DONE) 5. update sdutil rm
 
 # def test_sdutil_unlock(capsys, pargs):
