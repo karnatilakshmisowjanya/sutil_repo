@@ -19,7 +19,7 @@ from test.e2e.utils import set_args, run_command, verify_conditions
 from test.e2e.apis import subproject_exist, subproject_get, subproject_delete
 
 
-def test_subproject(capsys, pargs):
+def test_subproject_does_not_exist(capsys, pargs):
     path, idtoken = pargs.sdpath, pargs.idtoken
     tenant,subproject = path.split("/")[2],path.split("/")[3]
     status, output = subproject_delete(tenant, subproject, idtoken)

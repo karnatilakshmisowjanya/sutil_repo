@@ -270,8 +270,6 @@ def test_sdutil_rm_dataset(capsys, pargs):
     verify_deletion1 = 1 if (dataset1_exist_status == 0) else 0
     dataset2_exist_status, dataset2_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_02, pargs.idtoken)
     verify_deletion2 = 1 if (dataset2_exist_status == 0) else 0
-    # remove the second dataset
-
     # checks
     errors = verify_conditions(sdutil_rm_dataset1 = str(sdutil_rm_dataset1_status) + ';' + sdutil_rm_dataset1_output,
                                 verify_dataset_deleted = str(verify_deletion1) + ';' + 'Dataset ds-0 still exist after sdutil rm operation',

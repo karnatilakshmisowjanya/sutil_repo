@@ -14,14 +14,12 @@
 # limitations under the License.
 
 import os
-import sys
-import io
 from glob import glob
 from sdlib.shared.config import Config
 
 import pytest
 
-from test.e2e.utils import set_args, run, e2e_test_dataset_prefix, e2e_test_dataset_01, e2e_test_dataset_02, e2e_test_dataset_fsize
+from test.e2e.utils import e2e_test_dataset_prefix, e2e_test_dataset_01, e2e_test_dataset_02, e2e_test_dataset_fsize
 
 
 def pytest_addoption(parser):
@@ -55,37 +53,26 @@ def setup(request, pytestconfig, pargs):
 
 def upload_seed_files(sdpath, pargs):
 
-    # upload test seistore dataset 01
+    # generate a file to test seistore dataset 01
     file_sdpath = "/".join([sdpath, e2e_test_dataset_01])
     generate_local_file(e2e_test_dataset_01)
-    # set_args("cp {local_file} {path} --idtoken={stoken}".format(local_file=e2e_test_dataset_01, path=file_sdpath, stoken=pargs.idtoken))
-    # run()
 
-    # upload test seistore dataset 02
+    # generate a file to test seistore dataset 02
     file_sdpath = "/".join([sdpath, e2e_test_dataset_02])
     generate_local_file(e2e_test_dataset_02)
-    # set_args("cp {local_file} {path} --idtoken={stoken}".format(local_file=e2e_test_dataset_02, path=file_sdpath, stoken=pargs.idtoken))
-    # run()
+
 
 def generate_local_file(name):
     with open(name, 'wb') as fout:
         fout.write(os.urandom(e2e_test_dataset_fsize[0]))
 
+
 def cleanup(sdpath, pargs):
-
-    # # delete test seistore dataset 01
-    # file_sdpath = "/".join([sdpath, e2e_test_dataset_01])
-    # set_args("rm {path} --idtoken={stoken}".format(path=file_sdpath, stoken=pargs.idtoken))
-    # run()
-
-    # # delete test seistore dataset 02
-    # file_sdpath = "/".join([sdpath, e2e_test_dataset_02])
-    # set_args("rm {path} --idtoken={stoken}".format(path=file_sdpath, stoken=pargs.idtoken))
-    # run()
 
     # delete local test files
     for filename in glob(e2e_test_dataset_prefix + "*"):
         os.remove(filename)
+
 
 class TestArgs:
     def __init__(self, stoken, sdpath, admin, legaltag, legaltag02, acl_admin, acl_viewer):
