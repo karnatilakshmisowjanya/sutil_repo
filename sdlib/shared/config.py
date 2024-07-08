@@ -31,7 +31,6 @@ class Config(object):
     __configuration = {}
     __user_configuration = {}
     __data_partition_id = None
-    __subproject_name = None
 
 
     @classmethod 
@@ -217,11 +216,3 @@ class Config(object):
     @classmethod
     def get_data_partition_id(cls):
         return cls.__data_partition_id
-    
-    @classmethod
-    def set_subproject_name(cls, subproject_name):
-        cls.__subproject_name = subproject_name
-
-    @classmethod
-    def get_subproject_name(cls):
-        return cls.__subproject_name
