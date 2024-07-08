@@ -122,7 +122,7 @@ echo "  default: null" >> sdlib/config.yaml
 
 # pytest fetches a stoken when a service account secret key is passed.
 pytest --forked -v --log-format="%(asctime)s %(levelname)s %(message)s" --log-date-format="%Y-%m-%d %H:%M:%S" --timeout=300 \
-    test/e2e --idtoken=${idtoken} --sdpath=sd://${tenant}/${subproject} --admin=${admin} --legaltag=${legaltag} --legaltag=${legaltag02} --acl_admin=${acl_admin} --acl_viewer=${acl_viewer}
+    test/e2e --idtoken=${idtoken} --sdpath=sd://${tenant}/${subproject} --admin=${admin} --legaltag=${legaltag} --legaltag02=${legaltag02} --acl_admin=${acl_admin} --acl_viewer=${acl_viewer}
 exit_status=$?
 
 # restore configuration and clear temporary files
