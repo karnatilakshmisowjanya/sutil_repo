@@ -72,8 +72,6 @@ def subproject_delete(tenant, subproject, stoken):
 
 def dataset_exist(tenant, subproject, dataset, stoken, path='/'):
     ENDPOINT_URL = Config.get_svc_url()
-    # TENANT = Config.get_data_partition_id()
-    # SUBPROJECT = Config.get_subproject_name()
     URL = ENDPOINT_URL + '/dataset/tenant/' + tenant + '/subproject/' + subproject + '/dataset/' + dataset
     headers = {'Authorization':"Bearer " + stoken,
                 'data-partition-id':tenant,
@@ -86,8 +84,6 @@ def dataset_exist(tenant, subproject, dataset, stoken, path='/'):
 
 def dataset_delete(tenant, subproject, dataset, stoken, path='/'):
     ENDPOINT_URL = Config.get_svc_url()
-    # TENANT = Config.get_data_partition_id()
-    # SUBPROJECT = Config.get_subproject_name()
     URL = ENDPOINT_URL + '/dataset/tenant/' + tenant + '/subproject/' + subproject + '/dataset/' + dataset
     headers = {'Authorization':"Bearer " + stoken,
                 'data-partition-id':tenant,
@@ -133,7 +129,7 @@ def dataset_lock(tenant, subproject, dataset, stoken, path='/', openmode='write'
     return response
 
 def utility_ls(sdpath, stoken, wmode='all'):
-    ENDPOINT_URL = 'https://evt.api.enterprisedata.cloud.slb-ds.com/seistore-svc/api/v3'
+    ENDPOINT_URL = Config.get_svc_url()
     URL = ENDPOINT_URL + '/utility/ls'
     headers = {'Authorization':"Bearer " + stoken,
                 'Content-Type':'application/json'
