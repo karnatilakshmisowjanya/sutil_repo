@@ -6,6 +6,7 @@ variables:
   E2E_TENANT: $MY_TENANT
   DOMAIN: ${DOMAIN}
   E2E_LEGALTAG: ${LEGAL_TAG}
+  E2E_LEGALTAG02: opendes-dps-integration-test-valid2-legal-tag
   AZURE_AD_VALID_OID_USER1: ${AZURE_AD_VALID_OID_USER1}
   ACL_OWNERS: ${ACL_OWNERS}  
   ACL_VIEWERS: ${ACL_VIEWERS}
