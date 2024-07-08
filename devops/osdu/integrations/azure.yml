@@ -109,4 +109,5 @@ sdutil-azure-integration-test:
   script:
     - pip3 install -r ./test/requirements.txt
     - chmod +x ./devops/scripts/run_regression_tests.sh
-    - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --legaltag="${E2E_LEGALTAG}" --legaltag02="${E2E_LEGALTAG02}" --admin="${AZURE_AD_VALID_OID_USER1}" --acl-admin="${ACL_OWNERS}@${E2E_TENANT}.${DOMAIN}" --acl-viewer="${ACL_VIEWERS}@${E2E_TENANT}.${DOMAIN}" --idtoken="$svctoken"
+    - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --legaltag="${E2E_LEGALTAG}" --legaltag02="${E2E_LEGALTAG02}" --admin="${AZURE_AD_VALID_OID_USER1}" --acl-admin="${ACL_OWNERS}@${E2E_TENANT}.${DOMAIN}" --acl-viewer="${ACL_VIEWERS}@${E2E_TENANT}.${DOMAIN}" --idtoken="$svctoken" > out.txt 2>&1
+    - cat out.txt
