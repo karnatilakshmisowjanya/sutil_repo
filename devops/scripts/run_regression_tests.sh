@@ -50,6 +50,10 @@ for i in "$@"; do
             legaltag="${i#*=}"
             shift
             ;;
+        --legaltag02=*) # required
+            legaltag02="${i#*=}"
+            shift
+            ;;
         --admin=*) # required
             admin="${i#*=}"
             shift
@@ -74,13 +78,14 @@ for i in "$@"; do
 done
 
 # required parameters
-if [[ -z "${service_url}" || -z "${service_env}" || -z "${idtoken}" || -z "${tenant}" || -z "${subproject}" || -z "${legaltag}" || -z "${admin}" || -z "${acl_admin}" || -z "${acl_viewer}" || -z "${provider}" ]]; then
+if [[ -z "${service_url}" || -z "${service_env}" || -z "${idtoken}" || -z "${tenant}" || -z "${subproject}" || -z "${legaltag}" || -z "${legaltag02}" || -z "${admin}" || -z "${acl_admin}" || -z "${acl_viewer}" || -z "${provider}" ]]; then
     echo "[usage] ./run_regression_tests.sh --cloud-provider= --service-url= --service-env= --tenant= --subproject= --legaltag= --admin= --idtoken="
     echo "service-url: ${service_url} \n" 
     echo "service-env: ${service_env} \n"
     echo "tenant: ${tenant} \n"
     echo "subproject: ${subproject} \n"
     echo "legaltag: ${legaltag} \n"
+    echo "legaltag02: ${legaltag02} \n"
     echo "admin: ${admin} \n"
     echo "acl-admin: ${acl_admin} \n"
     echo "acl-viewer: ${acl_viewer} \n"
@@ -116,8 +121,8 @@ echo "auth_provider:" >> sdlib/config.yaml
 echo "  default: null" >> sdlib/config.yaml
 
 # pytest fetches a stoken when a service account secret key is passed.
-pytest --log-format="%(asctime)s %(levelname)s %(message)s" --log-date-format="%Y-%m-%d %H:%M:%S" --timeout=300 --capture=fd \
-    test/e2e --idtoken=${idtoken} --sdpath=sd://${tenant}/${subproject} --admin=${admin} --legaltag=${legaltag} --acl_admin=${acl_admin} --acl_viewer=${acl_viewer}
+pytest --forked --log-format="%(asctime)s %(levelname)s %(message)s" --log-date-format="%Y-%m-%d %H:%M:%S" --timeout=300 --capture=fd \
+    test/e2e --idtoken=${idtoken} --sdpath=sd://${tenant}/${subproject} --admin=${admin} --legaltag=${legaltag} --legaltag=${legaltag02} --acl_admin=${acl_admin} --acl_viewer=${acl_viewer}
 exit_status=$?
 
 # restore configuration and clear temporary files
