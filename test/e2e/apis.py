@@ -49,6 +49,16 @@ def subproject_register(tenant, subproject, legaltag, stoken, **kwargs):
     time.sleep(30)
     return 0, response.content
 
+def subproject_get(tenant, subproject, stoken):
+    ENDPOINT_URL = Config.get_svc_url()
+    URL = ENDPOINT_URL + '/subproject/tenant/' + tenant + '/subproject/' + subproject
+    headers = {'Authorization':"Bearer " + stoken,
+                'data-partition-id':tenant,
+                'Content-Type':'application/json'
+    }
+    response = requests.get(url=URL, headers=headers, timeout=10)
+    return response
+
 def subproject_delete(tenant, subproject, stoken):
     ENDPOINT_URL = Config.get_svc_url()
     URL = ENDPOINT_URL + '/subproject/tenant/' + tenant + '/subproject/' + subproject
