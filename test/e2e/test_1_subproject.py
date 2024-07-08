@@ -55,17 +55,18 @@ def test_sdutil_patch_subproject(capsys, pargs):
     path = pargs.sdpath
     tenant,subproject = path.split("/")[2],path.split("/")[3]
     legaltag02 = pargs.legaltag02
-    set_args("patch {path} --ltag={ltag} --idtoken={stoken}".format(path=path, ltag=legaltag02, stoken=pargs.idtoken))
+    # set_args("patch {path} --ltag={ltag} --idtoken={stoken}".format(path=path, ltag=legaltag02, stoken=pargs.idtoken))
     command = "sdutil patch {path} --ltag={ltag} --idtoken=...".format(path=path, ltag=legaltag02)
-    sdutil_patch_status, sdutil_patch_output = run_command(capsys)
-    time.sleep(10)
-    response = subproject_get(tenant, subproject, pargs.idtoken)
-    subroject_meta = json.loads(response.content)
-    subproject_patch_status = 0 if subroject_meta['ltag'] == legaltag02 else 1
-    errors = verify_conditions( sdutil_patch_subproject = str(sdutil_patch_status) + ';' + sdutil_patch_output + '\nCommand: ' + command,
-                                subroject_get_after_sdutil_rm_subproject = str(subproject_patch_status) + ';' + 'Subproject was not patched after sdutil patch command\n' + 'ltag: ' + subroject_meta['ltag']
-                            )
-    assert not errors, "errors occured:\n{}".format("\n".join(errors))
+    assert not True, 'Command: ' + command
+    # sdutil_patch_status, sdutil_patch_output = run_command(capsys)
+    # time.sleep(10)
+    # response = subproject_get(tenant, subproject, pargs.idtoken)
+    # subroject_meta = json.loads(response.content)
+    # subproject_patch_status = 0 if subroject_meta['ltag'] == legaltag02 else 1
+    # errors = verify_conditions( sdutil_patch_subproject = str(sdutil_patch_status) + ';' + sdutil_patch_output + '\nCommand: ' + command,
+    #                             subroject_get_after_sdutil_rm_subproject = str(subproject_patch_status) + ';' + 'Subproject was not patched after sdutil patch command\n' + 'ltag: ' + subroject_meta['ltag']
+    #                         )
+    # assert not errors, "errors occured:\n{}".format("\n".join(errors))
 
 def test_sdutil_rm_subproject(capsys, pargs):
     path = pargs.sdpath

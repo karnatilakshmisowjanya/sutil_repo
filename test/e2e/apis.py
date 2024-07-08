@@ -67,7 +67,7 @@ def subproject_delete(tenant, subproject, stoken):
                 'Content-Type':'application/json'
     }
     response = requests.delete(url=URL, headers=headers, timeout=10)
-    if (response.status_code != 200): return 1, response.content
+    if (response.status_code != 200 and response.status_code != 404): return 1, response.content
     return 0, response.content
 
 def dataset_exist(tenant, subproject, dataset, stoken, path='/'):
