@@ -38,7 +38,7 @@ from test.e2e.utils import run_command, set_args, verify_conditions, e2e_test_da
 from test.e2e.apis import *
 
 
-def test_subproject_for_cp(capsys, pargs) :
+def test_subproject_for_cp(capsys, pargs):
     # check subproject exists or create it
     path = pargs.sdpath
     tenant,subproject = path.split("/")[2],path.split("/")[3]
