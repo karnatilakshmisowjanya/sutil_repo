@@ -99,7 +99,7 @@ sdutil-azure-integration-test-supported:
     - compile-and-unit-test-supported
   before_script:
     - pip install msal
-    - export svctoken=$(python3 ${CI_PROJECT_DIR}/devops/scripts/azure_jwt_client.py)
+    - export svctoken=$(python ${CI_PROJECT_DIR}/devops/scripts/azure_jwt_client.py)
   script:
     - pip install -r ./test/requirements.txt
     - chmod +x ./devops/scripts/run_regression_tests.sh
@@ -114,7 +114,7 @@ sdutil-azure-integration-test:
     - compile-and-unit-test
   before_script:
     - pip install msal
-    - export svctoken=$(python3 ${CI_PROJECT_DIR}/devops/scripts/azure_jwt_client.py)
+    - export svctoken=$(python ${CI_PROJECT_DIR}/devops/scripts/azure_jwt_client.py)
   script:
     - pip install -r ./test/requirements.txt
     - chmod +x ./devops/scripts/run_regression_tests.sh
