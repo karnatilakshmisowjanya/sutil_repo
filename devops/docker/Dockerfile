@@ -14,7 +14,7 @@ RUN echo $PACKAGE_VERSION > .version
 RUN cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py .version dist
 RUN ls dist
 RUN chmod +x ./devops/scripts/run_regression_tests.sh
-
+RUN ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --idtoken="$svctoken"
 
 FROM python:3.10 as release
 WORKDIR /app
