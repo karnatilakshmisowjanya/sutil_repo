@@ -90,7 +90,7 @@ azure-publish:
       when: never
 
 
-sdutil-azure-integration-test-3-10:
+sdutil-azure-integration-test-supported:
   stage: integration
   image: python:3.10
   extends:
