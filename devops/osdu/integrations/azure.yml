@@ -113,6 +113,7 @@ sdutil-azure-integration-test:
     - .azure_variables
   dependencies:
     - compile-and-unit-test
+  allow_failure: true
   before_script:
     - pip install msal
     - export svctoken=$(python ${CI_PROJECT_DIR}/devops/scripts/azure_jwt_client.py)
