@@ -101,6 +101,7 @@ sdutil-azure-integration-test-supported:
     - pip install msal
     - export svctoken=$(python ${CI_PROJECT_DIR}/devops/scripts/azure_jwt_client.py)
   script:
+    - pip install -r requirements.txt
     - pip install -r ./test/requirements.txt
     - chmod +x ./devops/scripts/run_regression_tests.sh
     - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --idtoken="$svctoken"
@@ -116,6 +117,7 @@ sdutil-azure-integration-test:
     - pip install msal
     - export svctoken=$(python ${CI_PROJECT_DIR}/devops/scripts/azure_jwt_client.py)
   script:
+    - pip install -r requirements.txt
     - pip install -r ./test/requirements.txt
     - chmod +x ./devops/scripts/run_regression_tests.sh
     - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --idtoken="$svctoken"
