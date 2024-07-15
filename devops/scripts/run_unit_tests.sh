@@ -49,12 +49,12 @@ rm -rf .coverage coverage coverage.xml TEST-*
 # run unit test only
 # pytest test/utest
 # run unit test and generate coverage
-coverage run --branch --omit="*/*__init__.py" --source=sdlib -m xmlrunner discover -v -s test/utest/ -p "test_*.py"
+python -m coverage run --branch --omit="*/*__init__.py" --source=sdlib -m xmlrunner discover -v -s test/utest/ -p "test_*.py"
 exit_status=$?
 
 # generate coverage report
-coverage html -d coverage
-coverage xml -o coverage/coverage.xml
+python -m coverage html -d coverage
+python -m coverage xml -o coverage/coverage.xml
 
 # chnage directory permission
 chmod -R 777 coverage
