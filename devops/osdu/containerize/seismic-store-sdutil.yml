@@ -6,7 +6,7 @@ sdutil_containerize:
   stage: containerize
   needs: []
   variables:
-    SDUTIL_IMAGE: "seismic-store-sdutil-3-10"
+    SDUTIL_IMAGE: "seismic-store-sdutil"
     SHA_IMAGE: ${SDUTIL_IMAGE}:${CI_COMMIT_SHA}
     LATEST_IMAGE: ${SDUTIL_IMAGE}:latest
   before_script:
