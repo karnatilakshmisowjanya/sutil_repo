@@ -1,4 +1,4 @@
-compile-and-unit-test-3-10:
+compile-and-unit-test-supported:
     stage: build
     image: python:3.10
     script:

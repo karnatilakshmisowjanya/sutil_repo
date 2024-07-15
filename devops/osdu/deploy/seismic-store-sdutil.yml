@@ -2,7 +2,7 @@ osdu-package:
   stage: deploy
   image: ubuntu
   dependencies:
-    - compile-and-unit-test-3-10
+    - compile-and-unit-test-supported
   script:
     - apt-get update
     - apt-get install curl -y
