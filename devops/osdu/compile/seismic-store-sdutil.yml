@@ -3,6 +3,7 @@ compile-and-unit-test:
     image: python:3.10
     script:
         - pip install -r requirements.txt
+        - pip install coverage
         - chmod +x devops/scripts/run_unit_tests.sh
         - ./devops/scripts/run_unit_tests.sh
         - mkdir -p dist
