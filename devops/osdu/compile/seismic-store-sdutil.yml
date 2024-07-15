@@ -25,13 +25,13 @@ compile-and-unit-test:
     allow_failure: true
     script:
         - pip freeze > all-requirements.txt
+        - mkdir -p dist
+        - rm -rf dist/*
         - pip install -r requirements.txt
         - cat all-requirements.txt
         - pip install -r test/requirements.txt
         - chmod +x devops/scripts/run_unit_tests.sh
         - ./devops/scripts/run_unit_tests.sh
-        - mkdir -p dist
-        - rm -rf dist/*
         - version_major=3
         - version_minor=0
         - PACKAGE_VERSION=${version_major}.${version_minor}.$CI_PIPELINE_IID
@@ -39,6 +39,7 @@ compile-and-unit-test:
         - cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py .version dist
         - ls dist
     artifacts:
+        when: always
         name: sdutil
         paths:
         - dist/
