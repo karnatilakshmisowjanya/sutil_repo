@@ -1,4 +1,4 @@
-compile-and-unit-test:
+compile-and-unit-test-3-10:
     stage: build
     image: python:3.10
     script:
@@ -21,8 +21,32 @@ compile-and-unit-test:
         paths:
         - dist/
         - all-requirements.txt
-        
-    
+
+compile-and-unit-test:
+    stage: build
+    image: python
+    allowFailure: true
+    script:
+        - pip install -r requirements.txt
+        - pip install -r test/requirements.txt
+        - chmod +x devops/scripts/run_unit_tests.sh
+        - ./devops/scripts/run_unit_tests.sh
+        - mkdir -p dist
+        - rm -rf dist/*
+        - version_major=3
+        - version_minor=0
+        - PACKAGE_VERSION=${version_major}.${version_minor}.$CI_PIPELINE_IID
+        - echo $PACKAGE_VERSION > .version
+        - cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py .version dist
+        - ls dist
+        - pip freeze > all-requirements.txt
+        - cat all-requirements.txt
+    artifacts:
+        name: sdutil
+        paths:
+        - dist/
+        - all-requirements.txt
+
 clean-package:
   stage: build
   image: ubuntu
