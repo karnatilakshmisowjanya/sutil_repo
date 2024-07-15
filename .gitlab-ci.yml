@@ -8,6 +8,9 @@ include:
   - local: "/devops/osdu/compile/seismic-store-sdutil.yml"
 
   # containerize
+  - local: "/devops/osdu/containerize/seismic-store-sdutil.yml"
+
+  # gemnasium
   - local: "/devops/osdu/containerize/gemnasium.yml"
 
   # scan
