@@ -96,7 +96,7 @@ sdutil-azure-integration-test-3-10:
   extends:
     - .azure_variables
   dependencies:
-    - compile-and-unit-test-3-10
+    - compile-and-unit-test-supported
   before_script:
     - pip install msal
     - export svctoken=$(python3 ${CI_PROJECT_DIR}/devops/scripts/azure_jwt_client.py)
