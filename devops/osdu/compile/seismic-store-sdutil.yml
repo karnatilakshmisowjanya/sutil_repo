@@ -14,20 +14,20 @@ compile-and-unit-test-3-10:
         - echo $PACKAGE_VERSION > .version
         - cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py .version dist
         - ls dist
-        - pip freeze > all-requirements.txt
-        - cat all-requirements.txt
     artifacts:
         name: sdutil
         paths:
         - dist/
-        - all-requirements.txt
 
 compile-and-unit-test:
     stage: build
     image: python
     allow_failure: true
     script:
+        - cp requirements.txt all-requirements.txt
         - pip install -r requirements.txt
+        - pip freeze > all-requirements.txt
+        - cat all-requirements.txt
         - pip install -r test/requirements.txt
         - chmod +x devops/scripts/run_unit_tests.sh
         - ./devops/scripts/run_unit_tests.sh
@@ -39,8 +39,6 @@ compile-and-unit-test:
         - echo $PACKAGE_VERSION > .version
         - cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py .version dist
         - ls dist
-        - pip freeze > all-requirements.txt
-        - cat all-requirements.txt
     artifacts:
         name: sdutil
         paths:
