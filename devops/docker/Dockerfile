@@ -1,10 +1,12 @@
+ARG python_version=latest
+
+FROM python:${python_version} as development
 ARG arg_run_tests=false
 ARG arg_E2E_HOSTNAME=localhost
 ARG arg_SDMS_PREFIX="/seistore-svc/api/v3"
 ARG arg_E2E_TENANT=mytenant
 ARG arg_E2E_SUBPROJECT=mysubproject
 ARG arg_svctoken
-ARG arg_python_version=latest
 
 ENV run_tests=${arg_run_tests}
 ENV E2E_HOSTNAME=${arg_E2E_HOSTNAME}
@@ -12,9 +14,7 @@ ENV SDMS_PREFIX=${arg_SDMS_PREFIX}
 ENV E2E_TENANT=${arg_E2E_TENANT}
 ENV E2E_SUBPROJECT=${arg_E2E_SUBPROJECT}
 ENV svctoken=${arg_svctoken}
-ENV python_version=${arg_python_version}
 
-FROM python:${python_version} as development
 WORKDIR /app
 COPY . .
 RUN pip install -r requirements.txt
