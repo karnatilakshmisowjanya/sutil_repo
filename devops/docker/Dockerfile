@@ -53,5 +53,4 @@ RUN if [ "${run_tests}" != "false" ]; then \
 FROM python:3.10 as release
 WORKDIR /app
 COPY --from=development /app/dist /app
-RUN ls
 ENTRYPOINT ["/bin/bash"]
