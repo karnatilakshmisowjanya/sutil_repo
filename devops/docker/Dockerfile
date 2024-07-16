@@ -24,7 +24,7 @@ RUN cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py .vers
 RUN if [ "${run_tests}" != "false" ]; then \
     pip install -r test/requirements.txt \
     chmod +x ./devops/scripts/run_regression_tests.sh \
-    ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --idtoken="${svctoken}"
+    ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --idtoken="${svctoken}" \
   fi
 
 FROM python:3.10 as release
