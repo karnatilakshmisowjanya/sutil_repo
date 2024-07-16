@@ -1,20 +1,26 @@
+ARG run_tests=false
+
 FROM python:3.10 as development
 WORKDIR /app
 COPY . .
 RUN pip install -r requirements.txt
-RUN pip install -r test/requirements.txt
-RUN chmod +x devops/scripts/run_unit_tests.sh
-RUN ./devops/scripts/run_unit_tests.sh
-RUN mkdir -p dist
-RUN rm -rf dist/*
-RUN version_major=3
-RUN version_minor=0
-RUN PACKAGE_VERSION=${version_major}.${version_minor}.$CI_PIPELINE_IID
-RUN echo $PACKAGE_VERSION > .version
+RUN if [ "${run_tests}" != "false" ]; then \
+    pip install -r test/requirements.txt \
+    chmod +x devops/scripts/run_unit_tests.sh \
+    ./devops/scripts/run_unit_tests.sh \
+  fi
+RUN mkdir -p dist \
+  rm -rf dist/*
+RUN version_major=3 \
+  version_minor=0 \
+  PACKAGE_VERSION=${version_major}.${version_minor}.$CI_PIPELINE_IID \
+  echo $PACKAGE_VERSION > .version
 RUN cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py .version dist
-RUN ls dist
-RUN chmod +x ./devops/scripts/run_regression_tests.sh
-RUN ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --idtoken="$svctoken"
+RUN if [ "${run_tests}" != "false" ]; then \
+    pip install -r test/requirements.txt \
+    chmod +x ./devops/scripts/run_regression_tests.sh \
+    ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --idtoken="$svctoken"
+  fi
 
 FROM python:3.10 as release
 WORKDIR /app
