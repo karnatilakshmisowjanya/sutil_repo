@@ -44,7 +44,7 @@ RUN if [ "${run_tests}" != "false" ]; then \
     echo "tenant: ${E2E_TENANT}"; \
     echo "subproject: ${E2E_SUBPROJECT}"; \
     pip install msal; \
-    export svctoken=$(python ${CI_PROJECT_DIR}/devops/scripts/azure_jwt_client.py); \
+    export svctoken=$(python /devops/scripts/azure_jwt_client.py); \
     chmod +x ./devops/scripts/run_regression_tests.sh; \
     ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --idtoken=${svctoken}; \
   fi
