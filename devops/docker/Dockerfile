@@ -25,10 +25,10 @@ RUN version_major=3; \
   echo $PACKAGE_VERSION > .version
 RUN cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py .version dist
 RUN if [ "${run_tests}" != "false" ]; then \
-    echo ${E2E_HOSTNAME}; \
-    echo ${SDMS_PREFIX}; \
-    echo ${E2E_TENANT}; \
-    echo ${E2E_SUBPROJECT}; \
+    echo "host: ${E2E_HOSTNAME}"; \
+    echo "sdms prefix: ${SDMS_PREFIX}"; \
+    echo "tenant: ${E2E_TENANT}"; \
+    echo "subproject: ${E2E_SUBPROJECT}"; \
     chmod +x ./devops/scripts/run_regression_tests.sh; \
     ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --idtoken="${svctoken}"; \
   fi
