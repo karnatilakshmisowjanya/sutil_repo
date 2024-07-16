@@ -3,7 +3,7 @@ ARG E2E_HOSTNAME=localhost
 ARG SDMS_PREFIX="/seistore-svc/api/v3"
 ARG E2E_TENANT=mytenant
 ARG E2E_SUBPROJECT=mysubproject
-ARG svctoken=mytoken
+ARG svctoken
 
 FROM python:3.10 as development
 WORKDIR /app
