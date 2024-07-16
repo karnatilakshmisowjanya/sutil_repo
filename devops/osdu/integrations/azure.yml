@@ -95,7 +95,7 @@ sdutil-azure-integration-test-supported:
   image: python:3.10
   extends:
     - .azure_variables
-  dependencies:
+  needs:
     - compile-and-unit-test-supported
   before_script:
     - pip install msal
@@ -111,7 +111,7 @@ sdutil-azure-integration-test:
   image: python
   extends:
     - .azure_variables
-  dependencies:
+  needs:
     - compile-and-unit-test
   allow_failure: true
   before_script:
