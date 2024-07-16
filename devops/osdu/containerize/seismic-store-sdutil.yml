@@ -31,3 +31,15 @@ sdutil_containerize_supported:
       if [ "${CI_COMMIT_BRANCH}" == "${CI_DEFAULT_BRANCH}" ]; then
         docker push ${CI_REGISTRY_IMAGE}/$LATEST_IMAGE
       fi
+
+sdutil_containerize:
+  extends:
+    - .sdutil_containerize
+  allow_failure: true
+  script:
+    - docker build --build-arg arg_run_tests=true --build-arg arg_E2E_HOSTNAME="${E2E_HOSTNAME}" --build-arg arg_SDMS_PREFIX="${SDMS_PREFIX}" --build-arg arg_E2E_TENANT="${MY_TENANT}" --build-arg arg_E2E_SUBPROJECT="${E2E_SUBPROJECT}" --build-arg arg_AZURE_TENANT_ID="${AZURE_TENANT_ID}" --build-arg arg_AZURE_AD_APP_RESOURCE_ID="${AZURE_AD_APP_RESOURCE_ID}" --build-arg arg_INTEGRATION_TESTER="${INTEGRATION_TESTER}" --build-arg arg_AZURE_TESTER_SERVICEPRINCIPAL_SECRET="${AZURE_TESTER_SERVICEPRINCIPAL_SECRET}" -t ${CI_REGISTRY_IMAGE}/$SHA_IMAGE -f devops/docker/Dockerfile .
+    - docker push ${CI_REGISTRY_IMAGE}/$SHA_IMAGE
+    - |
+      if [ "${CI_COMMIT_BRANCH}" == "${CI_DEFAULT_BRANCH}" ]; then
+        docker push ${CI_REGISTRY_IMAGE}/$LATEST_IMAGE
+      fi

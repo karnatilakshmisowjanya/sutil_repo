@@ -114,6 +114,7 @@ sdutil-azure-integration-test:
     - .azure_variables
   needs:
     - compile-and-unit-test
+    - sdutil_containerize
   allow_failure: true
   before_script:
     - pip install msal
