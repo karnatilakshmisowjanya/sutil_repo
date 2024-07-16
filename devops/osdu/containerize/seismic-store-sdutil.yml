@@ -11,6 +11,8 @@ sdutil_containerize:
   services:
     - docker:19.03.12-dind
   stage: containerize
+  extends:
+    - .azure_variables
   needs: []
   variables:
     SDUTIL_IMAGE: "seismic-store-sdutil"
@@ -19,7 +21,7 @@ sdutil_containerize:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker build --build-arg python_version="3.10" --build-arg arg_run_tests=true --build-arg arg_E2E_HOSTNAME="${E2E_HOSTNAME}" --build-arg arg_SDMS_PREFIX="${SDMS_PREFIX}" --build-arg arg_E2E_TENANT="${E2E_TENANT}" --build-arg arg_E2E_SUBPROJECT="${E2E_SUBPROJECT}" --build-arg arg_svctoken="${svctoken}" -t ${CI_REGISTRY_IMAGE}/$SHA_IMAGE -f devops/docker/Dockerfile .
+    - docker build --build-arg python_version="3.10" --build-arg arg_run_tests=true --build-arg arg_E2E_HOSTNAME="${E2E_HOSTNAME}" --build-arg arg_SDMS_PREFIX="${SDMS_PREFIX}" --build-arg arg_E2E_TENANT="${MY_TENANT}" --build-arg arg_E2E_SUBPROJECT="${E2E_SUBPROJECT}" --build-arg arg_svctoken="${svctoken}" -t ${CI_REGISTRY_IMAGE}/$SHA_IMAGE -f devops/docker/Dockerfile .
     - docker push ${CI_REGISTRY_IMAGE}/$SHA_IMAGE
     - |
       if [ "${CI_COMMIT_BRANCH}" == "${CI_DEFAULT_BRANCH}" ]; then
