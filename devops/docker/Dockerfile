@@ -14,7 +14,7 @@ RUN if [ "${run_tests}" != "false" ]; then \
     chmod +x devops/scripts/run_unit_tests.sh; \
     ./devops/scripts/run_unit_tests.sh; \
   fi
-RUN mkdir -p dist \
+RUN mkdir -p dist; \
   rm -rf dist/*
 RUN version_major=3; \
   version_minor=0; \
