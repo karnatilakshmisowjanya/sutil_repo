@@ -46,6 +46,26 @@ for i in "$@"; do
             subproject="${i#*=}"
             shift
             ;;
+        --legaltag=*) # required
+            legaltag="${i#*=}"
+            shift
+            ;;
+        --legaltag02=*) # required
+            legaltag02="${i#*=}"
+            shift
+            ;;
+        --admin=*) # required
+            admin="${i#*=}"
+            shift
+            ;;
+        --acl-admin=*) # required
+            acl_admin="${i#*=}"
+            shift
+            ;;
+        --acl-viewer=*) # required
+            acl_viewer="${i#*=}"
+            shift
+            ;;
         --disable-ssl-verify)
             ssl_verify="true"
             shift
@@ -58,8 +78,18 @@ for i in "$@"; do
 done
 
 # required parameters
-if [[ -z "${service_url}" || -z "${service_env}" || -z "${idtoken}" || -z "${tenant}" || -z "${subproject}" || -z "${provider}" ]]; then
-    echo "[usage] ./run_regression_tests.sh --cloud-provider= --service-url= --service-env= --tenant= --subproject= --idtoken="
+if [[ -z "${service_url}" || -z "${service_env}" || -z "${idtoken}" || -z "${tenant}" || -z "${subproject}" || -z "${legaltag}" || -z "${legaltag02}" || -z "${admin}" || -z "${acl_admin}" || -z "${acl_viewer}" || -z "${provider}" ]]; then
+    echo "[usage] ./run_regression_tests.sh --cloud-provider= --service-url= --service-env= --tenant= --subproject= --legaltag= --admin= --idtoken="
+    echo "service-url: ${service_url} \n" 
+    echo "service-env: ${service_env} \n"
+    echo "tenant: ${tenant} \n"
+    echo "subproject: ${subproject} \n"
+    echo "legaltag: ${legaltag} \n"
+    echo "legaltag02: ${legaltag02} \n"
+    echo "admin: ${admin} \n"
+    echo "acl-admin: ${acl_admin} \n"
+    echo "acl-viewer: ${acl_viewer} \n"
+    if [[ -z "${idtoken}" ]]; then echo "idtoken is not provided"; fi
     exit 1
 fi
 
@@ -91,7 +121,8 @@ echo "auth_provider:" >> sdlib/config.yaml
 echo "  default: null" >> sdlib/config.yaml
 
 # pytest fetches a stoken when a service account secret key is passed.
-pytest test/e2e --idtoken=${idtoken} --sdpath=sd://${tenant}/${subproject} --timeout=300 --capture=fd
+pytest --forked -v --log-format="%(asctime)s %(levelname)s %(message)s" --log-date-format="%Y-%m-%d %H:%M:%S" --timeout=300 \
+    test/e2e --idtoken=${idtoken} --sdpath=sd://${tenant}/${subproject} --admin=${admin} --legaltag=${legaltag} --legaltag02=${legaltag02} --acl_admin=${acl_admin} --acl_viewer=${acl_viewer}
 exit_status=$?
 
 # restore configuration and clear temporary files
