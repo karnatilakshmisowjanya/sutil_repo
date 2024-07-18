@@ -52,14 +52,18 @@ RUN version_major=3; \
   echo $PACKAGE_VERSION > .version
 RUN cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py .version dist
 RUN if [ "${run_integration_tests}" != "false" ]; then \
+    pip install msal; \
+    export svctoken=$(python ./devops/scripts/azure_jwt_client.py); \
+    chmod +x ./devops/scripts/run_regression_tests.sh; \
     echo "host: ${E2E_HOSTNAME}"; \
     echo "sdms prefix: ${SDMS_PREFIX}"; \
     echo "tenant: ${E2E_TENANT}"; \
     echo "subproject: ${E2E_SUBPROJECT}"; \
-    pip install msal; \
-    ls; \
-    export svctoken=$(python ./devops/scripts/azure_jwt_client.py); \
-    chmod +x ./devops/scripts/run_regression_tests.sh; \
+    echo "legaltag: ${E2E_LEGALTAG}"; \
+    echo "legaltag02: ${E2E_LEGALTAG02}"; \
+    echo "admin: ${AZURE_AD_VALID_OID_USER1}"; \
+    echo "acl owners: ${ACL_OWNERS}"; \
+    echo "acl viewers: ${ACL_VIEWERS}"; \
     ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --legaltag="${E2E_LEGALTAG}" --legaltag02="${E2E_LEGALTAG02}" --admin="${AZURE_AD_VALID_OID_USER1}" --acl-admin="${ACL_OWNERS}" --acl-viewer="${ACL_VIEWERS}" --idtoken=${svctoken}; \
   fi
 
