@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright 2017-2019, Schlumberger
+# Copyright 2017-2024, Schlumberger
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -34,6 +34,13 @@ def set_args(args):
     sys.argv = args.split(' ')
     sys.argv.insert(0, "sdutil")
 
-
 def check_string(text, string):
     return text.find(string) != -1
+
+def verify_conditions(**kwargs):
+    errors = []
+    for test, result in kwargs.items():
+        result, output = str(result).split(';')[0], str(result).split(';')[1]
+        if int(result):
+            errors.append(test.replace('_', ' ') + " test fails. \n The reason: " + output)
+    return errors
