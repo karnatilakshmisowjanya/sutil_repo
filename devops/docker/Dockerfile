@@ -55,4 +55,5 @@ RUN if [ "${run_integration_tests}" != "false" ]; then \
 FROM python:3.10 as release
 WORKDIR /app
 COPY --from=development /app/dist /app
+RUN pip install -r requirements.txt
 ENTRYPOINT ["/bin/bash"]
