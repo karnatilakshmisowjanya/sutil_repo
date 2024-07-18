@@ -1,7 +1,8 @@
 ARG python_version=latest
 
 FROM python:${python_version} as development
-ARG arg_run_tests=false
+ARG arg_run_unit_tests=false
+ARG arg_run_integration_tests=false
 ARG arg_E2E_HOSTNAME=localhost
 ARG arg_SDMS_PREFIX="/seistore-svc/api/v3"
 ARG arg_E2E_TENANT=mytenant
@@ -11,7 +12,8 @@ ARG arg_AZURE_AD_APP_RESOURCE_ID
 ARG arg_INTEGRATION_TESTER
 ARG arg_AZURE_TESTER_SERVICEPRINCIPAL_SECRET
 
-ENV run_tests=${arg_run_tests}
+ENV run_unit_tests=${arg_run_unit_tests}
+ENV run_integration_tests=${arg_run_integration_tests}
 ENV E2E_HOSTNAME=${arg_E2E_HOSTNAME}
 ENV SDMS_PREFIX=${arg_SDMS_PREFIX}
 ENV E2E_TENANT=${arg_E2E_TENANT}
@@ -24,10 +26,10 @@ ENV AZURE_TESTER_SERVICEPRINCIPAL_SECRET=${arg_AZURE_TESTER_SERVICEPRINCIPAL_SEC
 WORKDIR /app
 COPY . .
 RUN pip install -r requirements.txt
-RUN if [ "${run_tests}" != "false" ]; then \
+RUN if [ "${run_unit_tests}" != "false" ] || [ "${run_integration_tests}" != "false" ]; then \
     pip install -r test/requirements.txt; \
   fi
-RUN if [ "${run_tests}" != "false" ]; then \
+RUN if [ "${run_unit_tests}" != "false" ]; then \
     chmod +x devops/scripts/run_unit_tests.sh; \
     ./devops/scripts/run_unit_tests.sh; \
   fi
@@ -38,7 +40,7 @@ RUN version_major=3; \
   PACKAGE_VERSION=${version_major}.${version_minor}.$CI_PIPELINE_IID; \
   echo $PACKAGE_VERSION > .version
 RUN cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py .version dist
-RUN if [ "${run_tests}" != "false" ]; then \
+RUN if [ "${run_integration_tests}" != "false" ]; then \
     echo "host: ${E2E_HOSTNAME}"; \
     echo "sdms prefix: ${SDMS_PREFIX}"; \
     echo "tenant: ${E2E_TENANT}"; \
