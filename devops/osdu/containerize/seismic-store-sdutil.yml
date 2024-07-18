@@ -21,7 +21,7 @@ variables:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-sdutil_containerize_supported:
+sdutil_containerize:
   extends:
     - .sdutil_containerize
   script:
@@ -32,7 +32,7 @@ sdutil_containerize_supported:
         docker push ${CI_REGISTRY_IMAGE}/$LATEST_IMAGE
       fi
 
-sdutil_containerize:
+sdutil_containerize_latest:
   extends:
     - .sdutil_containerize
   allow_failure: true
