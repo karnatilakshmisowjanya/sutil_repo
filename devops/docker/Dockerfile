@@ -7,6 +7,11 @@ ARG arg_E2E_HOSTNAME=localhost
 ARG arg_SDMS_PREFIX="/seistore-svc/api/v3"
 ARG arg_E2E_TENANT=mytenant
 ARG arg_E2E_SUBPROJECT=mysubproject
+ARG arg_E2E_LEGALTAG
+ARG arg_E2E_LEGALTAG02
+ARG arg_AZURE_AD_VALID_OID_USER1
+ARG arg_ACL_OWNERS
+ARG arg_ACL_VIEWERS
 ARG arg_AZURE_TENANT_ID
 ARG arg_AZURE_AD_APP_RESOURCE_ID
 ARG arg_INTEGRATION_TESTER
@@ -18,6 +23,11 @@ ENV E2E_HOSTNAME=${arg_E2E_HOSTNAME}
 ENV SDMS_PREFIX=${arg_SDMS_PREFIX}
 ENV E2E_TENANT=${arg_E2E_TENANT}
 ENV E2E_SUBPROJECT=${arg_E2E_SUBPROJECT}
+ENV E2E_LEGALTAG: ${arg_E2E_LEGALTAG}
+ENV E2E_LEGALTAG02: ${arg_E2E_LEGALTAG02}
+ENV AZURE_AD_VALID_OID_USER1: ${arg_AZURE_AD_VALID_OID_USER1}
+ENV ACL_OWNERS: ${arg_ACL_OWNERS}  
+ENV ACL_VIEWERS: ${arg_ACL_VIEWERS}
 ENV AZURE_TENANT_ID=${arg_AZURE_TENANT_ID}
 ENV AZURE_AD_APP_RESOURCE_ID=${arg_AZURE_AD_APP_RESOURCE_ID}
 ENV INTEGRATION_TESTER=${arg_INTEGRATION_TESTER}
@@ -49,7 +59,7 @@ RUN if [ "${run_integration_tests}" != "false" ]; then \
     ls; \
     export svctoken=$(python ./devops/scripts/azure_jwt_client.py); \
     chmod +x ./devops/scripts/run_regression_tests.sh; \
-    ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --idtoken=${svctoken}; \
+    ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --legaltag="${E2E_LEGALTAG}" --legaltag02="${E2E_LEGALTAG02}" --admin="${AZURE_AD_VALID_OID_USER1}" --acl-admin="${ACL_OWNERS}@${E2E_TENANT}.${DOMAIN}" --acl-viewer="${ACL_VIEWERS}@${E2E_TENANT}.${DOMAIN}" --idtoken=${svctoken}; \
   fi
 
 FROM python:3.10 as release

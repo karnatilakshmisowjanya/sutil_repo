@@ -3,7 +3,11 @@ variables:
   E2E_HOSTNAME: ${AZURE_DNS_NAME}
   SDMS_PREFIX: /seistore-svc/api/v3
   E2E_SUBPROJECT: demosandbox08
-  E2E_TENANT: $MY_TENANT
+  E2E_LEGALTAG: ${LEGAL_TAG}
+  E2E_LEGALTAG02: opendes-dps-integration-test-valid2-legal-tag
+  AZURE_AD_VALID_OID_USER1: ${AZURE_AD_VALID_OID_USER1}
+  ACL_OWNERS: ${ACL_OWNERS}  
+  ACL_VIEWERS: ${ACL_VIEWERS}
 
 .sdutil_containerize:
   tags: ["osdu-medium"]
@@ -25,7 +29,7 @@ sdutil_containerize:
   extends:
     - .sdutil_containerize
   script:
-    - docker build --build-arg python_version="3.10" --build-arg arg_run_unit_tests=true --build-arg arg_run_integration_tests=true --build-arg arg_E2E_HOSTNAME="${E2E_HOSTNAME}" --build-arg arg_SDMS_PREFIX="${SDMS_PREFIX}" --build-arg arg_E2E_TENANT="${MY_TENANT}" --build-arg arg_E2E_SUBPROJECT="${E2E_SUBPROJECT}" --build-arg arg_AZURE_TENANT_ID="${AZURE_TENANT_ID}" --build-arg arg_AZURE_AD_APP_RESOURCE_ID="${AZURE_AD_APP_RESOURCE_ID}" --build-arg arg_INTEGRATION_TESTER="${INTEGRATION_TESTER}" --build-arg arg_AZURE_TESTER_SERVICEPRINCIPAL_SECRET="${AZURE_TESTER_SERVICEPRINCIPAL_SECRET}" -t ${CI_REGISTRY_IMAGE}/$SHA_IMAGE -f devops/docker/Dockerfile .
+    - docker build --build-arg python_version="3.10" --build-arg arg_run_unit_tests=true --build-arg arg_run_integration_tests=true --build-arg arg_E2E_HOSTNAME="${E2E_HOSTNAME}" --build-arg arg_SDMS_PREFIX="${SDMS_PREFIX}" --build-arg arg_E2E_TENANT="${MY_TENANT}" --build-arg arg_E2E_SUBPROJECT="${E2E_SUBPROJECT}-sdutil" --build-arg arg_legaltag="${E2E_LEGALTAG}" --build-arg arg_legaltag02="${E2E_LEGALTAG02}" --build-arg arg_admin="${AZURE_AD_VALID_OID_USER1}" --build-arg arg_acl-admin="${ACL_OWNERS}@${E2E_TENANT}.${DOMAIN}" --build-arg arg_acl-viewer="${ACL_VIEWERS}@${E2E_TENANT}.${DOMAIN}"  --build-arg arg_AZURE_TENANT_ID="${AZURE_TENANT_ID}" --build-arg arg_AZURE_AD_APP_RESOURCE_ID="${AZURE_AD_APP_RESOURCE_ID}" --build-arg arg_INTEGRATION_TESTER="${INTEGRATION_TESTER}" --build-arg arg_AZURE_TESTER_SERVICEPRINCIPAL_SECRET="${AZURE_TESTER_SERVICEPRINCIPAL_SECRET}" -t ${CI_REGISTRY_IMAGE}/$SHA_IMAGE -f devops/docker/Dockerfile .
     - docker push ${CI_REGISTRY_IMAGE}/$SHA_IMAGE
     - |
       if [ "${CI_COMMIT_BRANCH}" == "${CI_DEFAULT_BRANCH}" ]; then
