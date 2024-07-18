@@ -59,7 +59,7 @@ RUN if [ "${run_integration_tests}" != "false" ]; then \
     ls; \
     export svctoken=$(python ./devops/scripts/azure_jwt_client.py); \
     chmod +x ./devops/scripts/run_regression_tests.sh; \
-    ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --legaltag="${E2E_LEGALTAG}" --legaltag02="${E2E_LEGALTAG02}" --admin="${AZURE_AD_VALID_OID_USER1}" --acl-admin="${ACL_OWNERS}@${E2E_TENANT}.${DOMAIN}" --acl-viewer="${ACL_VIEWERS}@${E2E_TENANT}.${DOMAIN}" --idtoken=${svctoken}; \
+    ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --legaltag="${E2E_LEGALTAG}" --legaltag02="${E2E_LEGALTAG02}" --admin="${AZURE_AD_VALID_OID_USER1}" --acl-admin="${ACL_OWNERS}" --acl-viewer="${ACL_VIEWERS}" --idtoken=${svctoken}; \
   fi
 
 FROM python:3.10 as release
