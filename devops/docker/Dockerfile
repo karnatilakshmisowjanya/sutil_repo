@@ -1,6 +1,7 @@
 ARG python_version=latest
 
 FROM python:${python_version} as development
+
 ARG arg_run_unit_tests=false
 ARG arg_run_integration_tests=false
 ARG arg_E2E_HOSTNAME=localhost
