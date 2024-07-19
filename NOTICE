@@ -114,7 +114,6 @@ The following software have components provided under the terms of this license:
 - cffi
 - charset-normalizer (from https://github.com/Ousret/charset_normalizer)
 - coverage (from https://github.com/nedbat/coveragepy)
-- exceptiongroup (from https://pypi.org/project/exceptiongroup/1.0.1/, https://pypi.org/project/exceptiongroup/1.2.2/)
 - iniconfig (from http://github.com/RonnyPfannschmidt/iniconfig, https://pypi.org/project/iniconfig/2.0.0/)
 - jmespath (from https://github.com/jmespath/jmespath.py)
 - lxml (from https://lxml.de/)
@@ -125,7 +124,6 @@ The following software have components provided under the terms of this license:
 - pytest-forked (from https://github.com/pytest-dev/pytest-forked)
 - pytest-timeout (from https://github.com/pytest-dev/pytest-timeout)
 - six (from http://pypi.python.org/pypi/six/, https://github.com/benjaminp/six)
-- tomli (from https://pypi.org/project/tomli/1.2.2/, https://pypi.org/project/tomli/2.0.0/, https://pypi.org/project/tomli/2.0.1/)
 - tqdm (from https://pypi.org/project/tqdm/4.66.1/, https://pypi.org/project/tqdm/4.66.4/, https://tqdm.github.io)
 - urllib3 (from https://pypi.org/project/urllib3/2.0.2/, https://pypi.org/project/urllib3/2.0.4/, https://pypi.org/project/urllib3/2.2.2/)
 
@@ -152,7 +150,6 @@ The following software have components provided under the terms of this license:
 
 - boto3 (from https://github.com/boto/boto3)
 - cryptography (from https://github.com/pyca/cryptography)
-- exceptiongroup (from https://pypi.org/project/exceptiongroup/1.0.1/, https://pypi.org/project/exceptiongroup/1.2.2/)
 - py-cpuinfo (from https://github.com/workhorsy/py-cpuinfo)
 - typing-extensions (from https://pypi.org/project/typing-extensions/4.2.0/, https://pypi.org/project/typing-extensions/4.4.0/)
 
