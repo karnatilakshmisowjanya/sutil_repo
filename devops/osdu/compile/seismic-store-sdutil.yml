@@ -1,6 +1,6 @@
 compile-and-unit-test:
     stage: build
-    image: python:3.10
+    image: python:3.11
     script:
         - mkdir -p dist
         - rm -rf dist/*

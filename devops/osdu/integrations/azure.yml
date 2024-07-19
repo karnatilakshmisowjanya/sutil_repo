@@ -98,7 +98,7 @@ azure-publish:
 
 sdutil-azure-integration-test:
   stage: integration
-  image: python:3.10
+  image: python:3.11
   extends:
     - .azure_variables
   needs:
