@@ -23,7 +23,9 @@ The following software have components provided under the terms of this license:
 - python-dateutil (from https://github.com/dateutil/dateutil)
 - requests (from http://python-requests.org, https://requests.readthedocs.io)
 - s3transfer (from https://github.com/boto/s3transfer)
+- setuptools (from https://pypi.org/project/setuptools/70.1.1/, https://pypi.org/project/setuptools/70.2.0/, https://pypi.org/project/setuptools/71.0.3/)
 - urllib3 (from https://pypi.org/project/urllib3/2.0.2/, https://pypi.org/project/urllib3/2.0.4/, https://pypi.org/project/urllib3/2.2.2/)
+- wheel (from https://pypi.org/project/wheel/0.43.0/)
 
 ========================================================================
 BSD-2-Clause
@@ -56,6 +58,8 @@ The following software have components provided under the terms of this license:
 - pycparser (from https://github.com/eliben/pycparser)
 - pytest-benchmark (from https://github.com/ionelmc/pytest-benchmark)
 - python-dateutil (from https://github.com/dateutil/dateutil)
+- setuptools (from https://pypi.org/project/setuptools/70.1.1/, https://pypi.org/project/setuptools/70.2.0/, https://pypi.org/project/setuptools/71.0.3/)
+- wheel (from https://pypi.org/project/wheel/0.43.0/)
 
 ========================================================================
 CC-BY-2.5
@@ -91,7 +95,6 @@ LGPL-2.1-only
 The following software have components provided under the terms of this license:
 
 - crc32c (from https://github.com/ICRAR/crc32c)
-- xmlrunner
 
 ========================================================================
 LGPL-2.1-or-later
@@ -123,9 +126,11 @@ The following software have components provided under the terms of this license:
 - pytest (from http://pytest.org, https://docs.pytest.org/en/latest/, https://pypi.org/project/pytest/8.2.2/)
 - pytest-forked (from https://github.com/pytest-dev/pytest-forked)
 - pytest-timeout (from https://github.com/pytest-dev/pytest-timeout)
+- setuptools (from https://pypi.org/project/setuptools/70.1.1/, https://pypi.org/project/setuptools/70.2.0/, https://pypi.org/project/setuptools/71.0.3/)
 - six (from http://pypi.python.org/pypi/six/, https://github.com/benjaminp/six)
 - tqdm (from https://pypi.org/project/tqdm/4.66.1/, https://pypi.org/project/tqdm/4.66.4/, https://tqdm.github.io)
 - urllib3 (from https://pypi.org/project/urllib3/2.0.2/, https://pypi.org/project/urllib3/2.0.4/, https://pypi.org/project/urllib3/2.2.2/)
+- wheel (from https://pypi.org/project/wheel/0.43.0/)
 
 ========================================================================
 MPL-2.0
