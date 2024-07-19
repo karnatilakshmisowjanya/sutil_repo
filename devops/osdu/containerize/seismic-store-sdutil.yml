@@ -29,6 +29,7 @@ sdutil_containerize:
     - docker push ${CI_REGISTRY_IMAGE}/$SHA_IMAGE
     - |
       if [ "${CI_COMMIT_BRANCH}" == "${CI_DEFAULT_BRANCH}" ]; then
+        docker tag ${CI_REGISTRY_IMAGE}/$SHA_IMAGE ${CI_REGISTRY_IMAGE}/$LATEST_IMAGE
         docker push ${CI_REGISTRY_IMAGE}/$LATEST_IMAGE
       fi
 

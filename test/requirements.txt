@@ -16,7 +16,7 @@
 # limitations under the License.
 
 mock
-coverage
+coverage==7.6.0
 xmlrunner
 unittest-xml-reporting
 pytest==8.1.1
