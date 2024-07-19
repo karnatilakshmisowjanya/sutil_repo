@@ -25,3 +25,4 @@ pytest-benchmark==4.0.0
 pytest-timeout
 PyYAML==6.0.1
 Requests==2.32.3
+unittest2
