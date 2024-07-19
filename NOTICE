@@ -51,7 +51,7 @@ The following software have components provided under the terms of this license:
 - cryptography (from https://github.com/pyca/cryptography)
 - idna (from https://pypi.org/project/idna/3.4/, https://pypi.org/project/idna/3.7/)
 - isodate (from http://cheeseshop.python.org/pypi/isodate, https://github.com/gweis/isodate/)
-- itsdangerous (from https://pypi.org/project/itsdangerous/2.2.0/)
+- itsdangerous (from https://palletsprojects.com/p/itsdangerous/, https://pypi.org/project/itsdangerous/2.2.0/)
 - lxml (from https://lxml.de/)
 - oauthlib (from https://github.com/oauthlib/oauthlib)
 - packaging (from https://pypi.org/project/packaging/22.0/, https://pypi.org/project/packaging/24.1/)
