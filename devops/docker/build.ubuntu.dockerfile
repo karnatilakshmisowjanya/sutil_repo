@@ -3,7 +3,7 @@ FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 # install required build tools via packet manager
-RUN apt-get -y update && apt-get -y install python3-pip
+RUN apt-get -y update && apt-get -y install python3-pip && python -m pip3 install --upgrade pip
 
 # temporary working directory
 WORKDIR /tmp
