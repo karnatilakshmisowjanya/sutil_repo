@@ -17,9 +17,9 @@ Flask==3.0.3
 azure-storage-blob==12.15.0
 Authlib==1.3.1
 PyYAML==6.0.1
-requests==2.28.1
-tqdm==4.62.3
-urllib3==1.26.8
+requests==2.32.0
+tqdm==4.66.3
+urllib3==1.26.19
 # Some versions of crc32c may have problems working on different platforms (for example Windows)
 crc32c==2.4.1
 boto3==1.26.6
