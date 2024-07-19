@@ -17,7 +17,6 @@
 
 mock
 coverage==7.6.0
-xmlrunner
 unittest-xml-reporting
 pytest==8.1.1
 pytest-forked==1.6.0
