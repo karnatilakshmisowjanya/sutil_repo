@@ -49,7 +49,7 @@ rm -rf .coverage coverage coverage.xml TEST-*
 # run unit test only
 # pytest test/utest
 # run unit test and generate coverage
-python -m coverage run --branch --omit="*/*__init__.py" --source=sdlib -m discover -v -s test/utest/ -p "test_*.py"
+python -m coverage run --branch --omit="*/*__init__.py" --source=sdlib -v -s test/utest/ -p "test_*.py"
 exit_status=$?
 
 # generate coverage report
