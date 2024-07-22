@@ -27,8 +27,8 @@ def subproject_exist(tenant, subproject, stoken):
                 'Content-Type':'application/json'
     }
     response = requests.get(url=URL, headers=headers, timeout=10)
-    if (response.status_code != 200): return 1
-    return 0
+    if (response.status_code == 200 or response.status_code == 409): return 0
+    return 1
 
 def subproject_register(tenant, subproject, legaltag, stoken, **kwargs):
     ENDPOINT_URL = Config.get_svc_url()

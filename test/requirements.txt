@@ -22,5 +22,5 @@ pytest==8.1.1
 pytest-forked==1.6.0
 pytest-benchmark==4.0.0
 pytest-timeout
-PyYAML==6.0.1
+PyYAML==6.0
 Requests==2.32.3
