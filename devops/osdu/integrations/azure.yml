@@ -98,7 +98,7 @@ azure-publish:
 
 sdutil-azure-integration-test:
   stage: integration
-  image: python:3.11
+  image: python:3.12
   extends:
     - .azure_variables
   needs:
@@ -121,6 +121,7 @@ sdutil-azure-integration-test-latest:
   needs:
     - compile-and-unit-test-latest
     - sdutil_containerize_latest
+    - sdutil-azure-integration-test
   allow_failure: true
   before_script:
     - pip install msal

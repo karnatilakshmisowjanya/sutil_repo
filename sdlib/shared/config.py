@@ -84,7 +84,7 @@ class Config(object):
         configuration = forced_configuration
         if not configuration:
             configuration_file = os.path.join(os.path.expanduser("~"), cls.HOME, cls.CONFIG_FILE)
-            if os.path.exists(path=configuration_file):
+            if os.path.exists(configuration_file):
                 with open(configuration_file, "r") as fh:
                     configuration = json.load(fh)
             else:
@@ -192,7 +192,7 @@ class Config(object):
         }        
 
         file_config_dir = os.path.join(os.path.expanduser("~"), Config.HOME)
-        if not os.path.exists(path=file_config_dir):
+        if not os.path.exists(file_config_dir):
             os.makedirs(file_config_dir)
 
         file_config = os.path.join(file_config_dir, Config.CONFIG_FILE)
