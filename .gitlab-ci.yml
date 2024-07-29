@@ -1,8 +1,8 @@
-include: 
+include:
   # pipeline logic
   - project: "osdu/platform/ci-cd-pipelines"
     file: "standard-setup.yml"
-    ref: v0.11.0
+    ref: release/0.27
 
   # build
   - local: "/devops/osdu/compile/seismic-store-sdutil.yml"
@@ -20,19 +20,22 @@ include:
   # vulnerability Scan
   - project: "osdu/platform/ci-cd-pipelines"
     file: "scanners/gitlab-ultimate.yml"
-  
+    ref: release/0.27
+
   - local: "/devops/osdu/scanners/gitlab-ultimate.yml"
 
   # azure-global
   - project: "osdu/platform/ci-cd-pipelines"
-    file: "cloud-providers/azure.yml" 
+    file: "cloud-providers/azure.yml"
+    ref: release/0.27
 
   # integration
   - local: "/devops/osdu/integrations/azure.yml"
-  
+
   # fossa
   - project: "osdu/platform/ci-cd-pipelines"
     file: "scanners/fossa-python.yml"
+    ref: release/0.27
 
   # build
   - local: "devops/osdu/deploy/seismic-store-sdutil.yml"
