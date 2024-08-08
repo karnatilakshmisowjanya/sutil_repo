@@ -16,9 +16,11 @@
 from __future__ import print_function
 
 import base64
+from datetime import datetime
 import hashlib
 import json
 import os
+import re
 import sys
 import uuid
 import time
@@ -298,3 +300,60 @@ class AzureStorageService(StorageService):
             print("Exception: " + str(e))
 
         return True
+    
+    def download_object(self, connection_string, local_path=None, latest=False):
+        # '''Download analytics reports'''
+        # '''
+    
+        pos = connection_string.find('/', connection_string.find('://') + 3)
+        base_url = connection_string[:pos]
+        query_string = connection_string[pos + 1:]
+        target = query_string.split('?')[0]
+        rest = ''.join(query_string.split('?')[1:])
+        parts = target.split('/');
+        container_name = parts[0]
+        prefix = '/'.join(parts[1:])
+        cs = f"{base_url}/{container_name}?{rest}"
+
+        try:
+            with ContainerClient.from_container_url(
+                    container_url=cs,
+                    use_byte_buffer=True,
+                    max_concurrency=self._max_concurrency,
+                    max_single_put_size=self._max_single_put_size,
+                    connection_timeout=100) as container_client:
+
+                blob_list = container_client.list_blobs(name_starts_with=f"{prefix}/")
+                base_path = os.path.join(
+                    os.path.expanduser('~'), os.getcwd(), local_path) if local_path is not None else os.path.join(
+                        os.path.expanduser('~'), os.getcwd())
+                if latest:
+                    # find the latest blob list
+                    def extract_date(reports):
+                        match = re.search(r'(\d{4})/(\d{2})/(\d{2})', reports)
+                        if match:
+                            return datetime.strptime(match.group(0), "%Y/%m/%d")
+                        return None
+                    # Extract dates and find the latest one
+                    dates = [(blob, extract_date(blob.name)) for blob in blob_list]
+                    latest_report = max(dates, key=lambda x: x[1] if x[1] else datetime.min)
+                    # Display the latest report filename
+                    print(f"The latest report is: {latest_report[0].name}\n")
+                    blob_list = [latest_report[0]]
+
+                for blob in blob_list:
+                    file_name = (blob.name).replace('/', '-')
+                    full_path = os.path.join(base_path, file_name)
+                    try:
+                        with open(full_path, 'wb') as lfile:
+                            print(f"downloading report {file_name}...")
+                            blob_client = container_client.get_blob_client(blob)
+                            blob_data = blob_client.download_blob().readinto(lfile)
+                    except Exception:
+                        raise Exception(f"Invalid Argument: The specified output path \"{local_path}\" does not exist or is not a regular directory.")
+                        
+
+            print('\nDownload completed')
+
+        except Exception as e:
+            print(str(e))

@@ -16,6 +16,7 @@
 
 import json
 import time
+import re
 
 import requests
 from sdlib.shared.config import Config
@@ -687,6 +688,49 @@ class SeismicStoreService(object):
             raise Exception('\n[' + str(resp.status_code) + '] ' + resp.text)
 
         return resp.json()
+
+    def analytics_list_report(self, dataPartitionId, subproject, filter=None, extension=None):
+
+        url = (Config.get_svc_url()
+               + '/analytics/job/'
+               + subproject)
+                
+        querystring = {"filter-date": filter, "extension": extension}
+
+        header = {
+            'Authorization': 'Bearer ' + self._auth.get_id_token(),
+            Config.get_svc_appkey_name(): Config.get_svc_appkey(),
+            'data-partition-id': dataPartitionId
+        }
+
+        resp = requests.get(url=url, headers=header, params=querystring, verify=Config.get_ssl_verify())
+
+        if resp.status_code != 200:
+            raise Exception('\n[' + str(resp.status_code) + '] ' + resp.text)
+
+        return resp.json()
+
+    def analytics_download_report(self, dataPartitionId, subproject, filter=None, extension=None):
+
+        url = (Config.get_svc_url()
+               + '/analytics/job/'
+               + subproject
+               + '/connection-string')
+
+        querystring = {"filter-date": filter, "extension": extension}
+
+        header = {
+            'Authorization': 'Bearer ' + self._auth.get_id_token(),
+            Config.get_svc_appkey_name(): Config.get_svc_appkey(),
+            'data-partition-id': dataPartitionId
+        }
+
+        resp = requests.get(url=url, headers=header, params=querystring, verify=Config.get_ssl_verify(), timeout=10)
+
+        if resp.status_code != 200:
+            raise Exception('\n[' + str(resp.status_code) + '] ' + resp.text)
+
+        return json.loads(resp.text)['access_token']
 
     @staticmethod
     def update_header_if_data_partition_id_provided(header):

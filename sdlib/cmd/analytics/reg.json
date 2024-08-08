@@ -1,0 +1,20 @@
+{
+    "description": "manage analytics reports",
+    "help": [
+        "> python sdutil analytics [ *list | *download ] (options)\n",
+        "  *list              $ python sdutil analytics list [dataPartitionId] [subproject] (options)",
+        "                       manage analytics reports for a subporject\n",
+        "                       [dataPartitionId]   : dataPartitionId/tenant the subproject belongs to.",
+        "                       [subproject]        : subproject name",
+        "  (options)            [--filter]          : apply filter to analytics reports, filter should be follow format as 'YYYY-MM-DD' or 'YYYY-MM' or 'YYYY'",
+        "                       [--idtoken]         : --idtoken=<token> pass the credential token to use, rather than generating a new one",
+        "  *download          $ python sdutil analytics download [dataPartitionId] [subproject] (options)",
+        "                       download analytics reports for a subproject\n",
+        "                       [dataPartitionId]   : dataPartitionId/tenant the subproject belongs to.",
+        "                       [subproject]        : subproject name",
+        "  (options)            [--dates]          : apply filter to analytics reports, filter should be follow format as 'xxxx-xx-xx' or 'xxxx-xx' or 'xxxx' or the word 'ALL'",
+        "                       [--path]            : a path to store the reports, default to current working directory",
+        "                       [--idtoken]         : --idtoken=<token> pass the credential token to use, rather than generating a new one"
+    ],
+    "name": "analytics"
+}

@@ -51,3 +51,6 @@ class StorageService(object):
 
     def download(self, *args, **kwargs):
         raise NotImplementedError()
+    
+    def download_object(self, *args, **kwargs):
+        raise NotImplementedError()
