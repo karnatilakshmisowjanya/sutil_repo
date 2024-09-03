@@ -1,12 +1,12 @@
 compile-and-unit-test:
     stage: build
     image: python
-    allow_failure: true
     script:
         - mkdir -p dist
         - rm -rf dist/*
         - pip install -r requirements.txt
         - pip install -r test/requirements.txt
+        - pip freeze > all-requirements.txt
         - chmod +x devops/scripts/run_unit_tests.sh
         - ./devops/scripts/run_unit_tests.sh
         - version_major=3
@@ -20,7 +20,7 @@ compile-and-unit-test:
         name: sdutil
         paths:
         - dist/
-
+        - all-requirements.txt
 
 clean-package:
   stage: build
