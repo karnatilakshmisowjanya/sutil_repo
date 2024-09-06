@@ -1,6 +1,6 @@
 compile-and-unit-test:
     stage: build
-    image: python:3.12
+    image: python
     script:
         - mkdir -p dist
         - rm -rf dist/*
@@ -16,34 +16,11 @@ compile-and-unit-test:
         - cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py .version dist
         - ls dist
     artifacts:
-        name: sdutil
-        paths:
-        - dist/
-        - all-requirements.txt
-
-compile-and-unit-test-latest:
-    stage: build
-    image: python
-    allow_failure: true
-    script:
-        - mkdir -p dist
-        - rm -rf dist/*
-        - pip install -r requirements.txt
-        - pip install -r test/requirements.txt
-        - chmod +x devops/scripts/run_unit_tests.sh
-        - ./devops/scripts/run_unit_tests.sh
-        - version_major=3
-        - version_minor=0
-        - PACKAGE_VERSION=${version_major}.${version_minor}.$CI_PIPELINE_IID
-        - echo $PACKAGE_VERSION > .version
-        - cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py .version dist
-        - ls dist
-    artifacts:
         when: always
         name: sdutil
         paths:
         - dist/
-
+        - all-requirements.txt
 
 clean-package:
   stage: build

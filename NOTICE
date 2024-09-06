@@ -8,7 +8,6 @@ This software includes the following software and licenses:
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- setuptools (from https://pypi.org/project/setuptools/70.1.1/, https://pypi.org/project/setuptools/70.2.0/, https://pypi.org/project/setuptools/71.1.0/)
 - typing-extensions (from https://pypi.org/project/typing-extensions/4.2.0/, https://pypi.org/project/typing-extensions/4.4.0/)
 
 ========================================================================
@@ -20,13 +19,11 @@ The following software have components provided under the terms of this license:
 - botocore (from https://github.com/boto/botocore)
 - coverage (from https://github.com/nedbat/coveragepy)
 - cryptography (from https://github.com/pyca/cryptography)
-- packaging (from https://pypi.org/project/packaging/22.0/, https://pypi.org/project/packaging/24.1/)
+- packaging (from https://pypi.org/project/packaging/, https://pypi.org/project/packaging/22.0/)
 - python-dateutil (from https://github.com/dateutil/dateutil)
 - requests (from http://python-requests.org, https://requests.readthedocs.io)
 - s3transfer (from https://github.com/boto/s3transfer)
-- setuptools (from https://pypi.org/project/setuptools/70.1.1/, https://pypi.org/project/setuptools/70.2.0/, https://pypi.org/project/setuptools/71.1.0/)
-- urllib3 (from https://pypi.org/project/urllib3/2.0.2/, https://pypi.org/project/urllib3/2.0.4/, https://pypi.org/project/urllib3/2.2.2/)
-- wheel (from https://pypi.org/project/wheel/0.43.0/)
+- urllib3 (from https://pypi.org/project/urllib3/, https://pypi.org/project/urllib3/2.0.2/, https://pypi.org/project/urllib3/2.0.4/)
 
 ========================================================================
 BSD-2-Clause
@@ -34,9 +31,8 @@ BSD-2-Clause
 The following software have components provided under the terms of this license:
 
 - mock (from http://mock.readthedocs.org/en/latest/)
-- packaging (from https://pypi.org/project/packaging/22.0/, https://pypi.org/project/packaging/24.1/)
+- packaging (from https://pypi.org/project/packaging/, https://pypi.org/project/packaging/22.0/)
 - pytest-benchmark (from https://github.com/ionelmc/pytest-benchmark)
-- setuptools (from https://pypi.org/project/setuptools/70.1.1/, https://pypi.org/project/setuptools/70.2.0/, https://pypi.org/project/setuptools/71.1.0/)
 - unittest-xml-reporting (from http://github.com/xmlrunner/unittest-xml-reporting/tree/master/)
 
 ========================================================================
@@ -44,38 +40,37 @@ BSD-3-Clause
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- Authlib (from https://authlib.org/, https://pypi.org/project/Authlib/1.3.0/, https://pypi.org/project/Authlib/1.3.1/)
-- Flask (from https://pypi.org/project/Flask/2.3.2/, https://pypi.org/project/Flask/2.3.3/, https://pypi.org/project/Flask/3.0.3/)
-- Jinja2 (from http://jinja.pocoo.org/, https://palletsprojects.com/p/jinja/, https://pypi.org/project/Jinja2/3.1.4/)
+- Authlib (from https://authlib.org/, https://pypi.org/project/Authlib/, https://pypi.org/project/Authlib/1.3.0/)
+- Flask (from https://pypi.org/project/Flask/, https://pypi.org/project/Flask/2.3.2/, https://pypi.org/project/Flask/2.3.3/)
+- Jinja2 (from http://jinja.pocoo.org/, https://palletsprojects.com/p/jinja/, https://pypi.org/project/Jinja2/)
 - MarkupSafe (from https://palletsprojects.com/p/markupsafe/)
-- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.6/, https://pypi.org/project/Werkzeug/2.3.7/, https://pypi.org/project/Werkzeug/3.0.3/)
+- Werkzeug (from https://pypi.org/project/Werkzeug/, https://pypi.org/project/Werkzeug/2.3.6/, https://pypi.org/project/Werkzeug/2.3.7/)
 - alive-progress (from https://github.com/rsalmei/alive-progress)
 - click (from https://palletsprojects.com/p/click/)
 - crc32c (from https://github.com/ICRAR/crc32c)
 - cryptography (from https://github.com/pyca/cryptography)
-- idna (from https://pypi.org/project/idna/3.4/, https://pypi.org/project/idna/3.7/)
+- idna (from https://pypi.org/project/idna/, https://pypi.org/project/idna/3.4/)
 - isodate (from http://cheeseshop.python.org/pypi/isodate, https://github.com/gweis/isodate/)
 - itsdangerous (from https://palletsprojects.com/p/itsdangerous/, https://pypi.org/project/itsdangerous/2.2.0/)
-- packaging (from https://pypi.org/project/packaging/22.0/, https://pypi.org/project/packaging/24.1/)
+- lxml (from https://lxml.de/)
+- packaging (from https://pypi.org/project/packaging/, https://pypi.org/project/packaging/22.0/)
 - pycparser (from https://github.com/eliben/pycparser)
 - pytest-benchmark (from https://github.com/ionelmc/pytest-benchmark)
 - python-dateutil (from https://github.com/dateutil/dateutil)
-- setuptools (from https://pypi.org/project/setuptools/70.1.1/, https://pypi.org/project/setuptools/70.2.0/, https://pypi.org/project/setuptools/71.1.0/)
-- wheel (from https://pypi.org/project/wheel/0.43.0/)
 
 ========================================================================
 CC-BY-2.5
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.6/, https://pypi.org/project/Werkzeug/2.3.7/, https://pypi.org/project/Werkzeug/3.0.3/)
+- Werkzeug (from https://pypi.org/project/Werkzeug/, https://pypi.org/project/Werkzeug/2.3.6/, https://pypi.org/project/Werkzeug/2.3.7/)
 
 ========================================================================
 CC-BY-3.0
 ========================================================================
 The following software have components provided under the terms of this license:
 
-- Werkzeug (from https://pypi.org/project/Werkzeug/2.3.6/, https://pypi.org/project/Werkzeug/2.3.7/, https://pypi.org/project/Werkzeug/3.0.3/)
+- Werkzeug (from https://pypi.org/project/Werkzeug/, https://pypi.org/project/Werkzeug/2.3.6/, https://pypi.org/project/Werkzeug/2.3.7/)
 
 ========================================================================
 LGPL-2.0-only
@@ -83,13 +78,6 @@ LGPL-2.0-only
 The following software have components provided under the terms of this license:
 
 - crc32c (from https://github.com/ICRAR/crc32c)
-
-========================================================================
-LGPL-2.0-or-later
-========================================================================
-The following software have components provided under the terms of this license:
-
-- lxml (from https://lxml.de/)
 
 ========================================================================
 LGPL-2.1-only
@@ -106,20 +94,6 @@ The following software have components provided under the terms of this license:
 - crc32c (from https://github.com/ICRAR/crc32c)
 
 ========================================================================
-LGPL-3.0-only
-========================================================================
-The following software have components provided under the terms of this license:
-
-- setuptools (from https://pypi.org/project/setuptools/70.1.1/, https://pypi.org/project/setuptools/70.2.0/, https://pypi.org/project/setuptools/71.1.0/)
-
-========================================================================
-LGPL-3.0-or-later
-========================================================================
-The following software have components provided under the terms of this license:
-
-- setuptools (from https://pypi.org/project/setuptools/70.1.1/, https://pypi.org/project/setuptools/70.2.0/, https://pypi.org/project/setuptools/71.1.0/)
-
-========================================================================
 MIT
 ========================================================================
 The following software have components provided under the terms of this license:
@@ -128,25 +102,23 @@ The following software have components provided under the terms of this license:
 - alive-progress (from https://github.com/rsalmei/alive-progress)
 - azure-core (from https://github.com/Azure/azure-sdk-for-python/tree/main/sdk/core/azure-core)
 - azure-storage-blob (from https://github.com/Azure/azure-sdk-for-python/tree/main/sdk/storage/azure-storage-blob)
-- blinker (from https://blinker.readthedocs.io, https://pypi.org/project/blinker/1.6.3/, https://pypi.org/project/blinker/1.8.1/)
+- blinker (from https://blinker.readthedocs.io, https://pypi.org/project/blinker/, https://pypi.org/project/blinker/1.6.3/)
 - botocore (from https://github.com/boto/botocore)
 - cffi
 - charset-normalizer (from https://github.com/Ousret/charset_normalizer)
 - coverage (from https://github.com/nedbat/coveragepy)
-- iniconfig (from http://github.com/RonnyPfannschmidt/iniconfig, https://pypi.org/project/iniconfig/2.0.0/)
+- iniconfig (from http://github.com/RonnyPfannschmidt/iniconfig, https://pypi.org/project/iniconfig/, https://pypi.org/project/iniconfig/2.0.0/)
 - jmespath (from https://github.com/jmespath/jmespath.py)
 - lxml (from https://lxml.de/)
 - pluggy
 - py (from https://py.readthedocs.io/)
 - py-cpuinfo (from https://github.com/workhorsy/py-cpuinfo)
-- pytest (from http://pytest.org, https://docs.pytest.org/en/latest/, https://pypi.org/project/pytest/8.3.1/)
+- pytest (from http://pytest.org, https://docs.pytest.org/en/latest/, https://pypi.org/project/pytest/)
 - pytest-forked (from https://github.com/pytest-dev/pytest-forked)
 - pytest-timeout (from https://github.com/pytest-dev/pytest-timeout)
-- setuptools (from https://pypi.org/project/setuptools/70.1.1/, https://pypi.org/project/setuptools/70.2.0/, https://pypi.org/project/setuptools/71.1.0/)
 - six (from http://pypi.python.org/pypi/six/, https://github.com/benjaminp/six)
-- tqdm (from https://pypi.org/project/tqdm/4.66.1/, https://pypi.org/project/tqdm/4.66.4/, https://tqdm.github.io)
-- urllib3 (from https://pypi.org/project/urllib3/2.0.2/, https://pypi.org/project/urllib3/2.0.4/, https://pypi.org/project/urllib3/2.2.2/)
-- wheel (from https://pypi.org/project/wheel/0.43.0/)
+- tqdm (from https://pypi.org/project/tqdm/, https://pypi.org/project/tqdm/4.66.1/, https://tqdm.github.io)
+- urllib3 (from https://pypi.org/project/urllib3/, https://pypi.org/project/urllib3/2.0.2/, https://pypi.org/project/urllib3/2.0.4/)
 
 ========================================================================
 MPL-2.0
@@ -155,7 +127,7 @@ The following software have components provided under the terms of this license:
 
 - botocore (from https://github.com/boto/botocore)
 - certifi (from https://github.com/certifi/python-certifi)
-- tqdm (from https://pypi.org/project/tqdm/4.66.1/, https://pypi.org/project/tqdm/4.66.4/, https://tqdm.github.io)
+- tqdm (from https://pypi.org/project/tqdm/, https://pypi.org/project/tqdm/4.66.1/, https://tqdm.github.io)
 
 ========================================================================
 PIL
@@ -172,7 +144,6 @@ The following software have components provided under the terms of this license:
 - boto3 (from https://github.com/boto/boto3)
 - cryptography (from https://github.com/pyca/cryptography)
 - py-cpuinfo (from https://github.com/workhorsy/py-cpuinfo)
-- setuptools (from https://pypi.org/project/setuptools/70.1.1/, https://pypi.org/project/setuptools/70.2.0/, https://pypi.org/project/setuptools/71.1.0/)
 - typing-extensions (from https://pypi.org/project/typing-extensions/4.2.0/, https://pypi.org/project/typing-extensions/4.4.0/)
 
 ========================================================================
