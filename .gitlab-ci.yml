@@ -4,13 +4,15 @@ include:
     file: "standard-setup.yml"
 
   # BUILD
-  # build
   - project: "osdu/platform/ci-cd-pipelines"
     file: "build/python.yml"
 
   # overwrite logic
   - local: "/devops/osdu/compile/python.yml"
 
-  # linters
+  # COINTAINERIZE
+  - local: "/devops/osdu/containerize/seismic-store-sdutil.yml"
+
+  # SCANNERS
   - project: "osdu/platform/ci-cd-pipelines"
-    file: "build/python-linters.yml"
+    file: "scanners/gitlab-ultimate.yml"
