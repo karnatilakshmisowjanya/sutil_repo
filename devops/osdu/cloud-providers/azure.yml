@@ -15,7 +15,9 @@ container_scanning:
   needs: ["sdutil_containerize"]
 
 azure_test_py:
+  image: python
   extends: [".azure_variables"]
+  retry: 2
   needs:
     - sdutil_containerize
   before_script:
