@@ -8,4 +8,4 @@ include:
     file: "build/python.yml"
   
   # overwrite logic
-  - local: "/devops/osdu/build/python.yml"
+  - local: "/devops/osdu/compile/python.yml"
