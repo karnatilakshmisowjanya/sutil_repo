@@ -16,6 +16,12 @@ compile-and-unit-test:
     paths:
     - dist/
     - all-requirements.txt
+  reports:
+    junit: unit_tests_report.xml
+    coverage_report:
+      coverage_format: cobertura
+      path: coverage/coverage.xml
+
 
 clean-package:
   stage: build
