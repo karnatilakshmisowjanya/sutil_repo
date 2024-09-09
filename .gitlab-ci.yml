@@ -1,38 +1,8 @@
 include: 
-  # pipeline logic
+  # PIPELINE LOGIC
   - project: "osdu/platform/ci-cd-pipelines"
     file: "standard-setup.yml"
-    ref: v0.11.0
 
-  # build
-  - local: "/devops/osdu/compile/seismic-store-sdutil.yml"
-
-  # containerize
-  - local: "/devops/osdu/containerize/seismic-store-sdutil.yml"
-
-  # gemnasium
-  - local: "/devops/osdu/containerize/gemnasium.yml"
-
-  # scan
-  # scan for secrets
-  - local: "/devops/osdu/scanners/scan-for-secrets-python.yml"
-
-  # vulnerability Scan
+  # BUILD
   - project: "osdu/platform/ci-cd-pipelines"
-    file: "scanners/gitlab-ultimate.yml"
-  
-  - local: "/devops/osdu/scanners/gitlab-ultimate.yml"
-
-  # azure-global
-  - project: "osdu/platform/ci-cd-pipelines"
-    file: "cloud-providers/azure.yml" 
-
-  # integration
-  - local: "/devops/osdu/integrations/azure.yml"
-  
-  # fossa
-  - project: "osdu/platform/ci-cd-pipelines"
-    file: "scanners/fossa-python.yml"
-
-  # build
-  - local: "devops/osdu/deploy/seismic-store-sdutil.yml"
+    file: "build/python.yml"
