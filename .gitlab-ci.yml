@@ -6,3 +6,6 @@ include:
   # BUILD
   - project: "osdu/platform/ci-cd-pipelines"
     file: "build/python.yml"
+  
+  # overwrite logic
+  - local: "/devops/osdu/build/python.yml"
