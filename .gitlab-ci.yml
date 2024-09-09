@@ -21,3 +21,6 @@ include:
   # azure
   - project: "osdu/platform/ci-cd-pipelines"
     file: "cloud-providers/azure.yml" 
+
+  # overwrite logic
+  - local: "/devops/osdu/cloud-providers/azure.yml"
