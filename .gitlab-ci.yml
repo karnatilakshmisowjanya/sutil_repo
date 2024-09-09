@@ -8,9 +8,9 @@ include:
   - project: "osdu/platform/ci-cd-pipelines"
     file: "build/python.yml"
 
+  # overwrite logic
+  - local: "/devops/osdu/compile/python.yml"
+
   # linters
   - project: "osdu/platform/ci-cd-pipelines"
     file: "build/python-linters.yml"
-
-  # overwrite logic
-  - local: "/devops/osdu/compile/python.yml"
