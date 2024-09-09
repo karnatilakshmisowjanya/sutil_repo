@@ -12,6 +12,7 @@ variables:
   ACL_VIEWERS: ${ACL_VIEWERS}
 
 azure_test_py:
+  extends: [".azure_variables"]
   needs:
     - compile-and-unit-test
     - sdutil_containerize
