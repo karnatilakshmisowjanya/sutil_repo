@@ -11,20 +11,18 @@ variables:
   ACL_OWNERS: ${ACL_OWNERS}  
   ACL_VIEWERS: ${ACL_VIEWERS}
 
-azure_containerize:
-  needs: []
+azure_test_py:
+  needs:
+    - compile-and-unit-test
+    - sdutil_containerize
+  before_script:
+    - pip install msal
+    - export svctoken=$(python ${CI_PROJECT_DIR}/devops/scripts/azure_jwt_client.py)
   script:
-      echo 'empty'
-  only:
-      - $DISABLED == 'true'
-
-container_scanning:
-  needs: []
-  script:
-      echo 'empty'
-  rules:
-    - if: $DISABLED == 'true'
-      when: never
+    - pip install -r requirements.txt
+    - pip install -r ./test/requirements.txt
+    - chmod +x ./devops/scripts/run_regression_tests.sh
+    - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}-sdutil" --legaltag="${E2E_LEGALTAG}" --legaltag02="${E2E_LEGALTAG02}" --admin="${AZURE_AD_VALID_OID_USER1}" --acl-admin="${ACL_OWNERS}@${E2E_TENANT}.${DOMAIN}" --acl-viewer="${ACL_VIEWERS}@${E2E_TENANT}.${DOMAIN}" --idtoken="$svctoken"
 
 azure_containerize_helm:
   needs: []
@@ -68,47 +66,3 @@ azure_containerize_helm:
       echo 'empty'
   only:
       - $DISABLED == 'true'
-
-azure_test_py:
-  needs: []
-  extends: []
-  script:
-      echo 'empty'
-  only:
-      - $DISABLED == 'true'
-
-azure_swagger_test:
-  needs: []
-  extends: []
-  script:
-      echo 'empty'
-  only:
-      - $DISABLED == 'true'
-
-azure-publish:
-  needs: []
-  before_script:
-      echo 'empty'
-  script:
-      echo 'empty'
-  rules:
-    - if: $DISABLED == 'true'
-      when: never
-
-
-sdutil-azure-integration-test:
-  stage: integration
-  image: python
-  extends:
-    - .azure_variables
-  needs:
-    - compile-and-unit-test
-    - sdutil_containerize
-  before_script:
-    - pip install msal
-    - export svctoken=$(python ${CI_PROJECT_DIR}/devops/scripts/azure_jwt_client.py)
-  script:
-    - pip install -r requirements.txt
-    - pip install -r ./test/requirements.txt
-    - chmod +x ./devops/scripts/run_regression_tests.sh
-    - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}-sdutil" --legaltag="${E2E_LEGALTAG}" --legaltag02="${E2E_LEGALTAG02}" --admin="${AZURE_AD_VALID_OID_USER1}" --acl-admin="${ACL_OWNERS}@${E2E_TENANT}.${DOMAIN}" --acl-viewer="${ACL_VIEWERS}@${E2E_TENANT}.${DOMAIN}" --idtoken="$svctoken"
