@@ -2,7 +2,7 @@ variables:
   #seismic store service variables\
   E2E_HOSTNAME: ${AZURE_DNS_NAME}
   SDMS_PREFIX: /seistore-svc/api/v3
-  E2E_SUBPROJECT: demosandbox08sdutil
+  E2E_SUBPROJECT: demosandbox08
   E2E_TENANT: $MY_TENANT
   DOMAIN: ${DOMAIN}
   E2E_LEGALTAG: ${LEGAL_TAG}
