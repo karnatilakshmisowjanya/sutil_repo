@@ -44,6 +44,7 @@ azure_containerize_helm:
   only:
     variables:
       - $AZURE == '1'
+      - $DISABLED == 'true'
   except:
     variables:
       - $AZURE_SKIP_DEPLOY == 'true'
