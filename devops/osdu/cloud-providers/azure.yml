@@ -43,7 +43,6 @@ azure_containerize_helm:
     AZURE_HELM_SUBDIR: osdu-ddms/standard-ddms
   only:
     variables:
-      - $AZURE == '1'
       - $DISABLED == 'true'
   except:
     variables:
