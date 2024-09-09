@@ -2,7 +2,7 @@ variables:
   #seismic store service variables\
   E2E_HOSTNAME: ${AZURE_DNS_NAME}
   SDMS_PREFIX: /seistore-svc/api/v3
-  E2E_SUBPROJECT: demosandbox08
+  E2E_SUBPROJECT: demosandbox01-sdutil
   E2E_TENANT: $MY_TENANT
   DOMAIN: ${DOMAIN}
   E2E_LEGALTAG: ${LEGAL_TAG}
@@ -27,7 +27,7 @@ azure_test_py:
     - pip install -r requirements.txt
     - pip install -r ./test/requirements.txt
     - chmod +x ./devops/scripts/run_regression_tests.sh
-    - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}-sdutil" --legaltag="${E2E_LEGALTAG}" --legaltag02="${E2E_LEGALTAG02}" --admin="${AZURE_AD_VALID_OID_USER1}" --acl-admin="${ACL_OWNERS}@${E2E_TENANT}.${DOMAIN}" --acl-viewer="${ACL_VIEWERS}@${E2E_TENANT}.${DOMAIN}" --idtoken="$svctoken"
+    - ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --legaltag="${E2E_LEGALTAG}" --legaltag02="${E2E_LEGALTAG02}" --admin="${AZURE_AD_VALID_OID_USER1}" --acl-admin="${ACL_OWNERS}@${E2E_TENANT}.${DOMAIN}" --acl-viewer="${ACL_VIEWERS}@${E2E_TENANT}.${DOMAIN}" --idtoken="$svctoken"
   only: null
 
 # JOBS DISABLED (NO NEEDED)
