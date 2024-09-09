@@ -17,7 +17,6 @@ container_scanning:
 azure_test_py:
   extends: [".azure_variables"]
   needs:
-    - compile-and-unit-test
     - sdutil_containerize
   before_script:
     - pip install msal
