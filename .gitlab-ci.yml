@@ -16,3 +16,8 @@ include:
   # SCANNERS
   - project: "osdu/platform/ci-cd-pipelines"
     file: "scanners/gitlab-ultimate.yml"
+
+  # CLOUD PROVIDERS
+  # azure
+  - project: "osdu/platform/ci-cd-pipelines"
+    file: "cloud-providers/azure.yml" 
