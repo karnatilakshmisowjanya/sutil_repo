@@ -20,7 +20,6 @@ compile-and-unit-test:
     - dist/
     - all-requirements.txt
     reports:
-      junit: unit_tests_report.xml
       coverage_report:
         coverage_format: cobertura
         path: coverage/coverage.xml
