@@ -2,7 +2,7 @@ osdu-package:
   stage: deploy
   image: ubuntu
   dependencies:
-    - azure_test_py
+    - compile-and-unit-test
   script:
     - apt-get update
     - apt-get install curl -y
