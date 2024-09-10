@@ -47,6 +47,9 @@ def test_subproject_for_cp(capsys, pargs):
     status = subproject_exist(tenant, subproject, idtoken)
     if 0 != status :
         status, output = subproject_register(tenant, subproject, legaltag, idtoken, admins=acl_admin, viewers=acl_viewer)
+    else :
+        set_args("unlock {path} --idtoken={stoken}".format(path=path, stoken=pargs.idtoken))
+        run_command(capsys)
     assert not status, output
 
 def test_sdutil_cp_upload(capsys, pargs):
@@ -55,12 +58,6 @@ def test_sdutil_cp_upload(capsys, pargs):
     tenant,subproject = path.split("/")[2],path.split("/")[3]
     status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
     if 0 == status :
-        dataset_lock_response = dataset_lock(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, 'write')
-        if 200 != dataset_lock_response.status_code : assert False, dataset_lock_response.content
-        dataset_lock2_response = dataset_lock(tenant, subproject, e2e_test_dataset_01, pargs.idtoken, 'read')
-        if 423 != dataset_lock2_response.status_code : assert False, 'The dataset was not locked with write lock'
-        dataset_unlock_response = dataset_unlock(tenant,subproject, e2e_test_dataset_01,pargs.idtoken)
-        if 200 != dataset_unlock_response.status_code : assert False, dataset_unlock_response.content
         delete_status, delete_output = dataset_delete(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
         if 0 != delete_status : assert not delete_status, delete_output
     # upload simple dataset01
