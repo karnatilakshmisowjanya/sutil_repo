@@ -47,8 +47,6 @@ def test_subproject_for_cp(capsys, pargs):
     status = subproject_exist(tenant, subproject, idtoken)
     if 0 != status :
         status, output = subproject_register(tenant, subproject, legaltag, idtoken, admins=acl_admin, viewers=acl_viewer)
-    else :
-        dataset_unlock(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
     assert not status, output
 
 def test_sdutil_cp_upload(capsys, pargs):
@@ -57,6 +55,7 @@ def test_sdutil_cp_upload(capsys, pargs):
     tenant,subproject = path.split("/")[2],path.split("/")[3]
     status, dataset_exist_output = dataset_exist(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
     if 0 == status :
+        dataset_unlock(tenant,subproject, e2e_test_dataset_01,pargs.idtoken)
         delete_status, delete_output = dataset_delete(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
         if 0 != delete_status : assert not delete_status, delete_output
     # upload simple dataset01
