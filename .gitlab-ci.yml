@@ -29,3 +29,6 @@ include:
 
   # overwrite logic
   - local: "/devops/osdu/cloud-providers/azure.yml"
+
+  # DEPLOY
+  - local: "devops/osdu/deploy/seismic-store-sdutil.yml"
