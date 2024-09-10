@@ -2,7 +2,7 @@ variables:
   #seismic store service variables\
   E2E_HOSTNAME: ${AZURE_DNS_NAME}
   SDMS_PREFIX: /seistore-svc/api/v3
-  E2E_SUBPROJECT: demosandbox08
+  E2E_SUBPROJECT: demosandbox01-sdutil
   E2E_LEGALTAG02: opendes-dps-integration-test-valid2-legal-tag
 
 .sdutil_containerize:
@@ -18,15 +18,19 @@ variables:
     SDUTIL_IMAGE: "seismic-store-sdutil"
     SHA_IMAGE: ${SDUTIL_IMAGE}:${CI_COMMIT_SHA}
     LATEST_IMAGE: ${SDUTIL_IMAGE}:latest
+    DOCKER_IMAGE: ${CI_REGISTRY_IMAGE}/${CI_PROJECT_NAME}-${CI_COMMIT_REF_SLUG}:${CI_COMMIT_SHA}
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
 sdutil_containerize:
   extends:
     - .sdutil_containerize
+  retry: 2
   script:
-    - docker build --build-arg arg_run_unit_tests=true --build-arg arg_run_integration_tests=true --build-arg arg_E2E_HOSTNAME="${E2E_HOSTNAME}" --build-arg arg_SDMS_PREFIX="${SDMS_PREFIX}" --build-arg arg_E2E_TENANT="${MY_TENANT}" --build-arg arg_E2E_SUBPROJECT="${E2E_SUBPROJECT}-sdutil" --build-arg arg_E2E_LEGALTAG="${LEGAL_TAG}" --build-arg arg_E2E_LEGALTAG02="${E2E_LEGALTAG02}" --build-arg arg_AZURE_AD_VALID_OID_USER1="${AZURE_AD_VALID_OID_USER1}" --build-arg arg_ACL_OWNERS="${ACL_OWNERS}@${MY_TENANT}.${DOMAIN}" --build-arg arg_ACL_VIEWERS="${ACL_VIEWERS}@${MY_TENANT}.${DOMAIN}" --build-arg arg_AZURE_TENANT_ID="${AZURE_TENANT_ID}" --build-arg arg_AZURE_AD_APP_RESOURCE_ID="${AZURE_AD_APP_RESOURCE_ID}" --build-arg arg_INTEGRATION_TESTER="${INTEGRATION_TESTER}" --build-arg arg_AZURE_TESTER_SERVICEPRINCIPAL_SECRET="${AZURE_TESTER_SERVICEPRINCIPAL_SECRET}" -t ${CI_REGISTRY_IMAGE}/$SHA_IMAGE -f devops/docker/Dockerfile .
+    - docker build --build-arg arg_run_unit_tests=true --build-arg arg_run_integration_tests=true --build-arg arg_E2E_HOSTNAME="${E2E_HOSTNAME}" --build-arg arg_SDMS_PREFIX="${SDMS_PREFIX}" --build-arg arg_E2E_TENANT="${MY_TENANT}" --build-arg arg_E2E_SUBPROJECT="${E2E_SUBPROJECT}" --build-arg arg_E2E_LEGALTAG="${LEGAL_TAG}" --build-arg arg_E2E_LEGALTAG02="${E2E_LEGALTAG02}" --build-arg arg_AZURE_AD_VALID_OID_USER1="${AZURE_AD_VALID_OID_USER1}" --build-arg arg_ACL_OWNERS="${ACL_OWNERS}@${MY_TENANT}.${DOMAIN}" --build-arg arg_ACL_VIEWERS="${ACL_VIEWERS}@${MY_TENANT}.${DOMAIN}" --build-arg arg_AZURE_TENANT_ID="${AZURE_TENANT_ID}" --build-arg arg_AZURE_AD_APP_RESOURCE_ID="${AZURE_AD_APP_RESOURCE_ID}" --build-arg arg_INTEGRATION_TESTER="${INTEGRATION_TESTER}" --build-arg arg_AZURE_TESTER_SERVICEPRINCIPAL_SECRET="${AZURE_TESTER_SERVICEPRINCIPAL_SECRET}" -t ${CI_REGISTRY_IMAGE}/$SHA_IMAGE -f devops/docker/Dockerfile .
     - docker push ${CI_REGISTRY_IMAGE}/$SHA_IMAGE
+    - docker tag ${CI_REGISTRY_IMAGE}/$SHA_IMAGE $DOCKER_IMAGE
+    - docker push $DOCKER_IMAGE
     - |
       if [ "${CI_COMMIT_BRANCH}" == "${CI_DEFAULT_BRANCH}" ]; then
         docker tag ${CI_REGISTRY_IMAGE}/$SHA_IMAGE ${CI_REGISTRY_IMAGE}/$LATEST_IMAGE
