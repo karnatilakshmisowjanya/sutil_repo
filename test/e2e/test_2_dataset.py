@@ -47,6 +47,8 @@ def test_subproject_for_cp(capsys, pargs):
     status = subproject_exist(tenant, subproject, idtoken)
     if 0 != status :
         status, output = subproject_register(tenant, subproject, legaltag, idtoken, admins=acl_admin, viewers=acl_viewer)
+    else :
+        dataset_unlock(tenant, subproject, e2e_test_dataset_01, pargs.idtoken)
     assert not status, output
 
 def test_sdutil_cp_upload(capsys, pargs):

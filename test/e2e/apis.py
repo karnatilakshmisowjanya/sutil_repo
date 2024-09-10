@@ -128,6 +128,16 @@ def dataset_lock(tenant, subproject, dataset, stoken, path='/', openmode='write'
     response = requests.put(url=URL, headers=headers, params=params)
     return response
 
+def dataset_unlock(tenant, subproject, dataset, stoken, path='/'):
+    ENDPOINT_URL = Config.get_svc_url()
+    URL = ENDPOINT_URL + '/dataset/tenant/' + tenant + '/subproject/' + subproject + '/dataset/' + dataset + '/unlock'
+    headers = {'Authorization':"Bearer " + stoken,
+                'data-partition-id':tenant,
+                'Content-Type':'application/json'
+    }
+    response = requests.put(url=URL, headers=headers)
+    return response
+
 def utility_ls(sdpath, stoken, wmode='all'):
     ENDPOINT_URL = Config.get_svc_url()
     URL = ENDPOINT_URL + '/utility/ls'
