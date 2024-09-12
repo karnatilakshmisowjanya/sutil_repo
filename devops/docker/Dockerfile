@@ -43,9 +43,11 @@ RUN apt-get -y update && apt-get -y install \
     python3-pip \
     python-is-python3
 
+RUN python --version
+
 RUN pip install -r requirements.txt --break-system-packages
 RUN if [ "${run_unit_tests}" != "false" ] || [ "${run_integration_tests}" != "false" ]; then \
-    pip install -r test/requirements.txt; \
+    pip install -r test/requirements.txt --break-system-packages; \
   fi
 RUN if [ "${run_unit_tests}" != "false" ]; then \
     chmod +x devops/scripts/run_unit_tests.sh; \
