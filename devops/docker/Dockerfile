@@ -91,6 +91,12 @@ RUN if [ "${run_integration_tests}" != "false" ]; then \
   fi
 
 FROM ubuntu:24.04 as release
+
+RUN apt-get -y update && apt-get -y install \
+    python3 \
+    python3-pip \
+    python-is-python3
+
 WORKDIR /app
 COPY --from=development /app/dist /app
 RUN pip install -r requirements.txt
