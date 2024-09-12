@@ -79,5 +79,5 @@ RUN if [ "${run_integration_tests}" != "false" ]; then \
 FROM ubuntu:24.04 as release
 WORKDIR /app
 COPY --from=development /app/dist /app
-RUN pip install -r requirements.txt --break-system-packages
+RUN pip install -r requirements.txt
 ENTRYPOINT ["/bin/bash"]
