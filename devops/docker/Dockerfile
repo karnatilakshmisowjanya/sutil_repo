@@ -43,7 +43,7 @@ RUN apt-get -y update && apt-get -y install \
     python3-pip \
     python-is-python3
 
-RUN python --version
+RUN echo Using: $(python --version)
 
 RUN pip install -r requirements.txt --break-system-packages
 RUN if [ "${run_unit_tests}" != "false" ] || [ "${run_integration_tests}" != "false" ]; then \
@@ -61,7 +61,7 @@ RUN version_major=3; \
   echo $PACKAGE_VERSION > .version
 RUN cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py .version dist
 RUN if [ "${run_integration_tests}" != "false" ]; then \
-    pip install msal; \
+    pip install msal --break-system-packages; \
     export svctoken=$(python ./devops/scripts/azure_jwt_client.py); \
     chmod +x ./devops/scripts/run_regression_tests.sh; \
     echo "host: ${E2E_HOSTNAME}"; \
@@ -79,5 +79,5 @@ RUN if [ "${run_integration_tests}" != "false" ]; then \
 FROM ubuntu:24.04 as release
 WORKDIR /app
 COPY --from=development /app/dist /app
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt --break-system-packages
 ENTRYPOINT ["/bin/bash"]
