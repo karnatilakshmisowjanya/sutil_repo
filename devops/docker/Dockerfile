@@ -1,6 +1,7 @@
 ARG python_version=latest
 
-FROM python:${python_version} as development
+# base image
+FROM ubuntu:24.04 as development
 
 ARG arg_run_unit_tests=false
 ARG arg_run_integration_tests=false
@@ -36,6 +37,12 @@ ENV AZURE_TESTER_SERVICEPRINCIPAL_SECRET=${arg_AZURE_TESTER_SERVICEPRINCIPAL_SEC
 
 WORKDIR /app
 COPY . .
+
+RUN apt-get -y update && apt-get -y install \
+    python3 \
+    python3-pip \
+    python-is-python3
+
 RUN pip install -r requirements.txt
 RUN if [ "${run_unit_tests}" != "false" ] || [ "${run_integration_tests}" != "false" ]; then \
     pip install -r test/requirements.txt; \
@@ -67,7 +74,7 @@ RUN if [ "${run_integration_tests}" != "false" ]; then \
     ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --legaltag="${E2E_LEGALTAG}" --legaltag02="${E2E_LEGALTAG02}" --admin="${AZURE_AD_VALID_OID_USER1}" --acl-admin="${ACL_OWNERS}" --acl-viewer="${ACL_VIEWERS}" --idtoken=${svctoken}; \
   fi
 
-FROM python:${python_version} as release
+FROM ubuntu:24.04 as release
 WORKDIR /app
 COPY --from=development /app/dist /app
 RUN pip install -r requirements.txt
