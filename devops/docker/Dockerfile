@@ -1,7 +1,24 @@
-ARG python_version=latest
+# ============================================================================
+# Copyright 2017-2024, Schlumberger
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ============================================================================
 
 # base image
 FROM ubuntu:24.04 as development
+
+# build as root
+USER 0
 
 ARG arg_run_unit_tests=false
 ARG arg_run_integration_tests=false
@@ -45,9 +62,9 @@ RUN apt-get -y update && apt-get -y install \
 
 RUN echo Using: $(python --version)
 
-RUN pip install -r requirements.txt --break-system-packages
+RUN pip install -r requirements.txt
 RUN if [ "${run_unit_tests}" != "false" ] || [ "${run_integration_tests}" != "false" ]; then \
-    pip install -r test/requirements.txt --break-system-packages; \
+    pip install -r test/requirements.txt; \
   fi
 RUN if [ "${run_unit_tests}" != "false" ]; then \
     chmod +x devops/scripts/run_unit_tests.sh; \
@@ -61,7 +78,7 @@ RUN version_major=3; \
   echo $PACKAGE_VERSION > .version
 RUN cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py .version dist
 RUN if [ "${run_integration_tests}" != "false" ]; then \
-    pip install msal --break-system-packages; \
+    pip install msal; \
     export svctoken=$(python ./devops/scripts/azure_jwt_client.py); \
     chmod +x ./devops/scripts/run_regression_tests.sh; \
     echo "host: ${E2E_HOSTNAME}"; \
