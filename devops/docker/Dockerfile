@@ -99,5 +99,5 @@ RUN apt-get -y update && apt-get -y install \
 
 WORKDIR /app
 COPY --from=development /app/dist /app
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt --break-system-packages
 ENTRYPOINT ["/bin/bash"]
