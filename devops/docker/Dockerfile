@@ -17,9 +17,6 @@
 # base image
 FROM ubuntu:24.04 as development
 
-# build as root
-USER 0
-
 ARG arg_run_unit_tests=false
 ARG arg_run_integration_tests=false
 ARG arg_E2E_HOSTNAME=localhost
@@ -62,9 +59,9 @@ RUN apt-get -y update && apt-get -y install \
 
 RUN echo Using: $(python --version)
 
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt --break-system-packages;
 RUN if [ "${run_unit_tests}" != "false" ] || [ "${run_integration_tests}" != "false" ]; then \
-    pip install -r test/requirements.txt; \
+    pip install -r test/requirements.txt --break-system-packages; \
   fi
 RUN if [ "${run_unit_tests}" != "false" ]; then \
     chmod +x devops/scripts/run_unit_tests.sh; \
@@ -78,7 +75,7 @@ RUN version_major=3; \
   echo $PACKAGE_VERSION > .version
 RUN cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py .version dist
 RUN if [ "${run_integration_tests}" != "false" ]; then \
-    pip install msal; \
+    pip install msal --break-system-packages; \
     export svctoken=$(python ./devops/scripts/azure_jwt_client.py); \
     chmod +x ./devops/scripts/run_regression_tests.sh; \
     echo "host: ${E2E_HOSTNAME}"; \
