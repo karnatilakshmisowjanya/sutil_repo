@@ -1,6 +1,21 @@
-ARG python_version=latest
+# ============================================================================
+# Copyright 2017-2024, Schlumberger
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# ============================================================================
 
-FROM python:${python_version} as development
+# base image
+FROM ubuntu:24.04 as development
 
 ARG arg_run_unit_tests=false
 ARG arg_run_integration_tests=false
@@ -36,9 +51,17 @@ ENV AZURE_TESTER_SERVICEPRINCIPAL_SECRET=${arg_AZURE_TESTER_SERVICEPRINCIPAL_SEC
 
 WORKDIR /app
 COPY . .
-RUN pip install -r requirements.txt
+
+RUN apt-get -y update && apt-get -y install \
+    python3 \
+    python3-pip \
+    python-is-python3
+
+RUN echo Using: $(python --version)
+
+RUN pip install -r requirements.txt --break-system-packages;
 RUN if [ "${run_unit_tests}" != "false" ] || [ "${run_integration_tests}" != "false" ]; then \
-    pip install -r test/requirements.txt; \
+    pip install -r test/requirements.txt --break-system-packages; \
   fi
 RUN if [ "${run_unit_tests}" != "false" ]; then \
     chmod +x devops/scripts/run_unit_tests.sh; \
@@ -52,7 +75,7 @@ RUN version_major=3; \
   echo $PACKAGE_VERSION > .version
 RUN cp -r LICENSE NOTICE README.md requirements.txt sdlib sdutil sdutil.py .version dist
 RUN if [ "${run_integration_tests}" != "false" ]; then \
-    pip install msal; \
+    pip install msal --break-system-packages; \
     export svctoken=$(python ./devops/scripts/azure_jwt_client.py); \
     chmod +x ./devops/scripts/run_regression_tests.sh; \
     echo "host: ${E2E_HOSTNAME}"; \
@@ -67,8 +90,14 @@ RUN if [ "${run_integration_tests}" != "false" ]; then \
     ./devops/scripts/run_regression_tests.sh --cloud-provider=azure --service-url="https://${E2E_HOSTNAME}${SDMS_PREFIX}" --service-env=gitlab --tenant="${E2E_TENANT}" --subproject="${E2E_SUBPROJECT}" --legaltag="${E2E_LEGALTAG}" --legaltag02="${E2E_LEGALTAG02}" --admin="${AZURE_AD_VALID_OID_USER1}" --acl-admin="${ACL_OWNERS}" --acl-viewer="${ACL_VIEWERS}" --idtoken=${svctoken}; \
   fi
 
-FROM python:${python_version} as release
+FROM ubuntu:24.04 as release
+
+RUN apt-get -y update && apt-get -y install \
+    python3 \
+    python3-pip \
+    python-is-python3
+
 WORKDIR /app
 COPY --from=development /app/dist /app
-RUN pip install -r requirements.txt
+RUN pip install -r requirements.txt --break-system-packages
 ENTRYPOINT ["/bin/bash"]
