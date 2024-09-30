@@ -290,7 +290,10 @@ class AzureStorageService(StorageService):
                       "Destination File Checksum: " + local_file_checksum)
 
                 if local_file_checksum != blob_properties_file_checksum:
-                    print('Checksum mismatch!!!')
+                    if md5Check:
+                        print('Checksum mismatch!!!')
+                    else:
+                        print('Warning: Checksum Skipped!')
                 else:
                     print('Checksum matches!!!')
 
