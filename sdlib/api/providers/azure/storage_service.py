@@ -309,6 +309,7 @@ class AzureStorageService(StorageService):
                 else:
                     print('Warning: Checksum Skipped!')
             print('\nTransfer completed')
+
         except Exception as e:
             print("Exception: " + str(e))
 
