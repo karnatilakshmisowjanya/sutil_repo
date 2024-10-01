@@ -296,7 +296,7 @@ class AzureStorageService(StorageService):
                         if local_file_checksum.hexdigest() not in md5_array:
                             enable_md5_check = False
                             break
-                # blob_properties_file_checksum = bytearray.hex(blob_properties_file_checksum)
+                blob_properties_file_checksum = bytearray.hex(blob_properties_file_checksum)
                 local_file_checksum = local_file_checksum.hexdigest()
 
                 print("Source File Checksum: " + blob_properties_file_checksum + '\n' +
