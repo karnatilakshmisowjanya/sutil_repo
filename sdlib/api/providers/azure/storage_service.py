@@ -280,7 +280,8 @@ class AzureStorageService(StorageService):
                                             print("Pausing before retry ...")
                                             time.sleep(10 + 5*retries)
             md5_array = tuple(md5_array)
-            enable_md5_check = True
+            individual_md5 = False
+            corrupted_file = False
             # determine the blob size
             blob_size = 32 * 1048576
             if len(size_array) > 1:
@@ -289,25 +290,37 @@ class AzureStorageService(StorageService):
             if blob_properties_file_checksum:
                 # md5 checksum for comparison
                 local_file_checksum = hashlib.md5()
+                # md5 checksum for to check if content_md5 store individual md5
+                blob_checksum = hashlib.md5()
                 # get the md5 of downloaded file
                 with open(local_filename, "rb") as local_file:
                     for file_chunk in iter(lambda: local_file.read(blob_size), b""):
                         local_file_checksum.update(file_chunk)
                         if local_file_checksum.hexdigest() not in md5_array:
-                            enable_md5_check = False
-                            break
+                            blob_checksum.update(file_chunk)
+                            if blob_checksum.hexdigest() not in md5_array:
+                                # this is individual md5
+                                corrupted_file = True
+                                break
+                            else:
+                                individual_md5 = True
+                                break
+                            # blob_checksum = hashlib.md5()
                 blob_properties_file_checksum = bytearray.hex(blob_properties_file_checksum)
                 local_file_checksum = local_file_checksum.hexdigest()
 
-                print("Source File Checksum: " + blob_properties_file_checksum + '\n' +
-                      "Destination File Checksum: " + local_file_checksum)
-                if enable_md5_check:
-                    if local_file_checksum != blob_properties_file_checksum:
-                        print('Checksum mismatch!!!')
-                    else:
-                        print('Checksum matches!!!')
+                if not individual_md5:
+                    print("Source File Checksum: " + blob_properties_file_checksum)
+                if not corrupted_file:
+                    print("Destination File Checksum: " + local_file_checksum)
+
+                if corrupted_file:
+                    print('Checksum mismatch!!!')
+                elif individual_md5:
+                    print("Warning: Checksum comparison was skipped because the MD5 calculation methods differ.")
                 else:
-                    print('Warning: Checksum Skipped!')
+                    print('Checksum matches!!!')
+                    
             print('\nTransfer completed')
 
         except Exception as e:
