@@ -20,6 +20,7 @@ PyYAML==6.0.1
 requests==2.32.3
 tqdm==4.66.3
 urllib3==1.26.19
+
 # Some versions of crc32c may have problems working on different platforms (for example Windows)
 crc32c==2.4.1
 boto3==1.26.6
