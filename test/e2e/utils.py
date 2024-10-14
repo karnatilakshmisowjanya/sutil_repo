@@ -13,9 +13,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import random
+import string
+
+def generate_random_string(length=8):
+    characters = string.ascii_letters + string.digits  # Letters and digits
+    return ''.join(random.choice(characters) for _ in range(length))
+
 e2e_test_dataset_prefix = 'ds-'
-e2e_test_dataset_01 = e2e_test_dataset_prefix + '0000'
-e2e_test_dataset_02 = e2e_test_dataset_prefix + '0001'
+e2e_test_dataset_01 = e2e_test_dataset_prefix + generate_random_string() + '-0'
+e2e_test_dataset_02 = e2e_test_dataset_prefix + generate_random_string() + '-1'
 e2e_test_dataset_fsize = (1024, '1.0 KB')
 
 def run_command(capsys):
