@@ -32,3 +32,5 @@ include:
 
   # DEPLOY
   - local: "devops/osdu/deploy/seismic-store-sdutil.yml"
+
+  
