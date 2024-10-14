@@ -50,7 +50,7 @@ class Config(object):
             configuration_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', "config.yaml")
             if os.path.exists(configuration_file):
                 with open(configuration_file, 'r') as fh:
-                    cls.__configuration = yaml.load(fh, Loader=yaml.FullLoader)
+                    cls.__configuration = yaml.safe_load(fh)
             else:
                 raise Exception("\nThe \"sdlib/config.yaml\" utility configuration has not been found."); 
 
