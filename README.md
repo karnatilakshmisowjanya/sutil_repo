@@ -105,6 +105,7 @@ auth_provider:
 </p>
 
 On Azure:
+
 1. You need to provide the refresh token for the environment in config.yaml. Follow the directions in [osduauth](https://community.opengroup.org/osdu/platform/deployment-and-operations/infra-azure-provisioning/-/tree/master/tools/rest/osduauth) to obtain a token and once obtained save the value in settings.
 2. Refresh token mechanism can be enabled using a flag: force_refresh_token from config.yaml. Specify this to 'true', and provide a default value as specified [here](https://community.opengroup.org/osdu/platform/domain-data-mgmt-services/seismic/seismic-dms-suite/seismic-store-sdutil/-/blob/master/docs/config-azure.yaml#L17)
 3. The value of sdutil_session_timeout will be silently ignored if the flag force_refresh_token is unset or not present, and is capped to 8 hours from code.
