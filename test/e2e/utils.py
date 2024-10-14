@@ -14,8 +14,8 @@
 # limitations under the License.
 
 e2e_test_dataset_prefix = 'ds-'
-e2e_test_dataset_01 = e2e_test_dataset_prefix + '0'
-e2e_test_dataset_02 = e2e_test_dataset_prefix + '1'
+e2e_test_dataset_01 = e2e_test_dataset_prefix + '000'
+e2e_test_dataset_02 = e2e_test_dataset_prefix + '001'
 e2e_test_dataset_fsize = (1024, '1.0 KB')
 
 def run_command(capsys):
